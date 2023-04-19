@@ -1,6 +1,8 @@
 import { trips, users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 
+// ADD: check that trip is at most one year in advance
+// API call??
 const createTrip = async (
   userId,
   tripName,
@@ -9,9 +11,10 @@ const createTrip = async (
   startTime,
   endLocation,
   endDate,
-  [stops],
+  endTime,
+  stops,
   toDo,
-  [usersAllowed]
+  usersAllowed
 ) => {
   if (
     !userId ||
@@ -21,8 +24,8 @@ const createTrip = async (
     !startTime ||
     !endLocation ||
     !endDate ||
+    !endTime ||
     !stops ||
-    !itinerary ||
     !toDo ||
     !usersAllowed
   ) {
@@ -46,11 +49,17 @@ const createTrip = async (
   if (typeof endDate != 'string' || endDate.trim().length == 0) {
     throw 'Error: Must provide end date as valid nonempty string';
   }
+  if (typeof startTime != 'string' || startTime.trim().length == 0) {
+    throw 'Error: Must provide start time as valid nonempty string';
+  }
+  if (typeof endTime != 'string' || endTime.trim().length == 0) {
+    throw 'Error: Must provide end time as valid nonempty string';
+  }
   if (!Array.isArray(stops)) {
     throw 'You must provide an array of all stops on your trip';
   }
   if (!Array.isArray(usersAllowed)) {
-    throw 'You must provide an array of all stops on your trip';
+    throw 'You must provide an array of all users allowed on your trip';
   }
   userId = userId.trim();
   tripName = tripName.trim();
@@ -58,59 +67,54 @@ const createTrip = async (
   startDate = startDate.trim();
   endLocation = endLocation.trim();
   endDate = endDate.trim();
+  startTime = startTime.trim();
+  endTime = endTime.trim();
+  // trim stops, todo and usersAllowed
+  let st = startTime.split(':');
+  let et = endTime.split(':');
+  if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (et.length != 2 || et[0].length != 2 || et[1].length != 2) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
   let sd = startDate.split('/');
   let ed = endDate.split('/');
   if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
-  if (
-    (sd[0] * 1 == 1 ||
-      sd[0] * 1 == 3 ||
-      sd[0] * 1 == 5 ||
-      sd[0] * 1 == 7 ||
-      sd[0] * 1 == 8 ||
-      sd[0] * 1 == 10 ||
-      sd[0] * 1 == 12) &&
-    sd[1] * 1 < 1 &&
-    sd[1] * 1 > 31
-  ) {
-    throw 'Error: Must provide start date in  MM/DD/YYYY format';
+  if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
-  if (
-    (sd[0] * 1 == 4 || sd[0] * 1 == 6 || sd[0] * 1 == 5 || sd[0] * 1 == 9 || sd[0] * 1 == 11) &&
-    sd[1] * 1 < 1 &&
-    sd[1] * 1 > 30
-  ) {
-    throw 'Error: Must provide start date in  MM/DD/YYYY format';
+  if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
-  if (sd[0] * 1 == 2 && sd[1] * 1 < 1 && sd[1] * 1 > 29) {
-    throw 'Error: Must provide start date in  MM/DD/YYYY format';
+  if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
   if (ed.length != 3 || ed[0].length != 2 || ed[1].length != 2 || ed[2].length != 4) {
     throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
-  if (
-    (ed[0] * 1 == 1 ||
-      ed[0] * 1 == 3 ||
-      ed[0] * 1 == 5 ||
-      ed[0] * 1 == 7 ||
-      ed[0] * 1 == 8 ||
-      ed[0] * 1 == 10 ||
-      ed[0] * 1 == 12) &&
-    ed[1] * 1 < 1 &&
-    ed[1] * 1 > 31
-  ) {
-    throw 'Error: Must provide end date in  MM/DD/YYYY format';
+  if (ed[0] * 1 < 1 || ed[0] * 1 > 12) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
-  if (
-    (ed[0] * 1 == 4 || ed[0] * 1 == 6 || ed[0] * 1 == 5 || ed[0] * 1 == 9 || ed[0] * 1 == 11) &&
-    ed[1] * 1 < 1 &&
-    ed[1] * 1 > 30
-  ) {
-    throw 'Error: Must provide end date in  MM/DD/YYYY format';
+  if (ed[1] * 1 < 1 || ed[1] * 1 > 31) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
-  if (ed[0] * 1 == 2 && ed[1] * 1 < 1 && ed[1] * 1 > 29) {
-    throw 'Error: Must provide end date in  MM/DD/YYYY format';
+  if (ed[2] * 1 < sd[2] * 1 || ed[2] * 1 > ed[2] * 1 + 1) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
   if (sd > ed) {
     throw 'Error: Start date must be set to a date before end date';
@@ -122,10 +126,10 @@ const createTrip = async (
     }
     stops[i] = stops[i].trim();
   }
-  if (toDo.length === 0) throw 'You must supply at least one stop';
+  if (toDo.length === 0) throw 'You must supply at least one to-do item';
   for (let i in toDo) {
     if (typeof toDo[i] !== 'string' || toDo[i].trim().length === 0) {
-      throw 'You must supply at least 1 stop';
+      throw 'You must supply at least 1 to-do item';
     }
     toDo[i] = toDo[i].trim();
   }
@@ -137,17 +141,17 @@ const createTrip = async (
     start_time: startTime,
     end_location: endLocation,
     end_date: endDate,
-    stops: [stops],
+    end_time: endTime,
+    stops: stops,
     itinerary: [],
     to_do: toDo,
-    cost: 0
+    cost: 0,
+    users_allowed: usersAllowed
   };
   const tripCollection = await trips();
   const insertInfo = await tripCollection.insertOne(newTrip);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add trip';
-
   const newId = insertInfo.insertedId.toString();
-
   const trip = await get(newId);
   return trip;
 };
@@ -164,12 +168,8 @@ const getAll = async (userId) => {
   }
   userId = userId.trim();
   const tripCollection = await trips();
-  let tripList = await tripCollection.find({}).project({ _id: 1, name: 1 }).toArray();
+  const tripList = await tripCollection.find({ userId: userId }).toArray();
   if (!tripList) throw 'Could not get all trips';
-  tripList = tripList.map((element) => {
-    element._id = element._id.toString();
-    return element;
-  });
   return tripList;
 };
 
@@ -196,6 +196,7 @@ const get = async (id) => {
   return trip;
 };
 
+// TODO: filter function -- MARIAM
 const filter = async (userId, sortingParam) => {
   if (!userId) {
     throw 'You must provide an id to search for';
@@ -206,7 +207,6 @@ const filter = async (userId, sortingParam) => {
   if (userId.trim().length === 0) {
     throw 'Id cannot be an empty string or just spaces';
   }
-
   if (!sortingParam) {
     throw 'You must provide an id to search for';
   }
@@ -219,35 +219,46 @@ const filter = async (userId, sortingParam) => {
   userId = userId.trim();
   sortingParam = sortingParam.trim();
   if (sortingParam != 'past' && sortingParam != 'future' && sortingParam != 'present') {
-    throw 'You must filter trips by either past, current, or future';
+    throw 'You must filter trips by either past, present, or future';
   }
-  let totalTrips = getAll(userId);
+  let allTripArray = [];
+  let allTrips = await getAll(userId);
+  allTrips.forEach((elem) => {
+    elem._id = elem._id.toString();
+    allTripArray.push(elem);
+  });
   let filtered = [];
   let date = new Date();
-  if (sortingParam == 'past') {
-    totalTrips.forEach((elem) => {
-      if (totalTrips.endDate < date) {
-        filtered.push(elem);
-      }
-    });
-  }
-  if (sortingParam == 'future') {
-    totalTrips.forEach((elem) => {
-      if (totalTrips.startDate > date) {
-        filtered.push(elem);
-      }
-    });
-  }
-  if (sortingParam == 'present') {
-    totalTrips.forEach((elem) => {
-      if (totalTrips.startDate < date && totalTrips.endDate > date) {
-        filtered.push(elem);
-      }
-    });
-  }
+  // if (sortingParam == 'past') {
+  //   totalTrips.forEach((elem) => {
+  //     if (totalTrips.endDate < date) {
+  //       filtered.push(elem);
+  //     }
+  //   });
+  // }
+  // if (sortingParam == 'future') {
+  //   totalTrips.forEach((elem) => {
+  //     if (totalTrips.startDate > date) {
+  //       filtered.push(elem);
+  //     }
+  //   });
+  // }
+  // if (sortingParam == 'present') {
+  //   totalTrips.forEach((elem) => {
+  //     if (totalTrips.startDate < date && totalTrips.endDate > date) {
+  //       filtered.push(elem);
+  //     }
+  //   });
+  // }
   return filtered;
 };
 
+// TODO: updateTime -- SHAILAJA
+// NOTE: some object types in the database, when returned, are null
+// new start and end times are the same as before --> should error, doesn't
+// TEST CASES:
+// updateTime(tripId, '00:00', '12:59'); --> fails but shouldn't
+// FIX: object names
 const updateTime = async (tripId, startTime, endTime) => {
   if (!tripId) {
     throw 'Error: TripID must be inputted';
@@ -264,6 +275,26 @@ const updateTime = async (tripId, startTime, endTime) => {
   if (typeof endTime != 'string') {
     throw 'Error: End time must be a string';
   }
+  // let st = startTime.split(':');
+  // let et = endTime.split(':');
+  // if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
+  //   throw 'Error: Must provide start time in HH:MM format';
+  // }
+  // if (et.length != 2 || et[0].length != 2 || et[1].length != 2) {
+  //   throw 'Error: Must provide end time in HH:MM format';
+  // }
+  // if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+  //   throw 'Error: Must provide start time in HH:MM format';
+  // }
+  // if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+  //   throw 'Error: Must provide start time in HH:MM format';
+  // }
+  // if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+  //   throw 'Error: Must provide end time in HH:MM format';
+  // }
+  // if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+  //   throw 'Error: Must provide end time in HH:MM format';
+  // }
   let checkStart = startTime.split(':');
   if (checkStart.length != 2 || checkStart[0].length != 2 || checkStart[1].length != 2) {
     throw `Error: Start time must be in 24 hour clock format (Ex: 01:00 or 15:23)`;
@@ -282,9 +313,9 @@ const updateTime = async (tripId, startTime, endTime) => {
   }
   let checkEnd = endTime.split(':');
   if (checkEnd.length != 2 || checkEnd[0].length != 2 || checkEnd[1].length != 2) {
-    throw `Error: Start time must be in 24 hour clock format (Ex: 01:00 or 15:23)`;
+    throw `Error: End time must be in 24 hour clock format (Ex: 01:00 or 15:23)`;
   }
-  if (Number(endTime.charAt(0)) < -1 || Number(endTime.charAt(0)) > 3) {
+  if (Number(endTime.charAt(0)) < -1 || Number(endTime.charAt(0)) >= 3) {
     throw `Error: First digit of hours must be 0, 1, or 2`;
   }
   if (Number(endTime.charAt(1)) < -1 || Number(endTime.charAt(1)) > 9) {
@@ -311,24 +342,25 @@ const updateTime = async (tripId, startTime, endTime) => {
     throw `Error: New start and end times cannot be the same as before`;
   }
   const updatedTrip = {
-    userID: oldTrip.userID,
-    tripName: oldTrip.tripName,
-    startLocation: oldTrip.startLocation,
-    startDate: oldTrip.startDate,
-    startTime: startTime,
-    endLocation: oldTrip.endLocation,
-    endDate: oldTrip.endDate,
-    endTime: endTime,
+    userId: oldTrip.userId,
+    name: oldTrip.name,
+    start_location: oldTrip.start_location,
+    start_date: oldTrip.start_date,
+    start_time: startTime,
+    end_location: oldTrip.end_location,
+    end_date: oldTrip.end_date,
+    end_time: endTime,
     stops: oldTrip.stops,
     itinerary: oldTrip.itinerary,
     toDo: oldTrip.toDo,
-    usersAllowed: oldTrip.usersAllowed
+    cost: oldTrip.cost,
+    users_allowed: oldTrip.users_allowed
   };
   const tripCollection = await trips();
   const updatedTripInfo = await tripCollection.findOneAndUpdate(
     { _id: new ObjectId(tripId) },
-    { $set: updatedTrip },
-    { returnDocument: 'after' }
+    { $set: updatedTrip }
+    // { returnDocument: 'after' }
   );
   if (updatedTripInfo.lastErrorObject.n == 0) {
     throw `Error: Could not update trip successfully`;
@@ -337,6 +369,7 @@ const updateTime = async (tripId, startTime, endTime) => {
   return updatedTripInfo.value;
 };
 
+// TODO
 const updateDate = async (tripId, startDate, endDate) => {
   if (!tripId) {
     throw 'Error: TripID must be inputted';
@@ -362,7 +395,7 @@ const updateDate = async (tripId, startDate, endDate) => {
     checkStart[1].length != 2 ||
     checkStart[2].length != 4
   ) {
-    throw `Error: Start time must be in format MM/DD/YYYY`;
+    throw `Error: Start date must be in format MM/DD/YYYY`;
   }
   if (Number(checkStart[0]) < 0 || Number(checkStart[0]) > 13) {
     throw `Error: Month must be between 01-12`;
@@ -377,10 +410,10 @@ const updateDate = async (tripId, startDate, endDate) => {
       Number(checkStart[0]) == 11) &&
     Number(checkStart[1]) > 30
   ) {
-    throw `Error: April, June, Septermber, and November have 30 days`;
+    throw `Error: April, June, September, and November have 30 days`;
   }
   if (Number(checkStart[0]) == 2 && Number(checkStart[1]) > 30) {
-    throw `Error: Feburary can only have up to 28 or 29 days`;
+    throw `Error: February can only have up to 28 or 29 days`;
   }
   if (Number(checkStart[3]) < 1900 || Number(year.toString()) + 1 < Number(checkStart[3])) {
     throw `Error: Trips can only be planned one year in advance`;
@@ -407,10 +440,10 @@ const updateDate = async (tripId, startDate, endDate) => {
       Number(checkEnd[0]) == 11) &&
     Number(checkEnd[1]) > 30
   ) {
-    throw `Error: April, June, Septermber, and November have 30 days`;
+    throw `Error: April, June, September, and November have 30 days`;
   }
   if (Number(checkEnd[0]) == 2 && Number(checkEnd[1]) > 30) {
-    throw `Error: Feburary can only have up to 28 or 29 days`;
+    throw `Error: February can only have up to 28 or 29 days`;
   }
   if (Number(checkEnd[3]) < 1900 || Number(year.toString()) + 1 < Number(checkEnd[3])) {
     throw `Error: Trips can only be planned one year in advance`;
@@ -450,6 +483,8 @@ const updateDate = async (tripId, startDate, endDate) => {
   return updatedTripInfo.value;
 };
 
+// API call??
+// TODO
 const updateLocation = async (tripId, startLocation, endLocation) => {
   if (!tripId) {
     throw 'Error: TripID must be inputted';
@@ -509,6 +544,7 @@ const updateLocation = async (tripId, startLocation, endLocation) => {
   return updatedTripInfo.value;
 };
 
+// TODO
 const addToTodoList = async (tripId, task) => {
   if (!tripId || !task) {
     throw 'All fields need to have valid values';
@@ -541,6 +577,7 @@ const addToTodoList = async (tripId, task) => {
   return updatedTrip.value;
 };
 
+// TODO
 const deleteFromTodoList = async (tripId, task) => {
   if (!tripId || !task) {
     throw 'All fields need to have valid values';
@@ -576,6 +613,7 @@ const deleteFromTodoList = async (tripId, task) => {
   return updatedTrip.value;
 };
 
+// TODO
 const deleteTodoList = async (tripId) => {
   if (!tripId) {
     throw 'tripId is not provided';
@@ -601,6 +639,7 @@ const deleteTodoList = async (tripId) => {
   return updatedTrip.value;
 };
 
+// TODO
 const usersAllowed = async (userId, tripId) => {
   if (!userId || !tripId) {
     throw 'All fields need to have valid values';
