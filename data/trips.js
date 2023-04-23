@@ -60,6 +60,15 @@ const createTrip = async (
   if (!Array.isArray(usersAllowed)) {
     throw 'You must provide an array of all users allowed on your trip';
   }
+  if (startLocation == endLocation) {
+    throw 'Start location cannot be the same as end location';
+  }
+  if (startTime == endTime) {
+    throw 'Start time cannot be the same as end time';
+  }
+  if (startDate == endDate) {
+    throw 'Start date cannot be the same as end date';
+  }
   userId = userId.trim();
   tripName = tripName.trim();
   startLocation = startLocation.trim();
@@ -275,6 +284,9 @@ const updateTime = async (tripId, startTime, endTime) => {
   if (typeof endTime != 'string') {
     throw 'Error: End time must be a string';
   }
+  if (startTime == endTime) {
+    throw 'Error: Start time cannot be the same as end time';
+  }
   let st = startTime.split(':');
   let et = endTime.split(':');
   if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
@@ -349,6 +361,9 @@ const updateDate = async (tripId, startDate, endDate) => {
   }
   if (typeof endDate != 'string') {
     throw `Error: End date must be a string`;
+  }
+  if (startDate == endDate) {
+    throw 'Error: Start date cannot be the same as end date';
   }
   let today = new Date();
   let year = today.getFullYear();
@@ -456,10 +471,10 @@ const updateLocation = async (tripId, startLocation, endLocation) => {
     throw 'Error: TripID must be inputted';
   }
   if (!startLocation) {
-    throw `Error: Start time must be inputted`;
+    throw `Error: Start location must be inputted`;
   }
   if (!endLocation) {
-    throw `Error: End time must be inputted`;
+    throw `Error: End location must be inputted`;
   }
   if (typeof startLocation != 'string') {
     throw `Error: Start Location must be a string`;
@@ -473,6 +488,9 @@ const updateLocation = async (tripId, startLocation, endLocation) => {
   if (endLocation.length == 0 || endLocation.trim().length == 0) {
     throw `Error: End location must not be an empty string or made up of empty spaces`;
   }
+  if (startLocation == endLocation) {
+    throw 'Start location is the same as end location';
+  }
   if (typeof tripId != 'string') {
     throw `Error: Trip Id must be a string`;
   }
@@ -483,6 +501,9 @@ const updateLocation = async (tripId, startLocation, endLocation) => {
   startLocation = startLocation.trim();
   endLocation = endLocation.trim();
   const oldTrip = await get(tripId);
+  if (startLocation == oldTrip.start_location && endLocation == oldTrip.end_location) {
+    throw `Error: Start and end locations are the same as before`;
+  }
   const updatedTrip = {
     userId: oldTrip.userId,
     name: oldTrip.name,
