@@ -160,6 +160,9 @@ const removeStop = async (tripId, stop) => {
       stops.splice(index, index);
     }
   }
+  if (index === -1) {
+    throw `Error: Stop does not exist in trip`;
+  }
   const updatedBand = await bandCollection.updateOne({_id: new ObjectId(tripId)},
   {$set: {stops: stops}},
   {returnDocument: 'after'});
