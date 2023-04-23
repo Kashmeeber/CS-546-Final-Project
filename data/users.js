@@ -1,5 +1,8 @@
 import { users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
+import bcrypt from "bcrypt";
+import { type } from 'os';
+const saltRounds = 8;
 
 const createUser = async (firstName, lastName, email, password) => {
     if(!firstName) {
@@ -27,33 +30,59 @@ const createUser = async (firstName, lastName, email, password) => {
         throw `Error: Password must be in string format`
     }
     for(let i = 0; i < firstName.length; i++) {
-        if(firstName.charCodeAt(i) < 58 || firstName.charCodeAt(i) > 47) {
+        if(firstName.charCodeAt(i) < 58 && firstName.charCodeAt(i) > 47) {
             throw `Error: First Name cannot include numbers`
         }
     }
     for(let i = 0; i < lastName.length; i++) {
-        if(lastName.charCodeAt(i) < 58 || lastName.charCodeAt(i) > 47) {
+        if(lastName.charCodeAt(i) < 58 && lastName.charCodeAt(i) > 47) {
             throw `Error: Last Name cannot include numbers`
         }
     }
     let checkEmail = email.split("@");
-    if(checkEmail.length != 2 || checkEmail[1].includes(".com") == false) {
+    if(checkEmail.length != 2 || checkEmail[1].split(".")[1].length != 3) {
         throw `Error: Email must be in format ____@____.com`
     }
+    if(password.length > 8 && password.trim().length != 0) {
+        let num = 0;
+        let upperCase = 0;
+        for(let i = 0; i < password.length; i++) {
+            if(password.charAt(i) == " ") {
+                throw `Error: Password cannot have empty spaces`
+            }
+            if(password.charCodeAt(i) > 47 && password.charCodeAt(i) < 58) {
+                num = num + 1;
+            }
+            if(password.charCodeAt(i) > 64 && password.charCodeAt(i) < 91) {
+                upperCase = upperCase + 1;
+            }
+        }
+        if(!(num >= 1 && upperCase >= 1)) {
+            throw `Error: Password must have at least one capital letter and one number`
+        }
+    }
+    else {
+        throw `Error: Password must be a string of at least 8 characters with at least 1 one capital letter and 1 number`
+    }
+    const hashed = await bcrypt.hash(password, saltRounds);
     firstName = firstName.trim();
     lastName = lastName.trim();
     email = email.trim();
-    password = password.trim();
+    email = email.toLowerCase();
     let newUser = {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        password: password
+        password: hashed
     };
     const userCollection = await users();
+    const foundUser = await userCollection.findOne({email: email});
+    if(foundUser) {
+      throw `Error: User with that email address already exists`
+    }
     const newInsertInformation = await userCollection.insertOne(newUser);
     if (!newInsertInformation.insertedId) throw 'Insert failed!';
-    return await this.getUserById(newInsertInformation.insertedId.toString());
+    return await getUserById(newInsertInformation.insertedId.toString());
 };
 const getAllUsers = async () => {
     const userCollection = await users();
@@ -76,8 +105,9 @@ const getUserById = async (id) => {
         throw 'Error: Invalid Object Id'
     } 
     const userCollection = await users();
-    const user = await userCollection.findOne({_id: ObjectId(id)});
+    const user = await userCollection.findOne({_id: new ObjectId(id)});
     if (!user) throw 'Error: User not found';
+    user._id = user._id.toString();
     return user;
 };
 
@@ -97,7 +127,7 @@ const removeUser = async (id) => {
     } 
     const userCollection = await users();
     const deletionInfo = await userCollection.findOneAndDelete({
-      _id: ObjectId(id)
+      _id: new ObjectId(id)
     });
     if (deletionInfo.lastErrorObject.n === 0)
       throw `Error: Could not delete user with id of ${id}`;
@@ -105,7 +135,7 @@ const removeUser = async (id) => {
     return {...deletionInfo.value, deleted: true};
 };
 
-const updateUser = async(id, firstName, lastName, password, email) => {
+const updateUser = async(id, firstName, lastName, email, password) => {
     if(!id) {
         throw `Error: Must enter ID`
     }
@@ -140,37 +170,45 @@ const updateUser = async(id, firstName, lastName, password, email) => {
         throw `Error: Password must be in string format`
     }
     for(let i = 0; i < firstName.length; i++) {
-        if(firstName.charCodeAt(i) < 58 || firstName.charCodeAt(i) > 47) {
-            throw `Error: First Name cannot include numbers`
+        if(firstName.charCodeAt(i) < 58 && firstName.charCodeAt(i) > 47) {
+            throw `Error: First name cannot include numbers`
         }
     }
     for(let i = 0; i < lastName.length; i++) {
-        if(lastName.charCodeAt(i) < 58 || lastName.charCodeAt(i) > 47) {
+        if(lastName.charCodeAt(i) < 58 && lastName.charCodeAt(i) > 47) {
             throw `Error: Last Name cannot include numbers`
         }
     }
     let checkEmail = email.split("@");
-    if(checkEmail.length != 2 || checkEmail[1].includes(".com") == false) {
+    if(checkEmail.length != 2 || checkEmail[1].split(".")[1].length != 3) {
         throw `Error: Email must be in format ____@____.com`
+    }
+    if(password.length > 8 && password.trim().length != 0 ) {
+        let num = 0;
+        let upperCase = 0;
+        for(let i = 0; i < password.length; i++) {
+            if(password.charAt(i) == " ") {
+                throw `Error: Password cannot have empty spaces`
+            }
+            if(password.charCodeAt(i) > 47 && password.charCodeAt(i) < 58) {
+                num = num + 1;
+            }
+            if(password.charCodeAt(i) > 64 && password.charCodeAt(i) < 91) {
+                upperCase = upperCase + 1;
+            }
+        }
+        if(!(num >= 1 && upperCase >= 1)) {
+            throw `Error: Password must have at least one capital letter and one number`
+        }
+    }
+    else {
+        throw `Error: Password must be a string of at least 8 characters with at least 1 one capital letter and 1 number`
     }
     id = id.trim();
     firstName = firstName.trim();
     lastName = lastName.trim();
-    password = password.trim();
     email = email.trim();
-    const oldUser = getUserById(id);
-    if(oldUser.firstName == firstName) {
-        throw `Error: Updated first name cannot equal old last name`
-    }
-    if(oldUser.lastName == lastName) {
-        throw `Error: Updated last name cannot equal old last name`
-    }
-    if(oldUser.email == email) {
-        throw `Error: Updated email cannot equal old last name`
-    }
-    if(oldUser.password == password) {
-        throw `Error: Updated password cannot equal old last name`
-    }
+    email = email.toLowerCase();
     const userUpdateInfo = {
       firstName: firstName,
       lastName: lastName,
@@ -180,13 +218,16 @@ const updateUser = async(id, firstName, lastName, password, email) => {
     };
     const userCollection = await users();
     const updateInfo = await userCollection.findOneAndUpdate(
-      {_id: ObjectId(id)},
+      {_id: new ObjectId(id)},
       {$set: userUpdateInfo},
       {returnDocument: 'after'}
     );
+    if(updateInfo.modifiedCount === 0) {
+        throw `At least one field must be different to successfully update user`
+    }
     if (updateInfo.lastErrorObject.n === 0) throw 'Error: Update failed';
 
-    return await updateInfo.value;
+    return updateInfo.value;
 };
 
 export {
