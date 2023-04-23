@@ -92,6 +92,13 @@ const createTrip = async (
   }
   let sd = startDate.split('/');
   let ed = endDate.split('/');
+
+  let currentYear = new Date();
+  let newCurrentYear = currentYear.getFullYear();
+  if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
+    throw "The start date cannot be in the past and the end date cannot be more than 2 years from today";
+  }
+
   if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
