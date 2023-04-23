@@ -130,7 +130,43 @@ const addStop = async (tripId, stop) => {
 };
 
 const removeStop = async (tripId, stop) => {
+  if (!tripId || !stop) {
+    throw 'Error: All fields need to have valid values';
+  }
+  if(typeof tripId !== 'string' || tripId.trim().length === 0){
+    throw 'Error: Must provide trip id as valid nonempty string';
+  }
+  tripId = tripId.trim();
+  if (!ObjectId.isValid(tripId)) {
+    throw `Error: tripId provided is not a valid ObjectId`;
+  }
 
+  if(typeof stop !== 'string' || stop.trim().length === 0){
+    throw 'Error: Must provide stop as valid nonempty string';
+  }
+  stop = stop.trim();
+  //Need to figure out how what is in stops
+
+  const tripCollection = await trips();
+  let index = -1;
+  const tripInfo = await tripCollection.findOne({_id: new ObjectId(tripId)});
+  if (tripInfo === null) {
+    throw `Error: No band with that id found`;
+  }
+  let stops = tripInfo.stops;
+  for (let y = 0; y < stops.length; y++) {
+    if (stops[y] === stop) {
+      index = y;
+      stops.splice(index, index);
+    }
+  }
+  const updatedBand = await bandCollection.updateOne({_id: new ObjectId(tripId)},
+  {$set: {stops: stops}},
+  {returnDocument: 'after'});
+  if (updatedBand.modifiedCount === 0) {
+    throw [500, `Could not remove stop in trip with id ${tripId}`];
+  }
+  return `Successfully removed ${stop} from the trip`;
 };
 
 const addToSchedule = async (tripId, intinerary) => {
