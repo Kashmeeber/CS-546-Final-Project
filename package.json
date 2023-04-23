@@ -1,0 +1,24 @@
+{
+  "name": "cs-546-final-project",
+  "version": "1.0.0",
+  "description": "Road Trip Crisis?! We're here to help :)",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kashmeeber/CS-546-Final-Project.git"
+  },
+  "author": "Areeb Chaudhry, Mariam Dardir, Tamnhu Nguyen, Shailaja Vyas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kashmeeber/CS-546-Final-Project/issues"
+  },
+  "homepage": "https://github.com/Kashmeeber/CS-546-Final-Project#readme",
+  "dependencies": {
+    "mongodb": "^5.3.0"
+  }
+}
