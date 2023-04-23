@@ -1,8 +1,7 @@
 import { trips, users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 
-// ADD: check that trip is at most one year in advance
-// API call??
+// API call
 const createTrip = async (
   userId,
   tripName,
@@ -69,7 +68,9 @@ const createTrip = async (
   endDate = endDate.trim();
   startTime = startTime.trim();
   endTime = endTime.trim();
-  // trim stops, todo and usersAllowed
+  stops = stops.map((stop) => stop.trim());
+  toDo = toDo.map((todo) => todo.trim());
+  usersAllowed = usersAllowed.map((user) => user.trim());
   let st = startTime.split(':');
   let et = endTime.split(':');
   if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
@@ -92,13 +93,11 @@ const createTrip = async (
   }
   let sd = startDate.split('/');
   let ed = endDate.split('/');
-
   let currentYear = new Date();
   let newCurrentYear = currentYear.getFullYear();
   if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
-    throw "The start date cannot be in the past and the end date cannot be more than 2 years from today";
+    throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
   }
-
   if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
@@ -260,12 +259,6 @@ const filter = async (userId, sortingParam) => {
   return filtered;
 };
 
-// TODO: updateTime -- SHAILAJA
-// NOTE: some object types in the database, when returned, are null
-// new start and end times are the same as before --> should error, doesn't
-// TEST CASES:
-// updateTime(tripId, '00:00', '12:59'); --> fails but shouldn't
-// FIX: object names
 const updateTime = async (tripId, startTime, endTime) => {
   if (!tripId) {
     throw 'Error: TripID must be inputted';
@@ -282,60 +275,25 @@ const updateTime = async (tripId, startTime, endTime) => {
   if (typeof endTime != 'string') {
     throw 'Error: End time must be a string';
   }
-  // let st = startTime.split(':');
-  // let et = endTime.split(':');
-  // if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
-  //   throw 'Error: Must provide start time in HH:MM format';
-  // }
-  // if (et.length != 2 || et[0].length != 2 || et[1].length != 2) {
-  //   throw 'Error: Must provide end time in HH:MM format';
-  // }
-  // if (st[0] * 1 < 0 || st[0] * 1 > 23) {
-  //   throw 'Error: Must provide start time in HH:MM format';
-  // }
-  // if (st[1] * 1 < 0 || st[1] * 1 > 59) {
-  //   throw 'Error: Must provide start time in HH:MM format';
-  // }
-  // if (et[0] * 1 < 0 || et[0] * 1 > 23) {
-  //   throw 'Error: Must provide end time in HH:MM format';
-  // }
-  // if (et[1] * 1 < 0 || et[1] * 1 > 59) {
-  //   throw 'Error: Must provide end time in HH:MM format';
-  // }
-  let checkStart = startTime.split(':');
-  if (checkStart.length != 2 || checkStart[0].length != 2 || checkStart[1].length != 2) {
-    throw `Error: Start time must be in 24 hour clock format (Ex: 01:00 or 15:23)`;
+  let st = startTime.split(':');
+  let et = endTime.split(':');
+  if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
+    throw 'Error: Must provide start time in HH:MM format';
   }
-  if (Number(startTime.charAt(0)) < -1 || Number(startTime.charAt(0)) > 3) {
-    throw `Error: First digit of hours must be 0, 1, or 2`;
+  if (et.length != 2 || et[0].length != 2 || et[1].length != 2) {
+    throw 'Error: Must provide end time in HH:MM format';
   }
-  if (Number(startTime.charAt(1)) < -1 || Number(startTime.charAt(1)) > 9) {
-    throw `Error: Second digit of hours must be a number from 0-9`;
+  if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+    throw 'Error: Must provide start time in HH:MM format';
   }
-  if (Number(startTime.charAt(3)) < -1 || Number(startTime.charAt(3)) > 3) {
-    throw `Error: First digit of minutes must be a number from 0-5`;
+  if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+    throw 'Error: Must provide start time in HH:MM format';
   }
-  if (Number(startTime.charAt(4)) < -1 || Number(startTime.charAt(4)) > 9) {
-    throw `Error: First digit of minutes must be a number from 0-9`;
+  if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+    throw 'Error: Must provide end time in HH:MM format';
   }
-  let checkEnd = endTime.split(':');
-  if (checkEnd.length != 2 || checkEnd[0].length != 2 || checkEnd[1].length != 2) {
-    throw `Error: End time must be in 24 hour clock format (Ex: 01:00 or 15:23)`;
-  }
-  if (Number(endTime.charAt(0)) < -1 || Number(endTime.charAt(0)) >= 3) {
-    throw `Error: First digit of hours must be 0, 1, or 2`;
-  }
-  if (Number(endTime.charAt(1)) < -1 || Number(endTime.charAt(1)) > 9) {
-    throw `Error: Second digit of hours must be a number from 0-9`;
-  }
-  if (Number(endTime.charAt(3)) < -1 || Number(endTime.charAt(3)) > 3) {
-    throw `Error: First digit of minutes must be a number from 0-5`;
-  }
-  if (Number(endTime.charAt(4)) < -1 || Number(endTime.charAt(4)) > 9) {
-    throw `Error: First digit of minutes must be a number from 0-9`;
-  }
-  if (startTime == endTime) {
-    throw `Error: Start and End times can not be the same`;
+  if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+    throw 'Error: Must provide end time in HH:MM format';
   }
   if (typeof tripId != 'string') {
     throw `Error: Trip Id must be a string`;
@@ -345,7 +303,7 @@ const updateTime = async (tripId, startTime, endTime) => {
   }
   tripId = tripId.trim();
   const oldTrip = await get(tripId);
-  if (startTime == oldTrip.startTime && endTime == oldTrip.endTime) {
+  if (startTime == oldTrip.start_time && endTime == oldTrip.end_time) {
     throw `Error: New start and end times cannot be the same as before`;
   }
   const updatedTrip = {
@@ -359,15 +317,15 @@ const updateTime = async (tripId, startTime, endTime) => {
     end_time: endTime,
     stops: oldTrip.stops,
     itinerary: oldTrip.itinerary,
-    toDo: oldTrip.toDo,
+    to_do: oldTrip.to_do,
     cost: oldTrip.cost,
     users_allowed: oldTrip.users_allowed
   };
   const tripCollection = await trips();
   const updatedTripInfo = await tripCollection.findOneAndUpdate(
     { _id: new ObjectId(tripId) },
-    { $set: updatedTrip }
-    // { returnDocument: 'after' }
+    { $set: updatedTrip },
+    { returnDocument: 'after' }
   );
   if (updatedTripInfo.lastErrorObject.n == 0) {
     throw `Error: Could not update trip successfully`;
@@ -376,7 +334,6 @@ const updateTime = async (tripId, startTime, endTime) => {
   return updatedTripInfo.value;
 };
 
-// TODO
 const updateDate = async (tripId, startDate, endDate) => {
   if (!tripId) {
     throw 'Error: TripID must be inputted';
@@ -419,7 +376,7 @@ const updateDate = async (tripId, startDate, endDate) => {
   ) {
     throw `Error: April, June, September, and November have 30 days`;
   }
-  if (Number(checkStart[0]) == 2 && Number(checkStart[1]) > 30) {
+  if (Number(checkStart[0]) == 2 && Number(checkStart[1]) > 29) {
     throw `Error: February can only have up to 28 or 29 days`;
   }
   if (Number(checkStart[3]) < 1900 || Number(year.toString()) + 1 < Number(checkStart[3])) {
@@ -449,11 +406,14 @@ const updateDate = async (tripId, startDate, endDate) => {
   ) {
     throw `Error: April, June, September, and November have 30 days`;
   }
-  if (Number(checkEnd[0]) == 2 && Number(checkEnd[1]) > 30) {
+  if (Number(checkEnd[0]) == 2 && Number(checkEnd[1]) > 29) {
     throw `Error: February can only have up to 28 or 29 days`;
   }
-  if (Number(checkEnd[3]) < 1900 || Number(year.toString()) + 1 < Number(checkEnd[3])) {
-    throw `Error: Trips can only be planned one year in advance`;
+  if (year.toString() + 2 > Number(checkEnd[2])) {
+    throw `Error: Trips can only be planned two years in advance`;
+  }
+  if (Number(checkEnd[2]) < Number(checkStart[2])) {
+    throw `Error: End date must be after start date`;
   }
   if (typeof tripId != 'string') {
     throw `Error: Trip Id must be a string`;
@@ -464,18 +424,18 @@ const updateDate = async (tripId, startDate, endDate) => {
   tripId = tripId.trim();
   const oldTrip = await get(tripId);
   const updatedTrip = {
-    userID: oldTrip.userID,
-    tripName: oldTrip.tripName,
-    startLocation: oldTrip.startLocation,
-    startDate: startDate,
-    startTime: oldTrip.startTime,
-    endLocation: oldTrip.endLocation,
-    endDate: endDate,
-    endTime: oldTrip.endTime,
+    userId: oldTrip.userId,
+    name: oldTrip.name,
+    start_location: oldTrip.start_location,
+    start_date: startDate,
+    start_time: oldTrip.start_time,
+    end_location: oldTrip.end_location,
+    end_date: endDate,
+    end_time: oldTrip.end_time,
     stops: oldTrip.stops,
     itinerary: oldTrip.itinerary,
-    toDo: oldTrip.toDo,
-    usersAllowed: oldTrip.usersAllowed
+    to_do: oldTrip.to_do,
+    users_allowed: oldTrip.users_allowed
   };
   const tripCollection = await trips();
   const updatedTripInfo = await tripCollection.findOneAndUpdate(
@@ -490,8 +450,7 @@ const updateDate = async (tripId, startDate, endDate) => {
   return updatedTripInfo.value;
 };
 
-// API call??
-// TODO
+// API call
 const updateLocation = async (tripId, startLocation, endLocation) => {
   if (!tripId) {
     throw 'Error: TripID must be inputted';
@@ -525,18 +484,18 @@ const updateLocation = async (tripId, startLocation, endLocation) => {
   endLocation = endLocation.trim();
   const oldTrip = await get(tripId);
   const updatedTrip = {
-    userID: oldTrip.userID,
-    tripName: oldTrip.tripName,
-    startLocation: startLocation,
-    startDate: oldTrip.startDate,
-    startTime: oldTrip.startTime,
-    endLocation: endLocation,
-    endDate: oldTrip.endDate,
-    endTime: oldTrip.endTime,
+    userId: oldTrip.userId,
+    name: oldTrip.name,
+    start_location: startLocation,
+    start_date: oldTrip.start_date,
+    start_time: oldTrip.start_time,
+    end_location: endLocation,
+    end_date: oldTrip.end_date,
+    end_time: oldTrip.end_time,
     stops: oldTrip.stops,
     itinerary: oldTrip.itinerary,
-    toDo: oldTrip.toDo,
-    usersAllowed: oldTrip.usersAllowed
+    to_do: oldTrip.to_do,
+    users_allowed: oldTrip.users_allowed
   };
   const tripCollection = await trips();
   const updatedTripInfo = await tripCollection.findOneAndUpdate(
@@ -551,7 +510,6 @@ const updateLocation = async (tripId, startLocation, endLocation) => {
   return updatedTripInfo.value;
 };
 
-// TODO
 const addToTodoList = async (tripId, task) => {
   if (!tripId || !task) {
     throw 'All fields need to have valid values';
@@ -563,28 +521,31 @@ const addToTodoList = async (tripId, task) => {
     throw 'tripId must be a non-empty string';
   }
   if (typeof task !== 'string' || task.trim() === '') {
-    throw 'task must be a non-empty string';
+    throw 'Task must be a non-empty string';
   }
   tripId = tripId.trim();
   task = task.trim();
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ _id: ObjectId(tripId) });
+  const trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
   if (!trip) {
-    throw 'trip does not exist';
+    throw 'Trip does not exist';
   }
   if (!trip.to_do) {
-    throw 'to_do list does not exist';
+    throw 'To-do list does not exist';
   }
   trip.to_do.push(task);
-  const updatedTrip = await tripCollection.updateOne({ _id: ObjectId(tripId) }, { $set: trip });
-  if (updatedTrip.modifiedCount === 0) {
-    throw 'could not add task successfully';
+  const updatedTrip = await tripCollection.findOneAndUpdate(
+    { _id: new ObjectId(tripId) },
+    { $set: trip },
+    { returnDocument: 'after' }
+  );
+  if (updatedTrip.lastErrorObject.n == 0) {
+    throw 'Could not add task to to-do list';
   }
   updatedTrip.value._id = updatedTrip.value._id.toString();
   return updatedTrip.value;
 };
 
-// TODO
 const deleteFromTodoList = async (tripId, task) => {
   if (!tripId || !task) {
     throw 'All fields need to have valid values';
@@ -596,31 +557,34 @@ const deleteFromTodoList = async (tripId, task) => {
     throw 'tripId must be a non-empty string';
   }
   if (typeof task !== 'string' || task.trim() === '') {
-    throw 'task must be a non-empty string';
+    throw 'Task must be a non-empty string';
   }
   tripId = tripId.trim();
   task = task.trim();
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ _id: ObjectId(tripId) });
+  const trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
   if (!trip) {
-    throw 'trip does not exist';
+    throw 'Trip does not exist';
   }
   if (!trip.to_do) {
-    throw 'to_do list does not exist';
+    throw 'To-do list does not exist';
   }
   if (!trip.to_do.includes(task)) {
-    throw 'task does not exist';
+    throw 'Task does not exist';
   }
   trip.to_do.splice(trip.to_do.indexOf(task), 1);
-  const updatedTrip = await tripCollection.updateOne({ _id: ObjectId(tripId) }, { $set: trip });
-  if (updatedTrip.modifiedCount === 0) {
-    throw 'could not delete task successfully';
+  const updatedTrip = await tripCollection.findOneAndUpdate(
+    { _id: new ObjectId(tripId) },
+    { $set: trip },
+    { returnDocument: 'after' }
+  );
+  if (updatedTrip.lastErrorObject.n == 0) {
+    throw 'Could not delete task successfully';
   }
   updatedTrip.value._id = updatedTrip.value._id.toString();
   return updatedTrip.value;
 };
 
-// TODO
 const deleteTodoList = async (tripId) => {
   if (!tripId) {
     throw 'tripId is not provided';
@@ -633,20 +597,23 @@ const deleteTodoList = async (tripId) => {
   }
   tripId = tripId.trim();
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ _id: ObjectId(tripId) });
+  const trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
   if (!trip) {
-    throw 'trip does not exist';
+    throw 'Trip does not exist';
   }
   trip.to_do = [];
-  const updatedTrip = await tripCollection.updateOne({ _id: ObjectId(tripId) }, { $set: trip });
-  if (updatedTrip.modifiedCount === 0) {
-    throw 'could not delete list successfully';
+  const updatedTrip = await tripCollection.findOneAndUpdate(
+    { _id: new ObjectId(tripId) },
+    { $set: trip },
+    { returnDocument: 'after' }
+  );
+  if (updatedTrip.lastErrorObject.n == 0) {
+    throw 'Could not delete to-do list successfully';
   }
   updatedTrip.value._id = updatedTrip.value._id.toString();
   return updatedTrip.value;
 };
 
-// TODO
 const usersAllowed = async (userId, tripId) => {
   if (!userId || !tripId) {
     throw 'All fields need to have valid values';
@@ -663,12 +630,12 @@ const usersAllowed = async (userId, tripId) => {
   userId = userId.trim();
   tripId = tripId.trim();
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ _id: ObjectId(tripId) });
+  const trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
   if (!trip) {
-    throw 'trip does not exist';
+    throw 'Trip does not exist';
   }
   const usersCollection = await users();
-  const user = await usersCollection.findOne({ _id: ObjectId(userId) });
+  const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
   if (!user) {
     throw 'This user does not exist';
   } else {
