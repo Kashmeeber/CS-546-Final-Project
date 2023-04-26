@@ -37,7 +37,7 @@ const createActivity = async (tripId,
             throw 'Error: Must provide cost as valid nonempty string';
           }
           cost = cost.trim();
-          let newItinerary = {
+          let newActivity = {
             _id: new ObjectId(),
             tripId: tripId, 
             activityName: activityName,
@@ -57,7 +57,7 @@ const createActivity = async (tripId,
            let existingItinerary = a.itinerary;
            let existingCost = 0;
          
-           existingItinerary.push(newItinerary);
+           existingItinerary.push(newActivity);
          
            // console.log(existingAlbums)
            for(let i = 0; i < existingItinerary.length; i++){
@@ -69,7 +69,7 @@ const createActivity = async (tripId,
            // console.log(existingRatings)
          
            let updateFields = {
-             albums: existingItinerary,
+             intinerary: existingItinerary,
              overallCost: existingCost
            }
            const tripCollection = await trips();
@@ -85,9 +85,9 @@ const createActivity = async (tripId,
              throw 'Could not add intinerary';
            }
              
-           let newId = newItinerary["_id"].toString();
-           newItinerary["_id"] = newId;
-           return newItinerary;
+           let newId = newActivity["_id"].toString();
+           newActivity["_id"] = newId;
+           return newActivity;
     };
 
 const addStop = async (tripId, stop) => {
@@ -163,21 +163,58 @@ const removeStop = async (tripId, stop) => {
   if (index === -1) {
     throw `Error: Stop does not exist in trip`;
   }
-  const updatedBand = await bandCollection.updateOne({_id: new ObjectId(tripId)},
+  const updatedTrip = await tripCollection.updateOne({_id: new ObjectId(tripId)},
   {$set: {stops: stops}},
   {returnDocument: 'after'});
-  if (updatedBand.modifiedCount === 0) {
+  if (updatedTrip.modifiedCount === 0) {
     throw [500, `Could not remove stop in trip with id ${tripId}`];
   }
   return `Successfully removed ${stop} from the trip`;
 };
 
-const addToSchedule = async (tripId, intinerary) => {
+// const addToSchedule = async (tripId, intinerary) => {
 
+// };
+
+const removeActivity = async (tripId, activityId) => {
+  if (!activityId || !tripId) {
+    throw 'Error: All fields need to have valid values';
+  }
+  if(typeof tripId !== 'string' || tripId.trim().length === 0 || typeof activityId !== 'string' || activityId.trim().length === 0){
+    throw 'Error: Must provide trip id as valid nonempty string';
+  }
+  tripId = tripId.trim();
+  activityId = activityId.trim();
+  if (!ObjectId.isValid(tripId)) {
+    throw `Error: tripId provided is not a valid ObjectId`;
+  }
+  if (!ObjectId.isValid(activityId)) {
+    throw `Error: activityId provided is not a valid ObjectId`;
+  }
+
+  const tripCollection = await trips();
+  let index = -1;
+  const tripInfo = await tripCollection.findOne({_id: new ObjectId(tripId)});
+  if (tripInfo === null) {
+    throw `Error: No band with that id found`;
+  }
+  let newItinerary = tripInfo.itinerary;
+  for (let y = 0; y < newItinerary.length; y++) {
+    if (newItinerary[y]._id === activityId) {
+      index = y;
+      newItinerary.splice(index, index);
+    }
+  }
+  if (index === -1) {
+    throw `Error: Activity does not exist in trip`;
+  }
+  const updatedTrip = await tripCollection.updateOne({_id: new ObjectId(tripId)},
+  {$set: {itinerary: newItinerary}},
+  {returnDocument: 'after'});
+  if (updatedTrip.modifiedCount === 0) {
+    throw [500, `Could not remove activity in trip with id ${tripId}`];
+  }
+  return `Successfully removed ${newItinerary.activityName} from the trip`;
 };
 
-const removeFromSchedule = async (tripId, itinerary) => {
-
-};
-
-export {createActivity, addStop, removeStop, addToSchedule, removeFromSchedule};
+export {createActivity, addStop, removeStop, removeActivity};
