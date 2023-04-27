@@ -33,13 +33,19 @@ const createActivity = async (tripId,
             throw 'Error: Must provide end time as valid nonempty string';
           }
           endTime = endTime.trim();
-          if(typeof cost !== 'string' || cost.trim().length === 0){
-            throw 'Error: Must provide cost as valid nonempty string';
+          if(typeof cost !== 'number'){
+            throw 'Error: Must provide cost as an integer';
           }
-          cost = cost.trim();
+            if(notes){
+              notes = notes.trim();
+              if(typeof notes !== 'string' || notes.trim().length === 0){
+                throw 'Error: Notes must be a string';
+              }
+            }else{
+              notes = "";
+            }
           let newActivity = {
             _id: new ObjectId(),
-            tripId: tripId, 
             activityName: activityName,
             date: date,
             startTime: startTime,
@@ -53,7 +59,6 @@ const createActivity = async (tripId,
            }catch(e){
              throw "no trip with this id";
            }
-           
            let existingItinerary = a.itinerary;
            let existingCost = 0;
          
@@ -67,9 +72,8 @@ const createActivity = async (tripId,
            // console.log(existingRatings)
            existingCost = Number.parseFloat(existingCost.toFixed(2));
            // console.log(existingRatings)
-         
            let updateFields = {
-             intinerary: existingItinerary,
+             itinerary: existingItinerary,
              overallCost: existingCost
            }
            const tripCollection = await trips();
@@ -80,9 +84,8 @@ const createActivity = async (tripId,
              {$set: updateFields},
              {returnDocument: 'after'}
            );
-         
            if(insertInfo.lastErrorObject.n == 0){
-             throw 'Could not add intinerary';
+             throw 'Could not add itinerary';
            }
              
            let newId = newActivity["_id"].toString();
@@ -172,7 +175,7 @@ const removeStop = async (tripId, stop) => {
   return `Successfully removed ${stop} from the trip`;
 };
 
-// const addToSchedule = async (tripId, intinerary) => {
+// const addToSchedule = async (tripId, itinerary) => {
 
 // };
 
@@ -183,6 +186,7 @@ const removeActivity = async (tripId, activityId) => {
   if(typeof tripId !== 'string' || tripId.trim().length === 0 || typeof activityId !== 'string' || activityId.trim().length === 0){
     throw 'Error: Must provide trip id as valid nonempty string';
   }
+
   tripId = tripId.trim();
   activityId = activityId.trim();
   if (!ObjectId.isValid(tripId)) {
@@ -198,11 +202,15 @@ const removeActivity = async (tripId, activityId) => {
   if (tripInfo === null) {
     throw `Error: No band with that id found`;
   }
+
   let newItinerary = tripInfo.itinerary;
+  let actName;
   for (let y = 0; y < newItinerary.length; y++) {
-    if (newItinerary[y]._id === activityId) {
+    let currObj = newItinerary[y];
+    if (currObj._id.toString() === activityId) {
       index = y;
-      newItinerary.splice(index, index);
+      actName = currObj.activityName;
+      newItinerary.splice(index, 1);
     }
   }
   if (index === -1) {
@@ -214,7 +222,109 @@ const removeActivity = async (tripId, activityId) => {
   if (updatedTrip.modifiedCount === 0) {
     throw [500, `Could not remove activity in trip with id ${tripId}`];
   }
-  return `Successfully removed ${newItinerary.activityName} from the trip`;
+  return `Successfully removed ${actName} from the trip`;
 };
 
-export {createActivity, addStop, removeStop, removeActivity};
+const updateActivity = async (tripId, activityId, activityName, date, startTime, endTime, cost, notes) => {
+  if(!tripId || !activityName || !date || !startTime || !endTime || !cost){
+    throw 'Error: All fields need to have valid values';
+  }
+  if(typeof tripId !== 'string' || tripId.trim().length === 0){
+    throw 'Error: Must provide trip id as valid nonempty string';
+  }
+  tripId = tripId.trim();
+  if(typeof activityName !== 'string' || activityName.trim().length === 0){
+    throw 'Error: Must provide activity name as valid nonempty string';
+  }
+  activityName = activityName.trim();
+  if(typeof date !== 'string' || date.trim().length === 0){
+    throw 'Error: Must provide date as valid nonempty string';
+  }
+  date = date.trim();
+  if(typeof startTime !== 'string' || startTime.trim().length === 0){
+    throw 'Error: Must provide start time as valid nonempty string';
+  }
+  startTime = startTime.trim();
+  if(typeof endTime !== 'string' || endTime.trim().length === 0){
+    throw 'Error: Must provide end time as valid nonempty string';
+  }
+  endTime = endTime.trim();
+  if(typeof cost !== 'number'){
+    throw 'Error: Must provide cost as an integer';
+  }
+    if(notes){
+      notes = notes.trim();
+      if(typeof notes !== 'string' || notes.trim().length === 0){
+        throw 'Error: Notes must be a string';
+      }
+    }else{
+      notes = "";
+    }
+    const tripCollection = await trips();
+  // Find the band given the band id
+  let trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
+
+  // Update the band with the given id
+  const updatedItinerary = {
+    _id: new ObjectId(activityId),
+    activityName: activityName,
+    date: date,
+    startTime: startTime,
+    endTime: endTime, 
+    cost: cost,
+    notes: notes
+  }
+
+  let itineraryArr = trip.itinerary;
+  let newItineraryArr = [];
+  // itineraryArr.push(updatedItinerary);
+  // trip.itinerary = itineraryArr;
+
+  // console.log(itineraryArr);
+
+  // console.log(newItineraryArr);
+
+  for(let i = 0; i < itineraryArr.length; i++) {
+    let currIt = itineraryArr[i];
+    // console.log(currIt)
+    // console.log(currIt._id.toString())
+    // console.log(activityId);
+    if (currIt._id.toString() !== activityId) {
+      newItineraryArr.push(currIt);
+    }
+  }
+
+  // console.log(newItineraryArr);
+  // console.log(itineraryArr);
+
+  newItineraryArr.push(updatedItinerary);
+
+  // console.log(newItineraryArr);
+
+  trip.itinerary = newItineraryArr;
+
+  // console.log(itineraryArr);
+
+  // let itineraryArr = trip.itinerary;
+  // console.log(itineraryArr);
+
+  let newCost = 0;
+
+  newItineraryArr.forEach((element) => {
+    newCost = newCost+element.cost;
+  });
+
+  trip.overallCost = Number.parseFloat(newCost.toFixed(2));
+
+  const updatedInfo = await tripCollection.replaceOne({ _id: new ObjectId(tripId) }, trip);
+
+
+
+  if (updatedInfo.modifiedCount === 0) {
+    throw "Could not update band successfully";
+  }
+
+  return await get(tripId);
+};
+
+export {createActivity, addStop, removeStop, removeActivity, updateActivity};
