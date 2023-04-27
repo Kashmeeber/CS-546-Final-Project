@@ -4,6 +4,8 @@
 import { Router } from "express";
 const router = Router();
 import {tripsData} from "../data/index.js";
+import {itineraryData} from "../data/index.js";
+
 import validation from "../validation.js";
 
 router
@@ -47,7 +49,7 @@ router
 
 
 router
-  .route("/:tripId")
+  .route("/trip/:tripId")
   .get(async (req, res) => {
     //code here for GET
     try {
@@ -70,28 +72,69 @@ router
     try {
       req.params.tripId = validation.checkId(req.params.tripId);
       const deletedTrip = await tripsData.remove(req.params.tripId);
-      return res.status(200).json({ tripId: req.params.tripId, deleted: true });
+      return res.status(200).json(deletedTrip);
     } catch (e) {
-      // if the id is not a valid ObjectId, return a 400
-      if (e === "The id provided is not a valid ObjectId") {
-        return res.status(400).json(e);
-      }
       // if no band exists with that id, return a 404
-      if (e === "Could not delete trip with this id") {
         return res.status(404).json(e);
-      }
     }
   })
   .put(async (req, res) => {
     //code here for PUT
     try {
       req.params.tripId = validation.checkId(req.params.tripId);
-      const updatedTrip = await tripsData.update(req.params.tripId, req.body.startLocation, req.body.endLocation, 
-        req.body.startDate, req.body.endDate, req.body.startTime, req.body.endTime);
+      const updatedTrip = await tripsData.update(req.params.tripId,req.body.tripName, req.body.startLocation, 
+        req.body.startDate, req.body.startTime, req.body.endLocation, req.body.endDate, req.body.endTime, req.body.stops, req.body.toDo, 
+        req.body.usersAllowed);
       return res.status(200).json(updatedTrip);
     } catch (e) {
         return res.status(400).json(e);
     }
   });
 // make a post and delete route /itinerary/:tripId
+router
+  .route("/itinerary/:tripId")
+  .post(async (req, res) => {
+    try{
+      req.params.tripId = validation.checkId(req.params.tripId);
+      const itinerary = await itineraryData.createActivity( req.params.tripId, req.body.activityName,
+      req.body.date, req.body.startTime, req.body.endTime, req.body.cost, req.body.notes);
+      return res.status(200).json(itinerary);
+    }catch(e){
+      return res.status(400).json(e);
+    }
+  });
+
+  router
+  .route("/itinerary/:tripId/:itineraryId")
+  .delete(async (req, res) => {
+    try {
+      req.params.tripId = validation.checkId(req.params.tripId);
+      req.params.itineraryId = validation.checkId(req.params.itineraryId);
+    } catch (e) {
+      return res.status(400).json({error: e});
+    }
+
+    try {
+      let deletedTrip = await itineraryData.removeActivity(req.params.tripId, req.params.itineraryId);
+      return res.json(deletedTrip);
+    } catch (e) {
+      return res.status(500).send({error: e});
+    }
+  })
+  .put(async (req, res) => {
+    try {
+      req.params.tripId = validation.checkId(req.params.tripId);
+      req.params.itineraryId = validation.checkId(req.params.itineraryId);
+    } catch (e) {
+      return res.status(400).json({error: e});
+    }
+
+    try {
+      let updatedTrip = await itineraryData.updateActivity(req.params.tripId, req.params.itineraryId,
+        req.body.activityName, req.body.date, req.body.startTime, req.body.endTime, req.body.cost, req.body.notes);
+      return res.json(updatedTrip);
+    } catch (e) {
+      return res.status(500).send({error: `${e}`});
+    }
+  });
 export default router;
