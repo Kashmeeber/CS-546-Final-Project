@@ -1,0 +1,68 @@
+{{! TO DO:
+    - verify locations
+    - work on itinerary
+    - clientside js to display hidden divs
+    - for to do lists we need to make sure the user knows they should only be used for things to do in preparation for the trip
+
+    - TO DO LIST
+        - preparation for trip
+    - ITINERARY
+        - activities done during stops on trip
+    - STOPS
+        - places the user is going to during the trip
+            - rest stops, hotels, place of activity, gas stations, etc.
+    - }}
+
+<p>Create new trip here!</p>
+<div id="createTrip">
+    <form action="/:userId" method="POST">
+        <label for="tripNameInput">Trip Name:
+            <input name="tripNameInput" id="tripNameInput" type="text">
+        </label>
+        <label for="startLocationInput">Start Location:
+            <input name="startLocationInput" id="startLocationInput" type="text">
+        </label>
+        <label for="startDateInput">Start Date:
+            <input name="startDateInput" id="startDateInput" type="text">
+        </label>
+        <label for="startTimeInput">Start Time:
+            <input name="startTimeInput" id="startTimeInput" type="text">
+        </label>
+        <label for="endLocationInput">End Location:
+            <input name="endLocationInput" id="endLocationInput" type="text">
+        </label>
+        <label for="endDateInput">End Date:
+            <input name="endDateInput" id="endDateInput" type="text">
+        </label>
+        <label for="endTimeInput">End Time:
+            <input name="endTimeInput" id="endTimeInput" type="text">
+        </label>
+        <label for="stopsInput">Stop:
+            <input name="stopsInput" id="stopsInput" type="text">
+        </label>
+        <label for="toDoInput">ToDo:
+            <input name="toDoInput" id="toDoInput" type="text">
+        </label>
+        <label for="usersAllowedInput">Users Allowed:
+            <input name="usersAllowedInput" id="usersAllowedInput" type="text">
+        </label>
+        <button type="submit">Submit</button>
+        {{! Another div tag that allows users to create an itinerary for a trip }}
+    </form>
+</div>
+{{! Edit existing trip }}
+<p>Search for a trip to edit!</p>
+<div id="editTrip">
+    <form>
+
+    </form>
+    <p>Want to edit the itinerary?</p>
+    {{! Editing the itinerary means you can make changes to stops that were there before (add/delete activities) 
+    or add new things to new stops  
+    If a user deletes a stop then its activities in the itinerary should automatically be deleted}}
+    <div>
+
+    </div>
+</div>
+<a href="/profile">Profile</a>
+<a href="/logout">Click here to logout!</a>
