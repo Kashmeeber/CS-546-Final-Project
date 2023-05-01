@@ -227,57 +227,50 @@ const updateUser = async (id, firstName, lastName, email, password) => {
 };
 
 const checkUser = async (emailAddress, password) => {
-  if (!emailAddress || !password) {
-    throw 'All fields must be supplied';
+  emailAddress = emailAddress.trim();
+  password = password.trim();
+
+  if(!emailAddress.includes("@")){
+    throw 'Error: Input valid email address';
   }
-  emailAddress = emailAddress.toLowerCase();
-  if (typeof emailAddress !== 'string') {
-    throw 'Email address must be a valid string';
+  let splitEmail = emailAddress.split("@");
+  if(!splitEmail[1].includes(".")){
+    throw 'Error: Input valid email address';
   }
-  if (emailAddress.trim().length === 0) {
-    throw 'Email address cannot be empty';
+
+  //figure out regex
+  let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_!]).*$/
+  
+  //figure out regex
+  if(password.length == 0 || password.length < 8 || password.includes(" ")){
+    throw 'Error: must input valid password';
   }
-  if (!/\S+@\S+\.\S+/.test(emailAddress)) {
-    throw 'Email address must be a valid email address';
-  }
-  if (typeof password !== 'string') {
-    throw 'Password must be a valid string';
-  }
-  if (password.trim().length === 0) {
-    throw 'Password cannot be empty';
-  }
-  if (password.includes(' ')) {
-    throw 'Password cannot contain spaces';
-  }
-  if (password.trim().length <= 8) {
-    throw 'Password must be at least 8 characters';
-  }
-  if (!/[A-Z]/.test(password)) {
-    throw 'Password must contain at least one uppercase letter';
-  }
-  if (!/\d/.test(password)) {
-    throw 'Password must contain at least one number';
-  }
-  if (!/[!@#$%^&*]/.test(password)) {
-    throw 'Password must contain at least one special character';
+  if(!(regex.test(password))) {
+    throw 'Error: Must be valid password syntax';
   }
   const userCollection = await users();
-  const userByEmail = await userCollection.findOne({ emailAddress: emailAddress.trim() });
-  if (!userByEmail) {
-    throw 'Either the email address or password is invalid';
-  } else {
-    const compare = await bcrypt.compare(password, userByEmail.password);
-    if (!compare) {
-      throw 'Either the email address or password is invalid';
-    } else {
-      return {
-        firstName: userByEmail.firstName,
-        lastName: userByEmail.lastName,
-        emailAddress: userByEmail.emailAddress,
-        role: userByEmail.role
-      };
-    }
+  const findUser = await userCollection.findOne({"email": emailAddress.toLowerCase()});
+  if(!findUser) {
+    throw 'missing user'
   }
+  let comparelmao = false;
+try {
+  comparelmao = await bcrypt.compare(password, findUser.password);
+} catch (e) {
+  //no op
+}
+  if(!comparelmao) {
+    throw "no"
+  }
+
+  let retObj = {
+    id: findUser._id.toString(),
+    firstName: findUser.firstName,
+    lastName: findUser.lastName,
+    emailAddress: findUser.email,
+  }
+
+  return retObj;
 };
 
 export { createUser, updateUser, removeUser, getAllUsers, getUserById, checkUser };
