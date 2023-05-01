@@ -13,7 +13,7 @@ const createTrip = async (
   endTime,
   stops,
   toDo,
-  usersAllowed
+  usersAllowed = []
 ) => {
   if (
     !userId ||
@@ -25,8 +25,7 @@ const createTrip = async (
     !endDate ||
     !endTime ||
     !stops ||
-    !toDo ||
-    !usersAllowed
+    !toDo
   ) {
     throw 'Error: All fields need to have valid values';
   }
@@ -57,9 +56,9 @@ const createTrip = async (
   if (!Array.isArray(stops)) {
     throw 'You must provide an array of all stops on your trip';
   }
-  if (!Array.isArray(usersAllowed)) {
-    throw 'You must provide an array of all users allowed on your trip';
-  }
+  // if (!Array.isArray(usersAllowed)) {
+  //   throw 'You must provide an array of all users allowed on your trip';
+  // }
   if (startLocation == endLocation) {
     throw 'Start location cannot be the same as end location';
   }
@@ -79,7 +78,11 @@ const createTrip = async (
   endTime = endTime.trim();
   stops = stops.map((stop) => stop.trim());
   toDo = toDo.map((todo) => todo.trim());
-  usersAllowed = usersAllowed.map((user) => user.trim());
+  if(usersAllowed.length !== 0) {
+    usersAllowed = usersAllowed.map((user) => user.trim());
+  } else {
+    usersAllowed = [];
+  }
   let st = startTime.split(':');
   let et = endTime.split(':');
   if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {

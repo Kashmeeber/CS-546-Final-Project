@@ -9,10 +9,23 @@ import {itineraryData} from "../data/index.js";
 import validation from "../validation.js";
 
 router
+  .route("/")
+  .get(async (req, res) => {
+    //code here for GET
+    try {
+      // const trips = await tripsData.getAll(req.session.user.id);
+      return res.render("tripplanning", {userId: req.session.user.id});
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  });
+
+router
   .route("/:userId")
   .get(async (req, res) => {
     //code here for GET
     try {
+      // console.log(req.session.user.id)
       const trips = await tripsData.getAll(req.params.userId);
     //   const returnTrips = bands.map((trip) => {
     //     return {
@@ -28,19 +41,34 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
+    let tripInfo = req.body;
+    let toDoArr = []
+    let stopsArr = []
+
+    let splitToDo = tripInfo.toDoInput.split(',')
+    let splitStops = tripInfo.stopsInput.split(',')
+
+    for(let i = 0; i < splitToDo.length; i++) {
+      toDoArr.push(splitToDo[i]);
+    }
+
+    for(let i = 0; i < splitStops.length; i++) {
+      stopsArr.push(splitStops[i]);
+    }
+
     try {
       const trip = await tripsData.createTrip(
         req.params.userId, 
-        req.body.tripName, 
-        req.body.startLocation, 
-        req.body.startDate, 
-        req.body.startTime,
-        req.body.endLocation, 
-        req.body.endDate, 
-        req.body.endTime, 
-        req.body.stops, 
-        req.body.toDo,
-        req.body.usersAllowed);
+        req.body.tripNameInput, 
+        req.body.startLocationInput, 
+        req.body.startDateInput, 
+        req.body.startTimeInput,
+        req.body.endLocationInput, 
+        req.body.endDateInput, 
+        req.body.endTimeInput, 
+        stopsArr, 
+        toDoArr,
+        req.body.usersAllowedInput);
       return res.status(200).json(trip);
     } catch (e) {
         return res.status(400).json(e);

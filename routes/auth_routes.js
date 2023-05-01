@@ -83,7 +83,7 @@ router.route('/homepage').get(async (req, res) => {
 
 router.route('/profile').get(async (req, res) => {
   //code here for GET
-  return res.render("profile", {firstName: req.session.user.firstName, lastName: req.session.user.lastName, emailAddress: req.session.user.emailAddress});
+  return res.render("profile", {firstNameInput: req.session.user.firstName, lastNameInput: req.session.user.lastName, emailAddressInput: req.session.user.emailAddress});
 });
 
 router.route('/error').get(async (req, res) => {
