@@ -2,6 +2,7 @@
 import {users} from '../config/mongoCollections.js';
 import {Router} from 'express';
 import * as userData from '../data/users.js';
+import * as tripData from '../data/trips.js';
 
 const router = Router();
 router.route('/').get(async (req, res) => {
@@ -83,7 +84,9 @@ router.route('/homepage').get(async (req, res) => {
 
 router.route('/profile').get(async (req, res) => {
   //code here for GET
-  return res.render("profile", {firstNameInput: req.session.user.firstName, lastNameInput: req.session.user.lastName, emailAddressInput: req.session.user.emailAddress});
+  let tData = await tripData.getAll(req.session.user.id)
+
+  return res.render("profile", {firstNameInput: req.session.user.firstName, lastNameInput: req.session.user.lastName, emailAddressInput: req.session.user.emailAddress, trips: tData});
 });
 
 router.route('/error').get(async (req, res) => {

@@ -81,14 +81,15 @@ const createTrip = async (
   if(usersAllowed.length !== 0) {
     usersAllowed = usersAllowed.map((user) => user.trim());
   } else {
-    usersAllowed = [];
+    usersAllowed = []
   }
   let st = startTime.split(':');
   let et = endTime.split(':');
-  if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
+  let regexNum = /^[0-9]*$/
+  if (st.length != 2 || st[0].length != 2 || st[1].length != 2 || !regexNum.test(st[0]) || !regexNum.test(st[1])) {
     throw 'Error: Must provide start time in HH:MM format';
   }
-  if (et.length != 2 || et[0].length != 2 || et[1].length != 2) {
+  if (et.length != 2 || et[0].length != 2 || et[1].length != 2 || !regexNum.test(et[0]) || !regexNum.test(et[1])) {
     throw 'Error: Must provide end time in HH:MM format';
   }
   if (st[0] * 1 < 0 || st[0] * 1 > 23) {
@@ -110,7 +111,7 @@ const createTrip = async (
   if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
     throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
   }
-  if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4) {
+  if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4 || !regexNum.test(sd[0]) || !regexNum.test(sd[1]) || !regexNum.test(sd[2])) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
   if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
@@ -122,7 +123,7 @@ const createTrip = async (
   if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
-  if (ed.length != 3 || ed[0].length != 2 || ed[1].length != 2 || ed[2].length != 4) {
+  if (ed.length != 3 || ed[0].length != 2 || ed[1].length != 2 || ed[2].length != 4 || !regexNum.test(ed[0]) || !regexNum.test(ed[1]) || !regexNum.test(ed[2])) {
     throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
   if (ed[0] * 1 < 1 || ed[0] * 1 > 12) {
@@ -170,7 +171,7 @@ const createTrip = async (
   const insertInfo = await tripCollection.insertOne(newTrip);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add trip';
   const newId = insertInfo.insertedId.toString();
-  const trip = await get(newId);
+  const trip = await get(newTrip.name);
   return trip;
 };
 
@@ -191,22 +192,22 @@ const getAll = async (userId) => {
   return tripList;
 };
 
-const get = async (id) => {
-  if (!id) {
+const get = async (name) => {
+  if (!name) {
     throw 'You must provide an id to search for';
   }
-  if (typeof id !== 'string') {
+  if (typeof name !== 'string') {
     throw 'Id must be a string';
   }
-  if (id.trim().length === 0) {
+  if (name.trim().length === 0) {
     throw 'Id cannot be an empty string or just spaces';
   }
-  id = id.trim();
-  if (!ObjectId.isValid(id)) {
-    throw 'invalid object ID';
-  }
+  name = name.trim();
+  // if (!ObjectId.isValid(name)) {
+  //   throw 'invalid object ID';
+  // }
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ _id: new ObjectId(id) });
+  const trip = await tripCollection.findOne({ name : name });
   if (trip === null) {
     throw 'No trip with that id';
   }
