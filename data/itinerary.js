@@ -216,7 +216,7 @@ const removeActivity = async (tripName, activityName) => {
   if (index === -1) {
     throw `Error: Activity does not exist in trip`;
   }
-  const updatedTrip = await tripCollection.updateOne({name: tripName})},
+  const updatedTrip = await tripCollection.updateOne({name: tripName},
   {$set: {itinerary: newItinerary}},
   {returnDocument: 'after'});
   if (updatedTrip.modifiedCount === 0) {
