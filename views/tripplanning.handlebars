@@ -14,10 +14,10 @@ trip
 - rest stops, hotels, place of activity, gas stations, etc.
 - }}
 <p id="serverErr">{{error}}</p>
-<div id="error" hidden></div>
+<div id="error"></div>
 <p>Create new trip here!</p>
 <div id="createTrip">
-    <form action="/trips/{{userId}}" method="POST" id="tripForm">
+    <form id="tripForm">
         <label for="tripNameInput">Trip Name:
             <input name="tripNameInput" id="tripNameInput" type="text">
         </label>
@@ -48,25 +48,31 @@ trip
         <label for="usersAllowedInput">Users Allowed:
             <input name="usersAllowedInput" id="usersAllowedInput" type="text">
         </label>
-        <button type="submit">Submit</button>
+        <button type="submit" onclick=promptQuestion()>Submit</button>
     </form>
 </div>
-{{! Another div tag that allows users to create an itinerary for a trip }}
-{{! activity, date, startTime, endTime, cost, notes }}
+<div id="promptQuestion1">
+    <label for="createItineraryQuestion" class='createItineraryQuestion'>Create an itinerary for your
+        trip?</label>
+    <select name='createItineraryQuestion' id='createItineraryQuestion' class='createItineraryQuestion'>
+        <option value='yes'>Yes</option>
+        <option value='no'>No</option>
+    </select>
+    <button type="submit" onclick=createItinerary1()>Submit</button>
+</div>
 <div id="createItinerary">
-    <p>Would you like to create an itinerary for your trip?</p>
-    <form>
+    <form id="createItineraryForm">
         <label for="activityInput">Name of Activity:
             <input name="activityInput" id="activityInput" type="text">
         </label>
         <label for="dateInput">Date of Activity:
             <input id="dateInput" name="dateInput" type="date">
         </label>
-        <label for="itineraryStartTimeInput">Start Time for Activity:
-            <input id="startTimeInput" name="startTimeInput" type="time">
+        <label for="startTimeInput">Start Time for Activity:
+            <input id="startTimeInput" name="activityStartTimeInput" type="time">
         </label>
-        <label for="itineraryEndTimeInput">End Time for Activity:
-            <input id="endTimeInput" name="endTimeInput" type="time">
+        <label for="endTimeInput">End Time for Activity:
+            <input id="endTimeInput" name="activityEndTimeInput" type="time">
         </label>
         <label for="costInput">Estimated Cost:
             <input id="costInput" name="costInput" type="number">
