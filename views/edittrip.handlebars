@@ -1,23 +1,7 @@
-{{! TO DO:
-- verify locations
-- work on itinerary
-- clientside js to display hidden divs
-- for to do lists we need to make sure the user knows they should only be used for things to do in preparation for the
-trip
-
-- TO DO LIST
-- preparation for trip
-- ITINERARY
-- activities done during stops on trip
-- STOPS
-- places the user is going to during the trip
-- rest stops, hotels, place of activity, gas stations, etc.
-- }}
-<p id="serverErr">{{error}}</p>
-<div id="error"></div>
-<p>Create new trip here!</p>
-<div id="createTrip">
-    <form action= "/trips/{{userId}}" method = "POST" id="tripForm">
+<div>
+<p>Would you like to edit an existing trip?</p>
+    <p>If you don't want to change a field, input the same information as before.</p>
+    <form>
         <label for="tripNameInput">Trip Name:
             <input name="tripNameInput" id="tripNameInput" type="text">
         </label>
@@ -48,9 +32,6 @@ trip
         <label for="usersAllowedInput">Users Allowed:
             <input name="usersAllowedInput" id="usersAllowedInput" type="text">
         </label>
-        <button type="submit" onclick=promptQuestion()>Submit</button>
+        <button type="submit">Submit</button>
     </form>
 </div>
-<a href="/edittrip">Click here to edit a trip</a>
-<a href="/trips/itinerary">Click here to add an itinerary</a>
-<a href="/edititinerary">Click here to edit an existing itinerary</a>

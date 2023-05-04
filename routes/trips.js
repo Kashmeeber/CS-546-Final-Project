@@ -188,7 +188,7 @@ router
     try {
       req.params.tripName = validation.checkString(req.params.tripName);
       const trip = await tripsData.get(req.params.tripName);
-      return res.render('editTrips', {trips: trip})
+      return res.render('/edittrip', {trips: trip})
       // return res.status(200).json(trip);
     } catch (e) {
       // if the id is not a valid ObjectId, return a 400
@@ -222,7 +222,11 @@ router
   })
 // make a post and delete route /itinerary/:tripId
 router
-  .route("/itinerary/:tripName")
+  .route("/itinerary")
+  .get(async (req, res) => {
+    //code here for GET
+    res.render("/itinerary.handlebars", {title: "Itinerary"})
+  })
   .post(async (req, res) => {
     try{
       req.params.tripName = validation.checkString(req.params.tripName);
