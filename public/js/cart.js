@@ -489,3 +489,16 @@ async function displayRoute(origin, destination, service, display) {
       throw 'Could not display directions due to: ' + e;
   }
 }
+
+function computeTotalDistance(result) {
+  let total = 0;
+  let myroute = result.routes[0];
+  if (!myroute) {
+      return;
+  }
+  for (let i = 0; i < myroute.legs.length; i++) {
+      total += myroute.legs[i].distance.value;
+  }
+  total = (total / 1000 / 1.609).toFixed(2);
+  document.getElementById('total').innerHTML = total + ' miles';
+}
