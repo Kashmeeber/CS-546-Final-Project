@@ -694,12 +694,13 @@ const remove  = async (tripId) => {
   return {"tripId": `${deletionInfo.value.tripId}`, "deleted": true};
 };
 
-const update = async (tripId, tripName, startLocation, startDate, startTime, endLocation, 
+const update = async (nameParams, tripName, startLocation, startDate, startTime, endLocation, 
   endDate, endTime, stops, toDo, usersAllowed) => {
   
   // Check that the id is provided
+  console.log(1)
   if (
-    !tripId ||
+    !nameParams ||
     !tripName ||
     !startLocation ||
     !startDate ||
@@ -712,6 +713,9 @@ const update = async (tripId, tripName, startLocation, startDate, startTime, end
     !usersAllowed
   ) {
     throw 'Error: All fields need to have valid values';
+  }
+  if (typeof nameParams != 'string' || nameParams.trim().length == 0) {
+    throw 'Error: Must provide the trip name as valid nonempty string';
   }
   if (typeof tripName != 'string' || tripName.trim().length == 0) {
     throw 'Error: Must provide the trip name as valid nonempty string';
@@ -752,7 +756,7 @@ const update = async (tripId, tripName, startLocation, startDate, startTime, end
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }
-  tripId = tripId.trim();
+  nameParams = nameParams.trim();
   tripName = tripName.trim();
   startLocation = startLocation.trim();
   startDate = startDate.trim();
@@ -832,7 +836,7 @@ const update = async (tripId, tripName, startLocation, startDate, startTime, end
     toDo[i] = toDo[i].trim();
   }
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
+  const trip = await tripCollection.findOne({name: nameParams });
 
   const updatedtrip = {
     userId: trip.userId,
@@ -849,13 +853,13 @@ const update = async (tripId, tripName, startLocation, startDate, startTime, end
     cost: trip.cost,
     users_allowed: usersAllowed
   }
-  const updatedInfo = await tripCollection.replaceOne({ _id: new ObjectId(tripId) }, updatedtrip);
+  const updatedInfo = await tripCollection.replaceOne({ name: nameParams }, updatedtrip);
 
   if (updatedInfo.modifiedCount === 0) {
     throw "Could not update band successfully";
   }
 
-  return await get(tripId);
+  return await get(tripName);
 };
 
 
