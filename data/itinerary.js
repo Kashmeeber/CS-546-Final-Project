@@ -3,20 +3,20 @@ import {trips} from '../config/mongoCollections.js';
 import {ObjectId} from 'mongodb';
 import {getAll, get} from './trips.js';
 
-const createActivity = async (tripId, 
+const createActivity = async (tripName, 
     activityName,
     date,
     startTime,
     endTime, 
     cost,
     notes) => {
-        if(!tripId || !activityName || !date || !startTime || !endTime || !cost){
+        if(!tripName || !activityName || !date || !startTime || !endTime || !cost){
             throw 'Error: All fields need to have valid values';
           }
-          if(typeof tripId !== 'string' || tripId.trim().length === 0){
+          if(typeof tripName !== 'string' || tripName.trim().length === 0){
             throw 'Error: Must provide trip id as valid nonempty string';
           }
-          tripId = tripId.trim();
+          tripName = tripName.trim();
           if(typeof activityName !== 'string' || activityName.trim().length === 0){
             throw 'Error: Must provide activity name as valid nonempty string';
           }
@@ -55,7 +55,7 @@ const createActivity = async (tripId,
            };
            let a = undefined;
            try{
-             a = await d.tripsData.get(tripId);
+             a = await d.tripsData.get(tripName);
            }catch(e){
              throw "no trip with this id";
            }
@@ -80,7 +80,7 @@ const createActivity = async (tripId,
          
            // let bandId2 = new ObjectId(bandId);
            const insertInfo = await tripCollection.findOneAndUpdate(
-             {_id: new ObjectId(tripId)},
+             {name: new ObjectId(tripName)},
              {$set: updateFields},
              {returnDocument: 'after'}
            );
@@ -114,7 +114,7 @@ const addStop = async (tripId, stop) => {
   const tripCollection = await trips();
   const tripInfo = await tripCollection.findOne({_id: new ObjectId(tripId)});
   if (tripInfo === null) {
-    throw `Error: No band with that id found`;
+    throw `Error: No trip with that id found`;
   }
   let stops = tripInfo.stops;
   for (let y = 0; y < stops.length; y++) {
@@ -154,7 +154,7 @@ const removeStop = async (tripId, stop) => {
   let index = -1;
   const tripInfo = await tripCollection.findOne({_id: new ObjectId(tripId)});
   if (tripInfo === null) {
-    throw `Error: No band with that id found`;
+    throw `Error: No trip with that id found`;
   }
   let stops = tripInfo.stops;
   for (let y = 0; y < stops.length; y++) {
@@ -179,28 +179,28 @@ const removeStop = async (tripId, stop) => {
 
 // };
 
-const removeActivity = async (tripId, activityId) => {
-  if (!activityId || !tripId) {
+const removeActivity = async (tripName, activityName) => {
+  if (!activityName || !tripName) {
     throw 'Error: All fields need to have valid values';
   }
-  if(typeof tripId !== 'string' || tripId.trim().length === 0 || typeof activityId !== 'string' || activityId.trim().length === 0){
+  if(typeof tripName !== 'string' || tripName.trim().length === 0 || typeof activityId !== 'string' || activityId.trim().length === 0){
     throw 'Error: Must provide trip id as valid nonempty string';
   }
 
-  tripId = tripId.trim();
+  tripName = tripName.trim();
   activityId = activityId.trim();
-  if (!ObjectId.isValid(tripId)) {
-    throw `Error: tripId provided is not a valid ObjectId`;
-  }
+  // if (!ObjectId.isValid(tripName)) {
+  //   throw `Error: tripName provided is not a valid ObjectId`;
+  // }
   if (!ObjectId.isValid(activityId)) {
     throw `Error: activityId provided is not a valid ObjectId`;
   }
 
   const tripCollection = await trips();
   let index = -1;
-  const tripInfo = await tripCollection.findOne({_id: new ObjectId(tripId)});
+  const tripInfo = await tripCollection.findOne({name: tripName});
   if (tripInfo === null) {
-    throw `Error: No band with that id found`;
+    throw `Error: No trip with that id found`;
   }
 
   let newItinerary = tripInfo.itinerary;
@@ -216,23 +216,23 @@ const removeActivity = async (tripId, activityId) => {
   if (index === -1) {
     throw `Error: Activity does not exist in trip`;
   }
-  const updatedTrip = await tripCollection.updateOne({_id: new ObjectId(tripId)},
+  const updatedTrip = await tripCollection.updateOne({name: tripName})},
   {$set: {itinerary: newItinerary}},
   {returnDocument: 'after'});
   if (updatedTrip.modifiedCount === 0) {
-    throw [500, `Could not remove activity in trip with id ${tripId}`];
+    throw [500, `Could not remove activity in trip with name ${tripName}`];
   }
   return `Successfully removed ${actName} from the trip`;
 };
 
-const updateActivity = async (tripId, activityId, activityName, date, startTime, endTime, cost, notes) => {
-  if(!tripId || !activityName || !date || !startTime || !endTime || !cost){
+const updateActivity = async (tripName, activityId, activityName, date, startTime, endTime, cost, notes) => {
+  if(!tripName || !activityName || !date || !startTime || !endTime || !cost){
     throw 'Error: All fields need to have valid values';
   }
-  if(typeof tripId !== 'string' || tripId.trim().length === 0){
+  if(typeof tripName !== 'string' || tripName.trim().length === 0){
     throw 'Error: Must provide trip id as valid nonempty string';
   }
-  tripId = tripId.trim();
+  tripName = tripName.trim();
   if(typeof activityName !== 'string' || activityName.trim().length === 0){
     throw 'Error: Must provide activity name as valid nonempty string';
   }
@@ -262,7 +262,7 @@ const updateActivity = async (tripId, activityId, activityName, date, startTime,
     }
     const tripCollection = await trips();
   // Find the band given the band id
-  let trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
+  let trip = await tripCollection.findOne({name: new ObjectId(tripName) });
 
   // Update the band with the given id
   const updatedItinerary = {
@@ -316,7 +316,7 @@ const updateActivity = async (tripId, activityId, activityName, date, startTime,
 
   trip.overallCost = Number.parseFloat(newCost.toFixed(2));
 
-  const updatedInfo = await tripCollection.replaceOne({ _id: new ObjectId(tripId) }, trip);
+  const updatedInfo = await tripCollection.replaceOne({name: new ObjectId(tripName) }, trip);
 
 
 
@@ -324,7 +324,7 @@ const updateActivity = async (tripId, activityId, activityName, date, startTime,
     throw "Could not update band successfully";
   }
 
-  return await get(tripId);
+  return "You have sucessfully updated your itinerary";
 };
 
 export {createActivity, addStop, removeStop, removeActivity, updateActivity};

@@ -203,15 +203,15 @@ const get = async (name) => {
     throw 'Id cannot be an empty string or just spaces';
   }
   name = name.trim();
-  // if (!ObjectId.isValid(name)) {
+  // if (!ObjectId.isValid(id)) {
   //   throw 'invalid object ID';
   // }
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ name : name });
+  const trip = await tripCollection.findOne({name: name });
   if (trip === null) {
     throw 'No trip with that id';
   }
-  trip._id = trip._id.toString();
+  // trip._id = trip._id.toString();
   return trip;
 };
 

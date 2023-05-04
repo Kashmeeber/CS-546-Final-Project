@@ -1,18 +1,20 @@
 {{! TO DO:
-    - verify locations
-    - work on itinerary
-    - clientside js to display hidden divs
-    - for to do lists we need to make sure the user knows they should only be used for things to do in preparation for the trip
+- verify locations
+- work on itinerary
+- clientside js to display hidden divs
+- for to do lists we need to make sure the user knows they should only be used for things to do in preparation for the
+trip
 
-    - TO DO LIST
-        - preparation for trip
-    - ITINERARY
-        - activities done during stops on trip
-    - STOPS
-        - places the user is going to during the trip
-            - rest stops, hotels, place of activity, gas stations, etc.
-    - }}
-
+- TO DO LIST
+- preparation for trip
+- ITINERARY
+- activities done during stops on trip
+- STOPS
+- places the user is going to during the trip
+- rest stops, hotels, place of activity, gas stations, etc.
+- }}
+<p id="serverErr">{{error}}</p>
+<div id="error" hidden></div>
 <p>Create new trip here!</p>
 <div id="createTrip">
     <form action="/trips/{{userId}}" method="POST" id="tripForm">
@@ -47,22 +49,135 @@
             <input name="usersAllowedInput" id="usersAllowedInput" type="text">
         </label>
         <button type="submit">Submit</button>
-        {{! Another div tag that allows users to create an itinerary for a trip }}
+    </form>
+</div>
+{{! Another div tag that allows users to create an itinerary for a trip }}
+{{! activity, date, startTime, endTime, cost, notes }}
+<div id="createItinerary">
+    <p>Would you like to create an itinerary for your trip?</p>
+    <form>
+        <label for="activityInput">Name of Activity:
+            <input name="activityInput" id="activityInput" type="text">
+        </label>
+        <label for="dateInput">Date of Activity:
+            <input id="dateInput" name="dateInput" type="date">
+        </label>
+        <label for="itineraryStartTimeInput">Start Time for Activity:
+            <input id="startTimeInput" name="startTimeInput" type="time">
+        </label>
+        <label for="itineraryEndTimeInput">End Time for Activity:
+            <input id="endTimeInput" name="endTimeInput" type="time">
+        </label>
+        <label for="costInput">Estimated Cost:
+            <input id="costInput" name="costInput" type="number">
+        </label>
+        <label for="notesInput">Notes:
+            <input id="notesInput" name='notesInput' type="textarea">
+        </label>
+        <button type="submit">Submit</button>
     </form>
 </div>
 {{! Edit existing trip }}
-<p>Search for a trip to edit!</p>
+<p>Want to edit a trip?</p>
 <div id="editTrip">
+    <p>Would you like to remove a trip?</p>
     <form>
-
+        <label for="searchTripInput">
+            <input id="searchTripInput" name="searchTripInput" type="text">
+        </label>
+        <button type="submit">Submit</button>
     </form>
-    <p>Want to edit the itinerary?</p>
-    {{! Editing the itinerary means you can make changes to stops that were there before (add/delete activities) 
-    or add new things to new stops  
-    If a user deletes a stop then its activities in the itinerary should automatically be deleted}}
-    <div>
-
-    </div>
+    <p>Would you like to edit an existing trip?</p>
+    <p>If you don't want to change a field, input the same information as before.</p>
+    <form>
+        <label for="tripNameInput">Trip Name:
+            <input name="tripNameInput" id="tripNameInput" type="text">
+        </label>
+        <label for="startLocationInput">Start Location:
+            <input name="startLocationInput" id="startLocationInput" type="text">
+        </label>
+        <label for="startDateInput">Start Date:
+            <input name="startDateInput" id="startDateInput" type="text">
+        </label>
+        <label for="startTimeInput">Start Time:
+            <input name="startTimeInput" id="startTimeInput" type="text">
+        </label>
+        <label for="endLocationInput">End Location:
+            <input name="endLocationInput" id="endLocationInput" type="text">
+        </label>
+        <label for="endDateInput">End Date:
+            <input name="endDateInput" id="endDateInput" type="text">
+        </label>
+        <label for="endTimeInput">End Time:
+            <input name="endTimeInput" id="endTimeInput" type="text">
+        </label>
+        <label for="stopsInput">Stop:
+            <input name="stopsInput" id="stopsInput" type="text">
+        </label>
+        <label for="toDoInput">ToDo:
+            <input name="toDoInput" id="toDoInput" type="text">
+        </label>
+        <label for="usersAllowedInput">Users Allowed:
+            <input name="usersAllowedInput" id="usersAllowedInput" type="text">
+        </label>
+        <button type="submit">Submit</button>
+    </form>
 </div>
-<a href="/profile">Profile</a>
-<a href="/logout">Click here to logout!</a>
+<div id="editItinerary">
+    <p>Want to edit the itinerary for that trip?</p>
+    {{! Editing the itinerary means you can make changes to stops that were there before (add/delete activities)
+    or add new things to new stops
+    If a user deletes a stop then its activities in the itinerary should automatically be deleted}}
+    <p>Would you like to remove an activity?</p>
+    <form>
+        <label for="searchItineraryInput">
+            <input id="searchItineraryInput" name="searchItineraryInput" type="text">
+        </label>
+        <button type="submit">Submit</button>
+    </form>
+    <p>Would you like to edit an existing activity?</p>
+    <p>If you don't want to change a field, input the same information as before.</p>
+    <form>
+        <label for="activityInput">Name of Activity:
+            <input name="activityInput" id="activityInput" type="text">
+        </label>
+        <label for="dateInput">Date of Activity:
+            <input id="dateInput" name="dateInput" type="date">
+        </label>
+        <label for="itineraryStartTimeInput">Start Time for Activity:
+            <input id="startTimeInput" name="startTimeInput" type="time">
+        </label>
+        <label for="itineraryEndTimeInput">End Time for Activity:
+            <input id="endTimeInput" name="endTimeInput" type="time">
+        </label>
+        <label for="costInput">Estimated Cost:
+            <input id="costInput" name="costInput" type="number">
+        </label>
+        <label for="notesInput">Notes:
+            <input id="notesInput" name='notesInput' type="textarea">
+        </label>
+        <button type="submit">Submit</button>
+    </form>
+    <p>Would you like to add more activities?</p>
+    <form>
+        <label for="activityInput">Name of Activity:
+            <input name="activityInput" id="activityInput" type="text">
+        </label>
+        <label for="dateInput">Date of Activity:
+            <input id="dateInput" name="dateInput" type="date">
+        </label>
+        <label for="itineraryStartTimeInput">Start Time for Activity:
+            <input id="startTimeInput" name="startTimeInput" type="time">
+        </label>
+        <label for="itineraryEndTimeInput">End Time for Activity:
+            <input id="endTimeInput" name="endTimeInput" type="time">
+        </label>
+        <label for="costInput">Estimated Cost:
+            <input id="costInput" name="costInput" type="number">
+        </label>
+        <label for="notesInput">Notes:
+            <input id="notesInput" name='notesInput' type="textarea">
+        </label>
+        <button type="submit">Submit</button>
+    </form>
+</div>
