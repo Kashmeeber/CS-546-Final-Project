@@ -450,3 +450,24 @@ function createItinerary1() {
     });
   }
 }
+
+function Map() {
+  map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: { lat: 40.743992, lng: -74.032364 } // Hoboken
+  });
+  const directionsService = new google.maps.DirectionsService();
+  const directionsRenderer = new google.maps.DirectionsRenderer({
+      draggable: true,
+      map: map,
+      panel: document.getElementById('panel'),
+  });
+  directionsRenderer.addListener('directions_changed', function () {
+      let directions = directionsRenderer.getDirections();
+      if (directions) {
+          computeTotalDistance(directions);
+      }
+  });
+
+  displayRoute('Hoboken, NJ', 'San Francisco Zoo', directionsService, directionsRenderer);
+}
