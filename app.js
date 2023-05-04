@@ -66,6 +66,13 @@ app.use('/profile', (req, res, next) => {
     next();
   }
 });
+app.use('/trips', (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect('/login')
+  } else {
+    next();
+  }
+});
 
 app.use('/logout', (req, res, next) => {
   if (!req.session.user) {
