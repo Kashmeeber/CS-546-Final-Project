@@ -471,3 +471,21 @@ function Map() {
 
   displayRoute('Hoboken, NJ', 'San Francisco Zoo', directionsService, directionsRenderer);
 }
+
+async function displayRoute(origin, destination, service, display) {
+  try {
+      let serv = await service.route({
+          origin: origin,
+          destination: destination,
+          waypoints: [
+              // { location: 'Newport Mall' },
+              // { location: 'Hamilton Park Montessori School' },
+          ],
+          travelMode: google.maps.TravelMode.DRIVING,
+          avoidTolls: true,
+      });
+      display.setDirections(serv);
+  } catch (e) {
+      throw 'Could not display directions due to: ' + e;
+  }
+}
