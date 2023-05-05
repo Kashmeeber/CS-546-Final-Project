@@ -4,6 +4,7 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+  background-color: #EDF4ED;
 }
 
 #container {
@@ -28,7 +29,7 @@ body {
 }
 
 #navbar {
-  background-color: chocolate;
+  background-color: #79B791;
   list-style-type: none;
   margin: 0px;
   padding: 0px;
@@ -62,4 +63,32 @@ main {
 #right {
   margin: 0px;
   padding: 10px 170px;
+}
+h1 {
+  font-style: italic;
+  letter-spacing: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+#float-container {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 5px;
+}
+#pfp {
+  max-width: 100%;
+  max-height:100%;
+  float: left;
+}
+#info {
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+p.profile::before {
+  content: "\A";
+  white-space: pre;
+}
+.profile {
+  font-size: 30px;
+  text-align: left;
 }

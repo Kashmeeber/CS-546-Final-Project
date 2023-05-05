@@ -1,7 +1,14 @@
-<p>First Name: {{firstNameInput}}</p>
-<p>Last Name: {{lastNameInput}}</p>
-<p>Email Address: {{emailAddressInput}}</p>
-
+<div id="float-container">
+    <img src="https://cdn.pixabay.com/photo/2020/02/10/08/56/emoji-4835770_1280.png" alt="its you :)" id="pfp">
+    <div>
+        {{!-- spacer --}}
+    </div>
+    <div id="info">
+        <p class="profile">First Name: {{firstNameInput}}</p>
+        <p class="profile">Last Name: {{lastNameInput}}</p>
+        <p class="profile">Email Address: {{emailAddressInput}}</p>
+    </div>
+</div>
 <p>My Trips: </p>
 {{#each trips}}
     <div id="{{this._id}}">
@@ -16,7 +23,7 @@
         {{#each this.stops}}
             <p>{{this}}</p>
         {{/each}}
-        <p>Things todo:</p>
+        <p>Things To Do:</p>
         {{#each this.to_do}}
             <p>{{this}}</p>
         {{/each}}
@@ -25,9 +32,6 @@
 
 {{/each}}
 
-<div>
-    <img src="https://cdn.pixabay.com/photo/2020/02/10/08/56/emoji-4835770_1280.png" alt="its you :)">
-</div>
 {{! link to trips }}
 {{! link to logout }}
 {{! filter trips }}
