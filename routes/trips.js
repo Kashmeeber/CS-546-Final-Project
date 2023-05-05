@@ -8,6 +8,7 @@ import {itineraryData} from "../data/index.js";
 
 import validation from "../validation.js";
 
+
 router
   .route("/")
   .get(async (req, res) => {
@@ -21,7 +22,197 @@ router
     }
   });
 
+// router
+//   .route("/trip/:tripName")
+//   .get(async (req, res) => {
+//     //code here for GET
+//     try {
+//       req.params.tripName = validation.checkString(req.params.tripName);
+//       const trip = await tripsData.get(req.params.tripName);
+//       return res.render('editTrips', {trips: trip})
+//       // return res.status(200).json(trip);
+//     } catch (e) {
+//       // if the id is not a valid ObjectId, return a 400
+//       if (e == "The id provided is not a valid ObjectId") {
+//         return res.status(400).json(e);
+//       }
+//       // if no band exists with that id, return a 404
+//       if (e == "No trip with that id") {
+//         return res.status(404).json(e);
+//       }
+//     }
+//   })
+//   .post(async (req, res) => {
+//     //code here for GET
+//     try {
+//       // req.params.tripName = validation.checkString(req.params.tripName);
+//       // const trip = await tripsData.get(req.params.tripName);
+//       // return res.render('editTrips', {trips: trip})
+//       return res.redirect(`/trip/${req.body.tripName}`)
+//       // return res.status(200).json(trip);
+//     } catch (e) {
+//       // if the id is not a valid ObjectId, return a 400
+//       if (e == "The id provided is not a valid ObjectId") {
+//         return res.status(400).json(e);
+//       }
+//       // if no band exists with that id, return a 404
+//       if (e == "No trip with that id") {
+//         return res.status(404).json(e);
+//       }
+//     }
+//   })
+//   .delete(async (req, res) => {
+//     //code here for DELETE
+//     try {
+//       req.params.tripName = validation.checkString(req.params.tripName);
+//       const deletedTrip = await tripsData.remove(req.params.tripName);
+//       return res.status(200).json(deletedTrip);
+//     } catch (e) {
+//       // if no band exists with that id, return a 404
+//         return res.status(404).json(e);
+//     }
+//   })
+//   //should we just try to keep this one w id?
+//   .put(async (req, res) => {
+//     //code here for PUT
+//     try {
+//       console.log(11)
+//       req.params.tripName = validation.checkString(req.params.tripName);
+//       const updatedTrip = await tripsData.update(req.params.tripName, req.body.tripName, req.body.startLocation, 
+//         req.body.startDate, req.body.startTime, req.body.endLocation, req.body.endDate, req.body.endTime, req.body.stops, req.body.toDo, 
+//         req.body.usersAllowed);
+//         console.log(updatedTrip)
+//       return res.status(200).json(updatedTrip);
+//     } catch (e) {
+//         return res.status(400).json(e);
+//     }
+//   });
+
 router
+  .route("/trip/:tripName")
+  .get(async (req, res) => {
+    //code here for GET
+    try {
+      req.params.tripName = validation.checkString(req.params.tripName);
+      const trip = await tripsData.get(req.params.tripName);
+      return res.render('/edittrip', {trips: trip})
+      // return res.status(200).json(trip);
+    } catch (e) {
+      // if the id is not a valid ObjectId, return a 400
+      if (e == "The id provided is not a valid ObjectId") {
+        return res.status(400).json(e);
+      }
+      // if no band exists with that id, return a 404
+      if (e == "No trip with that id") {
+        return res.status(404).json(e);
+      }
+    }
+  })
+//   .post(async (req, res) => {
+//     //code here for GET
+//     try {
+//       // req.params.tripName = validation.checkString(req.params.tripName);
+//       // const trip = await tripsData.get(req.params.tripName);
+//       // return res.render('editTrips', {trips: trip})
+//       return res.redirect(`/trip/${req.body.tripName}`)
+//       // return res.status(200).json(trip);
+//     } catch (e) {
+//       // if the id is not a valid ObjectId, return a 400
+//       if (e == "The id provided is not a valid ObjectId") {
+//         return res.status(400).json(e);
+//       }
+//       // if no band exists with that id, return a 404
+//       if (e == "No trip with that id") {
+//         return res.status(404).json(e);
+//       }
+//     }
+//   })
+// // make a post and delete route /itinerary/:tripId
+
+
+
+//   .post(async (req, res) => {
+//     try{
+//       req.params.tripName = validation.checkString(req.params.tripName);
+//       const itinerary = await itineraryData.createActivity( req.params.tripName, req.body.activityName,
+//       req.body.date, req.body.startTime, req.body.endTime, req.body.cost, req.body.notes);
+//       return res.status(200).json(itinerary);
+//     }catch(e){
+//       return res.status(400).json(e);
+//     }
+
+//     // try {
+//     //   const itinerary = await itineraryData.createActivity(
+//     //     req.params.tripName, 
+//     //     req.body.activityName, 
+//     //     req.body.date, 
+//     //     req.body.startTime, 
+//     //     req.body.endTime,
+//     //     req.body.cost, 
+//     //     req.body.notes
+//     //     );
+//     //   return res.status(200).json(itinerary);
+//     // } catch (e) {
+//     //     return res.status(400).json(e);
+//     // }
+//   });
+
+  router
+  .route("/itinerary/:tripName/:itineraryId")
+  .delete(async (req, res) => {
+    try {
+      req.params.tripName = validation.checkString(req.params.tripName);
+      req.params.itineraryId = validation.checkId(req.params.itineraryId);
+    } catch (e) {
+      return res.status(400).json({error: e});
+    }
+
+    try {
+      let deletedTrip = await itineraryData.removeActivity(req.params.tripName, req.params.itineraryId);
+      return res.json(deletedTrip);
+    } catch (e) {
+      return res.status(500).send({error: e});
+    }
+  })
+  .put(async (req, res) => {
+    try {
+      req.params.tripName = validation.checkString(req.params.tripName);
+      req.params.itineraryId = validation.checkId(req.params.itineraryId);
+    } catch (e) {
+      return res.status(400).json({error: e});
+    }
+
+    try {
+      let updatedTrip = await itineraryData.updateActivity(req.params.tripName, req.params.itineraryId,
+        req.body.activityName, req.body.date, req.body.startTime, req.body.endTime, req.body.cost, req.body.notes);
+      return res.json(updatedTrip);
+    } catch (e) {
+      return res.status(500).send({error: `${e}`});
+    }
+  });
+
+  router
+  .route("/itinerary")
+  .get(async (req, res) => {
+    //code here for GET
+    return res.render("itinerary", {title: "Itinerary"})
+  });
+
+  router
+  .route("/edittrip")
+  .get(async (req, res) => {
+    //code here for GET
+    return res.render("edittrip", {title: "Edit Trip"})
+  });
+
+  router
+  .route("/edititinerary")
+  .get(async (req, res) => {
+    //code here for GET
+    return res.render("edititinerary", {title: "Edit Itinerary"})
+  });
+
+  router
   .route("/:userId")
   .get(async (req, res) => {
     //code here for GET
@@ -92,9 +283,6 @@ router
       return res.status(400).json(`${e}`);
     }
 
-
-   
-
     try {
       const trip = await tripsData.createTrip(
         req.params.userId, 
@@ -111,179 +299,6 @@ router
       return res.status(200).json(trip);
     } catch (e) {
         return res.status(400).json(e);
-    }
-  });
-
-
-router
-  .route("/trip/:tripName")
-  .get(async (req, res) => {
-    //code here for GET
-    try {
-      req.params.tripName = validation.checkString(req.params.tripName);
-      const trip = await tripsData.get(req.params.tripName);
-      return res.render('editTrips', {trips: trip})
-      // return res.status(200).json(trip);
-    } catch (e) {
-      // if the id is not a valid ObjectId, return a 400
-      if (e == "The id provided is not a valid ObjectId") {
-        return res.status(400).json(e);
-      }
-      // if no band exists with that id, return a 404
-      if (e == "No trip with that id") {
-        return res.status(404).json(e);
-      }
-    }
-  })
-  .post(async (req, res) => {
-    //code here for GET
-    try {
-      // req.params.tripName = validation.checkString(req.params.tripName);
-      // const trip = await tripsData.get(req.params.tripName);
-      // return res.render('editTrips', {trips: trip})
-      return res.redirect(`/trip/${req.body.tripName}`)
-      // return res.status(200).json(trip);
-    } catch (e) {
-      // if the id is not a valid ObjectId, return a 400
-      if (e == "The id provided is not a valid ObjectId") {
-        return res.status(400).json(e);
-      }
-      // if no band exists with that id, return a 404
-      if (e == "No trip with that id") {
-        return res.status(404).json(e);
-      }
-    }
-  })
-  .delete(async (req, res) => {
-    //code here for DELETE
-    try {
-      req.params.tripName = validation.checkString(req.params.tripName);
-      const deletedTrip = await tripsData.remove(req.params.tripName);
-      return res.status(200).json(deletedTrip);
-    } catch (e) {
-      // if no band exists with that id, return a 404
-        return res.status(404).json(e);
-    }
-  })
-  //should we just try to keep this one w id?
-  .put(async (req, res) => {
-    //code here for PUT
-    try {
-      console.log(11)
-      req.params.tripName = validation.checkString(req.params.tripName);
-      const updatedTrip = await tripsData.update(req.params.tripName, req.body.tripName, req.body.startLocation, 
-        req.body.startDate, req.body.startTime, req.body.endLocation, req.body.endDate, req.body.endTime, req.body.stops, req.body.toDo, 
-        req.body.usersAllowed);
-        console.log(updatedTrip)
-      return res.status(200).json(updatedTrip);
-    } catch (e) {
-        return res.status(400).json(e);
-    }
-  });
-
-router
-  .route("/trip/:tripName")
-  .get(async (req, res) => {
-    //code here for GET
-    try {
-      req.params.tripName = validation.checkString(req.params.tripName);
-      const trip = await tripsData.get(req.params.tripName);
-      return res.render('/edittrip', {trips: trip})
-      // return res.status(200).json(trip);
-    } catch (e) {
-      // if the id is not a valid ObjectId, return a 400
-      if (e == "The id provided is not a valid ObjectId") {
-        return res.status(400).json(e);
-      }
-      // if no band exists with that id, return a 404
-      if (e == "No trip with that id") {
-        return res.status(404).json(e);
-      }
-    }
-  })
-  .post(async (req, res) => {
-    //code here for GET
-    try {
-      // req.params.tripName = validation.checkString(req.params.tripName);
-      // const trip = await tripsData.get(req.params.tripName);
-      // return res.render('editTrips', {trips: trip})
-      return res.redirect(`/trip/${req.body.tripName}`)
-      // return res.status(200).json(trip);
-    } catch (e) {
-      // if the id is not a valid ObjectId, return a 400
-      if (e == "The id provided is not a valid ObjectId") {
-        return res.status(400).json(e);
-      }
-      // if no band exists with that id, return a 404
-      if (e == "No trip with that id") {
-        return res.status(404).json(e);
-      }
-    }
-  })
-// make a post and delete route /itinerary/:tripId
-router
-  .route("/itinerary")
-  .get(async (req, res) => {
-    //code here for GET
-    res.render("/itinerary.handlebars", {title: "Itinerary"})
-  })
-  .post(async (req, res) => {
-    try{
-      req.params.tripName = validation.checkString(req.params.tripName);
-      const itinerary = await itineraryData.createActivity( req.params.tripName, req.body.activityName,
-      req.body.date, req.body.startTime, req.body.endTime, req.body.cost, req.body.notes);
-      return res.status(200).json(itinerary);
-    }catch(e){
-      return res.status(400).json(e);
-    }
-
-    // try {
-    //   const itinerary = await itineraryData.createActivity(
-    //     req.params.tripName, 
-    //     req.body.activityName, 
-    //     req.body.date, 
-    //     req.body.startTime, 
-    //     req.body.endTime,
-    //     req.body.cost, 
-    //     req.body.notes
-    //     );
-    //   return res.status(200).json(itinerary);
-    // } catch (e) {
-    //     return res.status(400).json(e);
-    // }
-  });
-
-  router
-  .route("/itinerary/:tripName/:itineraryId")
-  .delete(async (req, res) => {
-    try {
-      req.params.tripName = validation.checkString(req.params.tripName);
-      req.params.itineraryId = validation.checkId(req.params.itineraryId);
-    } catch (e) {
-      return res.status(400).json({error: e});
-    }
-
-    try {
-      let deletedTrip = await itineraryData.removeActivity(req.params.tripName, req.params.itineraryId);
-      return res.json(deletedTrip);
-    } catch (e) {
-      return res.status(500).send({error: e});
-    }
-  })
-  .put(async (req, res) => {
-    try {
-      req.params.tripName = validation.checkString(req.params.tripName);
-      req.params.itineraryId = validation.checkId(req.params.itineraryId);
-    } catch (e) {
-      return res.status(400).json({error: e});
-    }
-
-    try {
-      let updatedTrip = await itineraryData.updateActivity(req.params.tripName, req.params.itineraryId,
-        req.body.activityName, req.body.date, req.body.startTime, req.body.endTime, req.body.cost, req.body.notes);
-      return res.json(updatedTrip);
-    } catch (e) {
-      return res.status(500).send({error: `${e}`});
     }
   });
 export default router;
