@@ -46,14 +46,14 @@ router
   .route('/login')
   .get(async (req, res) => {
     //code here for GET
-    return res.render("login", {title: "Login"});
+    return res.render("login", {title: "login"});
 
   })
   .post(async (req, res) => {
     //code here for POST
     let userInfo = req.body;
     if(!userInfo.emailAddressInput || !userInfo.passwordInput){
-      return res.render("login", {title: "Login"});
+      return res.render("login", {title: "login"});
     }
     let retVal = undefined;
     try {
@@ -63,7 +63,7 @@ router
       );
       // res.json(retVal);
     } catch (e) {
-      return res.status(400).render('login', {error: "Invalid username/password", title: "Login"});
+      return res.status(400).render('login', {error: "Invalid username/password", title: "login"});
     }
     if(retVal){
       req.session.user = retVal;
@@ -86,7 +86,7 @@ router.route('/profile').get(async (req, res) => {
   //code here for GET
   let tData = await tripData.getAll(req.session.user.id)
 
-  return res.render("profile", {firstNameInput: req.session.user.firstName, lastNameInput: req.session.user.lastName, emailAddressInput: req.session.user.emailAddress, trips: tData});
+  return res.render("profile", {firstNameInput: req.session.user.firstName, lastNameInput: req.session.user.lastName, emailAddressInput: req.session.user.emailAddress, trips: tData, title: "profile"});
 });
 
 router.route('/error').get(async (req, res) => {
@@ -98,6 +98,6 @@ router.route('/error').get(async (req, res) => {
 router.route('/logout').get(async (req, res) => {
   //code here for GET
   req.session.destroy();
-  return res.render("logout", {title: "Logout"});
+  return res.render("logout", {title: "logout"});
 });
 export default router;
