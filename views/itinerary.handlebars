@@ -1,34 +1,18 @@
-{{!--
+<p id="serverErr">{{error}}</p>
+<div id="error" hidden></div>
+<form id="selection" action="/trips/itinerary" method="POST">
+    <select name="tripName" id="tripName" >
+        {{#each trips}}
+            <option value="{{this.name}}">{{this.name}}</option>
+        {{/each}}
+    </select>
+    <button id="submit" onclick="">Submit</button>
 
-possibly not needed hehe
-well.......nvm
-    - will display map view
-    - will combine itinerary / trip details
-    - can edit a trips itinerary
-    - back button to trip planning
+</form>
 
---}}
-<p>Would you like to add an activity?</p>
-    <div id="createItinerary">
-    <form id="createItineraryForm" method = "GET">
-        <label for="activityInput">Name of Activity:
-            <input name="activityInput" id="activityInput" type="text">
-        </label>
-        <label for="dateInput">Date of Activity:
-            <input id="dateInput" name="dateInput" type="date">
-        </label>
-        <label for="startTimeInput">Start Time for Activity:
-            <input id="startTimeInput" name="activityStartTimeInput" type="time">
-        </label>
-        <label for="endTimeInput">End Time for Activity:
-            <input id="endTimeInput" name="activityEndTimeInput" type="time">
-        </label>
-        <label for="costInput">Estimated Cost:
-            <input id="costInput" name="costInput" type="number">
-        </label>
-        <label for="notesInput">Notes:
-            <input id="notesInput" name='notesInput' type="textarea">
-        </label>
-        <button type="submit">Submit</button>
-    </form>
-</div>
+
+<script>
+   document.getElementById('tripName').addEventListener('change', function() {
+  console.log('You selected: ', this.value);
+});
+</script>

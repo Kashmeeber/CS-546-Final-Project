@@ -1,0 +1,26 @@
+<p id="serverErr">{{error}}</p>
+<div id="error" hidden></div>
+
+<div id="createItinerary">
+    <form action="/trips/itinerary/{{currentTrip}}" method="POST" id="createItineraryForm">
+        <label for="activityInput">Name of Activity:
+            <input name="activityInput" id="activityInput" type="text">
+        </label>
+        <label for="dateInput">Date of Activity:
+            <input id="dateInput" name="dateInput" type="text">
+        </label>
+        <label for="activityStartTimeInput">Start Time for Activity:
+            <input id="activityStartTimeInput" name="activityStartTimeInput" type="text">
+        </label>
+        <label for="activityEndTimeInput">End Time for Activity:
+            <input id="activityEndTimeInput" name="activityEndTimeInput" type="text">
+        </label>
+        <label for="costInput">Estimated Cost:
+            <input id="costInput" name="costInput" type="text">
+        </label>
+        <label for="notesInput">Notes:
+            <input id="notesInput" name='notesInput' type="textarea">
+        </label>
+        <button type="submit">Submit</button>
+    </form>
+</div>
