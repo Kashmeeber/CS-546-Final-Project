@@ -12,6 +12,8 @@ let createTrip = document.getElementById('createTrip');
 let createItinerary = document.getElementById('createItinerary');
 let promptQuestion1 = document.getElementById('promptQuestion1');
 
+
+
 function Map() {
   try {
      let map = new google.maps.Map(document.getElementById('map'), {
@@ -32,7 +34,8 @@ function Map() {
         }
     });
 
-    displayRoute('Hoboken, NJ', 'San Francisco Zoo', directionsService, directionsRenderer);
+    console.log(`${document.currentScript.getAttribute("start")}`)
+    displayRoute(`${document.currentScript.getAttribute("start")}`, `${document.currentScript.getAttribute("end")}`, `${document.currentScript.getAttribute("stops")}`,directionsService, directionsRenderer);
   } catch (e) {
     console.log(e);
     throw e;
@@ -41,15 +44,27 @@ function Map() {
  
 }
 
-async function displayRoute(origin, destination, service, display) {
+async function displayRoute(origin, destination, stops, service, display) {
   try {
+    let stopsArr = [];
+    let splitStops = stops.split('/');
+    for(let i = splitStops.length - 1; i >= 0; i--) {
+      if(typeof splitStops[i] == "string"){
+        stopsArr.push(splitStops[i]);
+      }else{
+        throw 'One of the stops is not a valid string'
+      }
+    }
+    let way = [];
+    console.log(stops);
+    for (let i = stopsArr.length - 1; i >= 0; i--) {
+      way.push({location: stopsArr[i]});
+    }
+    console.log(way);
       let serv = await service.route({
           origin: origin,
           destination: destination,
-          waypoints: [
-              // { location: 'Newport Mall' },
-              // { location: 'Hamilton Park Montessori School' },
-          ],
+          waypoints: way,
           travelMode: google.maps.TravelMode.DRIVING,
           avoidTolls: true,
           provideRouteAlternatives: true
