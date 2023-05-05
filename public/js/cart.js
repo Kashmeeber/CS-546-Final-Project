@@ -12,6 +12,67 @@ let createTrip = document.getElementById('createTrip');
 let createItinerary = document.getElementById('createItinerary');
 let promptQuestion1 = document.getElementById('promptQuestion1');
 
+function Map() {
+  try {
+     let map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: { lat: 40.743992, lng: -74.032364 }, // Hoboken
+      streetViewControl: false
+    });
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+        draggable: true,
+        map: map,
+        panel: document.getElementById('panel'),
+    });
+    directionsRenderer.addListener('directions_changed', function () {
+        let directions = directionsRenderer.getDirections();
+        if (directions) {
+            computeTotalDistance(directions);
+        }
+    });
+
+    displayRoute('Hoboken, NJ', 'San Francisco Zoo', directionsService, directionsRenderer);
+  } catch (e) {
+    console.log(e);
+    throw e;
+    
+  }
+ 
+}
+
+async function displayRoute(origin, destination, service, display) {
+  try {
+      let serv = await service.route({
+          origin: origin,
+          destination: destination,
+          waypoints: [
+              // { location: 'Newport Mall' },
+              // { location: 'Hamilton Park Montessori School' },
+          ],
+          travelMode: google.maps.TravelMode.DRIVING,
+          avoidTolls: true,
+          provideRouteAlternatives: true
+      });
+      display.setDirections(serv);
+  } catch (e) {
+      throw 'Could not display directions due to: ' + e;
+  }
+}
+
+function computeTotalDistance(result) {
+  let total = 0;
+  let myroute = result.routes[0];
+  if (!myroute) {
+      return;
+  }
+  for (let i = 0; i < myroute.legs.length; i++) {
+      total += myroute.legs[i].distance.value;
+  }
+  total = (total / 1000 / 1.609).toFixed(2);
+  // document.getElementById('total').innerHTML = total + ' miles';
+}
+
 function errorCheck(firstName, lastName, emailAddress, password, confirmPassword) {
   firstName = firstName.trim();
   lastName = lastName.trim();
@@ -449,56 +510,4 @@ function createItinerary1() {
       }
     });
   }
-}
-
-function Map() {
-  map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 4,
-      center: { lat: 40.743992, lng: -74.032364 } // Hoboken
-  });
-  const directionsService = new google.maps.DirectionsService();
-  const directionsRenderer = new google.maps.DirectionsRenderer({
-      draggable: true,
-      map: map,
-      panel: document.getElementById('panel'),
-  });
-  directionsRenderer.addListener('directions_changed', function () {
-      let directions = directionsRenderer.getDirections();
-      if (directions) {
-          computeTotalDistance(directions);
-      }
-  });
-
-  displayRoute('Hoboken, NJ', 'San Francisco Zoo', directionsService, directionsRenderer);
-}
-
-async function displayRoute(origin, destination, service, display) {
-  try {
-      let serv = await service.route({
-          origin: origin,
-          destination: destination,
-          waypoints: [
-              // { location: 'Newport Mall' },
-              // { location: 'Hamilton Park Montessori School' },
-          ],
-          travelMode: google.maps.TravelMode.DRIVING,
-          avoidTolls: true,
-      });
-      display.setDirections(serv);
-  } catch (e) {
-      throw 'Could not display directions due to: ' + e;
-  }
-}
-
-function computeTotalDistance(result) {
-  let total = 0;
-  let myroute = result.routes[0];
-  if (!myroute) {
-      return;
-  }
-  for (let i = 0; i < myroute.legs.length; i++) {
-      total += myroute.legs[i].distance.value;
-  }
-  total = (total / 1000 / 1.609).toFixed(2);
-  document.getElementById('total').innerHTML = total + ' miles';
 }
