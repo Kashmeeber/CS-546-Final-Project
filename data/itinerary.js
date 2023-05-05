@@ -22,7 +22,8 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
   if (splitDate.length !== 3) {
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
-  if (splitDate[0].length !== 2 || splitDate[1].length !== 2 || splitDate[2].length !== 4) {
+  let regexNum = /^[0-9]*$/
+  if (splitDate[0].length !== 2 || splitDate[1].length !== 2 || splitDate[2].length !== 4 || !regexNum.test(splitDate[0]) || !regexNum.test(splitDate[1]) || !regexNum.test(splitDate[2])) {
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
   if (splitDate[0] * 1 < 1 || splitDate[0] * 1 > 12) {
@@ -40,8 +41,25 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
     throw 'Error: Must provide end time as valid nonempty string';
   }
   endTime = endTime.trim();
-  if (typeof cost !== 'number') {
-    throw 'Error: Must provide cost as an integer';
+  let st = startTime.split(':');
+  let et = endTime.split(':');
+  if (st.length != 2 || st[0].length != 2 || st[1].length != 2 || !regexNum.test(st[0]) || !regexNum.test(st[1])) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (et.length != 2 || et[0].length != 2 || et[1].length != 2 || !regexNum.test(et[0]) || !regexNum.test(et[1])) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+    throw 'Error: Must provide end time in HH:MM format';
   }
   if (notes) {
     notes = notes.trim();
@@ -51,6 +69,10 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
   } else {
     notes = '';
   }
+  if(!regexNum.test(cost)){
+    throw 'Cost must be a number'
+  }
+  cost = parseInt(cost);
   let newActivity = {
     _id: new ObjectId(),
     activityName: activityName,
@@ -89,7 +111,7 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
   const tripCollection = await trips();
 
   const insertInfo = await tripCollection.findOneAndUpdate(
-    { name: new ObjectId(tripName) },
+    { name: tripName },
     { $set: updateFields },
     { returnDocument: 'after' }
   );

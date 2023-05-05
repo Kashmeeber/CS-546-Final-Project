@@ -5,7 +5,6 @@ import e, { Router } from "express";
 const router = Router();
 import {tripsData} from "../data/index.js";
 import {itineraryData} from "../data/index.js";
-
 import validation from "../validation.js";
 
 
@@ -156,6 +155,40 @@ router
 //     //     return res.status(400).json(e);
 //     // }
 //   });
+router
+  .route("/itinerary/:tripName")
+  .post(async (req, res) => {
+    let actInfo = req.body;
+    let regex = /.*[a-zA-Z].*/;
+    let regexStringsOnly = /^[A-Za-z]+$/;
+
+    try{
+      if(!regex.test(actInfo.activityInput)){
+        throw 'Activity Name must be a string'
+      }
+      
+    }catch(e){
+      return res.status(400).json(`${e}`);
+    }
+
+    try {
+      // console.log(req.body);
+      const itinerary = await itineraryData.createActivity(
+        req.params.tripName, 
+        req.body.activityInput, 
+        req.body.dateInput, 
+        req.body.activityStartTimeInput, 
+        req.body.activityEndTimeInput,
+        req.body.costInput, 
+        req.body.notesInput
+        );
+      console.log(itinerary)
+      console.log(req.body);
+      return res.status(200).json(itinerary);
+    } catch (e) {
+        return res.status(400).json(e);
+    }
+  })
 
   router
   .route("/itinerary/:tripName/:itineraryId")
@@ -195,7 +228,12 @@ router
   .route("/itinerary")
   .get(async (req, res) => {
     //code here for GET
-    return res.render("itinerary", {title: "Itinerary"})
+    let tData2 = await tripsData.getAll(req.session.user.id)
+    return res.render("itinerary", {title: "Choose Trip", trips: tData2})
+  })
+  .post(async (req, res) => {
+    req.session.currentTrip = req.body.tripName;
+    return res.render("createItinerary", {title: "Itinerary", currentTrip: req.session.currentTrip})
   });
 
   router
