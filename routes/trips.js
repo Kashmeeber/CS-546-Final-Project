@@ -7,12 +7,12 @@ import {tripsData} from "../data/index.js";
 import {itineraryData} from "../data/index.js";
 import validation from "../validation.js";
 
-
 router
   .route("/")
   .get(async (req, res) => {
     //code here for GET
     try {
+      // const trips = await tripsData.getAll(req.session.user.id);
       let tData = await tripsData.getAll(req.session.user.id)
       return res.render("tripplanning", {userId: req.session.user.id, trips: tData});
     } catch (e) {
@@ -20,6 +20,59 @@ router
     }
   });
 
+// router
+//   .route("/trip/:tripName")
+//   .get(async (req, res) => {
+//     //code here for GET
+//     try {
+//       req.params.tripName = validation.checkString(req.params.tripName);
+//       const trip = await tripsData.get(req.params.tripName);
+//       return res.render('editTrips', {trips: trip})
+//       // return res.status(200).json(trip);
+//     } catch (e) {
+//       // if the id is not a valid ObjectId, return a 400
+//       if (e == "The id provided is not a valid ObjectId") {
+//         return res.status(400).json(e);
+//       }
+//       // if no band exists with that id, return a 404
+//       if (e == "No trip with that id") {
+//         return res.status(404).json(e);
+//       }
+//     }
+//   })
+//   .post(async (req, res) => {
+//     //code here for GET
+//     try {
+//       // req.params.tripName = validation.checkString(req.params.tripName);
+//       // const trip = await tripsData.get(req.params.tripName);
+//       // return res.render('editTrips', {trips: trip})
+//       return res.redirect(`/trip/${req.body.tripName}`)
+//       // return res.status(200).json(trip);
+//     } catch (e) {
+//       // if the id is not a valid ObjectId, return a 400
+//       if (e == "The id provided is not a valid ObjectId") {
+//         return res.status(400).json(e);
+//       }
+//       // if no band exists with that id, return a 404
+//       if (e == "No trip with that id") {
+//         return res.status(404).json(e);
+//       }
+//     }
+//   })
+//   .delete(async (req, res) => {
+//     //code here for DELETE
+//     try {
+//       req.params.tripName = validation.checkString(req.params.tripName);
+//       const deletedTrip = await tripsData.remove(req.params.tripName);
+//       return res.status(200).json(deletedTrip);
+//     } catch (e) {
+//       // if no band exists with that id, return a 404
+//         return res.status(404).json(e);
+//     }
+//   })
+//   //should we just try to keep this one w id?
+
+// console.log("/trip/:tripName");
 router
   .route("/trip/:tripName")
   .get(async (req, res) => {
@@ -27,7 +80,8 @@ router
     try {
       req.params.tripName = validation.checkString(req.params.tripName);
       const trip = await tripsData.get(req.params.tripName);
-      return res.render('/edittrip', {trips: trip})
+      return res.render('edittrip', {trips: trip, currentTrips: req.params.tripName})
+      // return res.status(200).json(trip);
     } catch (e) {
       // if the id is not a valid ObjectId, return a 400
       if (e == "The id provided is not a valid ObjectId") {
@@ -39,13 +93,27 @@ router
       }
     }
   })
+  .post(async (req, res) => {
+    console.log("hi");
+  })
+  .put(async (req, res) => {
+    //code here for PUT
+    try {
+      req.params.tripName = validation.checkString(req.params.tripName);
+      const updatedTrip = await tripsData.update(req.params.tripName, req.body.tripNameInput, req.body.startLocationInput, 
+        req.body.startDate, req.body.startTimeInput, req.body.endLocationInput, req.body.endDateInput, req.body.endTimeInput, req.body.stopsInput, req.body.toDoInput, 
+        req.body.usersAllowedInput);
+      return res.status(200).json(updatedTrip);
+    } catch (e) {
+        return res.status(400).json(e);
+    }
+  });
 
 router
   .route("/itinerary/:tripName")
   .post(async (req, res) => {
     let actInfo = req.body;
     let regex = /.*[a-zA-Z].*/;
-    let regexStringsOnly = /^[A-Za-z]+$/;
 
     try{
       if(!regex.test(actInfo.activityInput)){
@@ -67,8 +135,6 @@ router
         req.body.costInput, 
         req.body.notesInput
         );
-      console.log(itinerary)
-      console.log(req.body);
       return res.status(200).json(itinerary);
     } catch (e) {
         return res.status(400).json(e);
@@ -125,7 +191,13 @@ router
   .route("/edittrip")
   .get(async (req, res) => {
     //code here for GET
-    return res.render("edittrip", {title: "Edit Trip"})
+    let tData3 = await tripsData.getAll(req.session.user.id)
+    return res.render("updateTrip", {title: "Edit Trip", trips:tData3})
+  })
+  .post(async (req, res) => {
+    // req.session.currentTrips = req.body.tripName;
+    return res.redirect(`/trips/trip/${req.body.tripName}`)
+    // return res.render("edittrip", {title: "Edit Trip Info", currentTrips: req.session.currentTrips})
   });
 
   router
@@ -222,14 +294,26 @@ router
     } catch (e) {
         return res.status(400).json(e);
     }
-  });
+  })
+  // .put(async (req, res) => {
+
+  // });
+  
 
   router
   .route("/:userId")
   .get(async (req, res) => {
     //code here for GET
     try {
+      // console.log(req.session.user.id)
       const trips = await tripsData.getAll(req.params.userId);
+    //   const returnTrips = bands.map((trip) => {
+    //     return {
+    //       _id: trip._id,
+    //       name: trip.name
+    //     }
+    //   });
+    // console.log(trips)
       return res.json(trips);
     } catch (e) {
       return res.status(500).json(e);

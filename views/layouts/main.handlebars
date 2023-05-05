@@ -26,7 +26,31 @@
             {{!-- 
             <script src="../../public/js/ajax.js"></script> --}}
             <script src="../../public/js/cart.js"></script>
-</script>
+            {{!-- CITATIONSSSS --}}
+            {{!-- https://stackoverflow.com/questions/8054165/using-put-method-in-html-form --}}
+            <script>
+                const myForm = document.getElementById('editForm');
+                myForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // prevent the form from submitting normally
+                    
+                    // create a new FormData object from the form data
+                    const formData = new FormData(myForm);
+                    
+                    // send the PUT request using fetch
+                    fetch(myForm.action, {
+                    method: 'PUT',
+                    body: formData
+                    })
+                    .then(response => {
+                    // handle the response
+                    continue;
+                    })
+                    .catch(error => {
+                    // handle the error
+                    console.log(error)
+                    });
+                });
+            </script>
         </footer>
     </body>
 

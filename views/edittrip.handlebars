@@ -1,7 +1,7 @@
 <div>
 <p>Would you like to edit an existing trip?</p>
     <p>If you don't want to change a field, input the same information as before.</p>
-    <form>
+    <form action="/trips/trip/{{currentTrips}}" method="POST" id="editForm">
         <label for="tripNameInput">Trip Name:
             <input name="tripNameInput" id="tripNameInput" type="text">
         </label>
@@ -32,6 +32,7 @@
         <label for="usersAllowedInput">Users Allowed:
             <input name="usersAllowedInput" id="usersAllowedInput" type="text">
         </label>
+        <input type="hidden" name="_method" value="PUT">
         <button type="submit">Submit</button>
     </form>
 </div>
