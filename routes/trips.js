@@ -180,11 +180,11 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData2 = await tripsData.getAll(req.session.user.id)
-    return res.render("itinerary", {title: "Choose Trip", trips: tData2})
+    return res.render("itinerary", {title: "choose trip", trips: tData2})
   })
   .post(async (req, res) => {
     req.session.currentTrip = req.body.tripName;
-    return res.render("createItinerary", {title: "Itinerary", currentTrip: req.session.currentTrip})
+    return res.render("createItinerary", {title: "itinerary", currentTrip: req.session.currentTrip})
   });
 
   router
@@ -192,7 +192,7 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData3 = await tripsData.getAll(req.session.user.id)
-    return res.render("updateTrip", {title: "Edit Trip", trips:tData3})
+    return res.render("updateTrip", {title: "edit trip", trips:tData3})
   })
   .post(async (req, res) => {
     // req.session.currentTrips = req.body.tripName;
@@ -204,7 +204,7 @@ router
   .route("/edititinerary")
   .get(async (req, res) => {
     //code here for GET
-    return res.render("edititinerary", {title: "Edit Itinerary"})
+    return res.render("edititinerary", {title: "edit itinerary"})
   });
 
   router
@@ -220,7 +220,7 @@ router
     //     }
     //   });
     // console.log(trips)
-      return res.render("map", {title: "Map"});
+      return res.render("map", {title: "map"});
     } catch (e) {
       return res.status(500).json(e);
     }
@@ -290,7 +290,7 @@ router
         stopsArr, 
         toDoArr,
         req.body.usersAllowedInput);
-      return res.status(200).render("map", {title: "Map", mData: trip});
+      return res.status(200).render("map", {title: "map", mData: trip});
     } catch (e) {
         return res.status(400).json(e);
     }

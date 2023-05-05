@@ -14,7 +14,7 @@ router
   .route('/register')
   .get(async (req, res) => {
     //code here for GET
-    return res.render("register", {title: "Register"});
+    return res.render("register", {title: "register"});
   })
   .post(async (req, res) => {
     //code here for POST
@@ -91,7 +91,7 @@ router.route('/profile').get(async (req, res) => {
 
 router.route('/error').get(async (req, res) => {
   //code here for GET
-  return res.render("error", {title: "Error"});
+  return res.render("error", {title: "error"});
 
 });
 
