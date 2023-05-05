@@ -25,3 +25,40 @@ body {
   flex-grow: 4;
   height: 100%;
 }
+
+#navbar {
+  background-color: chocolate;
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  display: block;
+  text-align: center;
+}
+
+li {
+  float: left;
+  padding: 10px 160px;
+  text-align: center;
+  margin: auto;
+}
+
+a {
+  display: block;
+  text-align: center;
+}
+
+main {
+  margin: auto;
+  text-align:center;
+}
+#left {
+  float: left;
+  text-align: center;
+  margin: auto;
+}
+
+#right {
+  margin: 0px;
+  padding: 10px 170px;
+}
