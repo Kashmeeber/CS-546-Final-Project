@@ -124,20 +124,17 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
   return newActivity;
 };
 
-const addStop = async (tripId, stop) => {
-  if (!tripId || !stop) {
+const addStop = async (tripName, stop) => {
+  if (!tripName || !stop) {
     throw 'Error: All fields need to have valid values';
   }
-  if (typeof tripId !== 'string' || tripId.trim().length === 0) {
+  if (typeof tripName !== 'string' || tripId.trim().length === 0) {
     throw 'Error: Must provide trip id as valid nonempty string';
   }
-  tripId = tripId.trim();
-  if (!ObjectId.isValid(tripId)) {
-    throw `Error: tripId provided is not a valid ObjectId`;
-  }
+  tripName = tripName.trim();
 
-  if (typeof stop !== 'string' || stop.trim().length === 0) {
-    throw 'Error: Must provide stop as valid nonempty string';
+  if (typeof stop !== 'string' || stop.trim().length <= 1) {
+    throw 'Error: Must provide stop as valid string';
   }
   stop = stop.trim();
   //Need to figure out how what is in stops
