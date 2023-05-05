@@ -13,7 +13,7 @@ let createItinerary = document.getElementById('createItinerary');
 let promptQuestion1 = document.getElementById('promptQuestion1');
 
 
-
+//Taken and modified from Google API documentation
 function Map() {
   try {
      let map = new google.maps.Map(document.getElementById('map'), {
@@ -33,8 +33,6 @@ function Map() {
             computeTotalDistance(directions);
         }
     });
-
-    console.log(`${document.currentScript.getAttribute("start")}`)
     displayRoute(`${document.currentScript.getAttribute("start")}`, `${document.currentScript.getAttribute("end")}`, `${document.currentScript.getAttribute("stops")}`,directionsService, directionsRenderer);
   } catch (e) {
     console.log(e);
@@ -66,7 +64,7 @@ async function displayRoute(origin, destination, stops, service, display) {
           destination: destination,
           waypoints: way,
           travelMode: google.maps.TravelMode.DRIVING,
-          avoidTolls: true,
+          avoidTolls: false,
           provideRouteAlternatives: true
       });
       display.setDirections(serv);

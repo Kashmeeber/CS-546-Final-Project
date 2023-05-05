@@ -1,7 +1,13 @@
+<form action = "/trips/map/{{userId}}" method = "POST" id= "mapSearch">
+    <label for="newStop">New Stop:
+        <input name="newStopInput" id="newStopInput" type="text">
+    </label>
+    <button type="submit">Submit</button>
+</form>
 <div id="container">
     <div id="map"></div>
     <div id="sidebar">
-    {{!-- <p>Total Distance: <span id="total"></span></p> --}}
+    <p>Total Distance: <span id="total"></span></p>
     <div id="panel"></div>
     </div>
 </div>
@@ -13,3 +19,5 @@
     defer>
 </script>
 {{!-- <script  src="../public/js/cart.js"></script> --}}
+
+{{!-- ${INSERT_APIKEY_HERE} --}}
