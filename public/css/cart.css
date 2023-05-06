@@ -4,7 +4,7 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
-  background-color: #EDF4ED;
+  background-color: #edf4ed;
 }
 
 #container {
@@ -29,7 +29,7 @@ body {
 }
 
 #navbar {
-  background-color: #79B791;
+  background-color: #79b791;
   list-style-type: none;
   margin: 0px;
   padding: 0px;
@@ -52,7 +52,7 @@ a {
 
 main {
   margin: auto;
-  text-align:center;
+  text-align: center;
 }
 #left {
   float: left;
@@ -78,14 +78,14 @@ h1 {
 }
 #pfp {
   max-width: 300px;
-  max-height:300px;
+  max-height: 300px;
   float: right;
   padding-left: 200px;
   /* border: 10px solid #301014; */
   /* border-radius: 50px; */
 }
 p.profile::before {
-  content: "\A";
+  content: '\A';
   white-space: pre;
 }
 .profile {
@@ -96,11 +96,11 @@ p.profile::before {
 .trips {
   display: inline-grid;
   grid-template-columns: auto auto auto;
-  background-color: #51291E;
+  background-color: #51291e;
   padding: 10px;
 }
 .content {
-  background-color: #ACC9BA;
+  background-color: #acc9ba;
   border: 1px solid #301014;
   padding: 20px;
   font-size: 15px;
@@ -115,16 +115,21 @@ h2 {
   /* border-radius: 25px; */
   border: 5px solid #301014;
   padding: 5px;
-  background-color: #B1BFBB;
+  background-color: #b1bfbb;
 }
 .next {
-  background-color: #F5BFC8;
+  background-color: #f5bfc8;
 }
 #contains {
   display: flex;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 .pad {
-  background-color: #F5BFC8;
+  background-color: #f5bfc8;
   text-align: center;
+}
+
+label::before {
+  content: '\A';
+  white-space: pre;
 }
