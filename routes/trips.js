@@ -589,21 +589,21 @@ router
       if(!regex.test(tripInfo.tripNameInput)){
         throw 'Trip Name must be a string'
       }
-      let splitSL = tripInfo.startLocationInput.split(' ');
-      if(splitSL.length < 3){
-        throw 'You must have a full street name in your address' 
-      }
-      // console.log(Number.isNaN(parseInt('123')))
-      if(Number.isNaN(parseInt(splitSL[0]))){
-        throw 'You must include a number in the address'
-      }
-      if(!regexStringsOnly.test(splitSL[1])){
-        throw 'You must have a street name in your address'
-      }
+      // let splitSL = tripInfo.startLocationInput.split(' ');
+      // if(splitSL.length < 3){
+      //   throw 'You must have a full street name in your address' 
+      // }
+      // // console.log(Number.isNaN(parseInt('123')))
+      // if(Number.isNaN(parseInt(splitSL[0]))){
+      //   throw 'You must include a number in the address'
+      // }
+      // if(!regexStringsOnly.test(splitSL[1])){
+      //   throw 'You must have a street name in your address'
+      // }
 
-      if(!regexStringsOnly.test(splitSL[2])){
-        throw 'You must have a full street name in your address'
-      }
+      // if(!regexStringsOnly.test(splitSL[2])){
+      //   throw 'You must have a full street name in your address'
+      // }
 
       let splitToDo = tripInfo.toDoInput.split(',')
       let splitStops = tripInfo.stopsInput.split(',')
