@@ -1,22 +1,28 @@
 <p id="serverErr">{{error}}</p>
 <div id="error" hidden></div>
 <form action="/register" method="POST" id="registration-form">
-    <label for="firstNameInput">First Name:
+    <p class="text">First Name:</p>
+    <label for="firstNameInput">
         <input name="firstNameInput" id="firstNameInput" type="text">
     </label>
-    <label for="lastNameInput">Last Name:
+    <p class="text">Last Name:</p>
+    <label for="lastNameInput">
         <input name="lastNameInput" id="lastNameInput" type="text">
     </label>
-    <label for="emailAddressInput">Email Address:
+    <p class="text">Email Address:</p>
+    <label for="emailAddressInput">
         <input name="emailAddressInput" id="emailAddressInput" type="email">
     </label>
-    <label for="passwordInput">Password:
+    <p class="text">Password:</p>
+    <label for="passwordInput">
         <input name="passwordInput" id="passwordInput" type="password">
     </label>
-    <label for="confirmPasswordInput">Confirm Password:
+    <p class="text">Confirm Password:</p>
+    <label for="confirmPasswordInput">
         <input name="confirmPasswordInput" id="confirmPasswordInput" type="password">
     </label>
-    <label for="submitButton"><input type="submit" name="submitButton" id="submitButton"></label>
+    <label for="register-button" class="submitButton"><input type="submit" name="register-button"
+            id="register-button"></label>
 
 </form>
 <a href="/login" class="a-format">Already have an account? Login here.</a>

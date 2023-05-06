@@ -1,14 +1,12 @@
 <p id="serverErr">{{error}}</p>
 <div id="error" hidden></div>
-<div id="format-login">
+<div>
     <form action "/login" method="POST" id="login-form">
-        <label for="emailAddressInput">Email:
-            <input type="email" name="emailAddressInput" id="emailAddressInput">
-        </label>
-        <label for="passwordInput">Password:
-            <input type="password" name="passwordInput" id="passwordInput">
-        </label>
-        <label for="loginSubmit">
+        <p class="text">Email:</p>
+        <label for="emailAddressInput"><input type="email" name="emailAddressInput" id="emailAddressInput"></label>
+        <p class="text">Password:</p>
+        <label for="passwordInput"><input type="password" name="passwordInput" id="passwordInput"></label>
+        <label for="loginSubmit" class="submitButton">
             <input type="submit" name="loginSubmit" id="loginSubmit">
         </label>
     </form>
