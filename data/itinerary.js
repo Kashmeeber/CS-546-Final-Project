@@ -23,6 +23,7 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
   let regexNum = /^[0-9]*$/
+  
   if (splitDate[0].length !== 2 || splitDate[1].length !== 2 || splitDate[2].length !== 4 || !regexNum.test(splitDate[0]) || !regexNum.test(splitDate[1]) || !regexNum.test(splitDate[2])) {
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
@@ -159,7 +160,7 @@ const addStop = async (tripName, stop) => {
   if (updatedTrip.modifiedCount === 0) {
     throw [500, `Could not update stops of trip with name ${tripName}`];
   }
-  return `Successfully added ${stop} to trip`;
+  return tripInfo;
 };
 
 const removeStop = async (tripId, stop) => {
@@ -274,6 +275,7 @@ const updateActivity = async (
   cost,
   notes
 ) => {
+  // console.log(`${tripName}, ${activityId}, ${activityName}, ${data}, ${startTime}, ${endTime}, ${cost}, ${notes}`);
   if (!tripName || !activityName || !date || !startTime || !endTime || !cost) {
     throw 'Error: All fields need to have valid values';
   }
@@ -310,6 +312,11 @@ const updateActivity = async (
     throw 'Error: Must provide end time as valid nonempty string';
   }
   endTime = endTime.trim();
+  let regexNum = /^[0-9]*$/
+  if(!regexNum.test(cost)){
+    throw 'Cost must be a number'
+  }
+  cost = parseInt(cost);
   if (typeof cost !== 'number') {
     throw 'Error: Must provide cost as an integer';
   }
@@ -386,4 +393,23 @@ const updateActivity = async (
   return 'You have sucessfully updated your itinerary';
 };
 
-export { createActivity, addStop, removeStop, removeActivity, updateActivity };
+const getActivitybyName = async (activityName) => {
+  const tripCollection = await trips();
+  const trip = await tripCollection.findOne({ "itinerary.activityName": activityName }, {projection: {_id: 0, itinerary: 1}});
+  if (trip === null) {
+    throw 'No trip with that activity';
+  }
+  let itin = trip.itinerary;
+  let id = null;
+  for (let i = 0; i < itin.length; i++) {
+    if (itin[i].activityName === activityName) {
+      id = itin[i]._id.toString();
+    }
+  }
+  if (id === null) {
+    throw 'No activity with that name found';
+  }
+  return id;
+};
+
+export { createActivity, addStop, removeStop, removeActivity, updateActivity, getActivitybyName };

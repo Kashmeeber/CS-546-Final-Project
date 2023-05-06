@@ -12,8 +12,7 @@ const createTrip = async (
   endDate,
   endTime,
   stops,
-  toDo,
-  usersAllowed = []
+  toDo
 ) => {
   if (
     !userId ||
@@ -53,9 +52,9 @@ const createTrip = async (
   if (typeof endTime != 'string' || endTime.trim().length == 0) {
     throw 'Error: Must provide end time as valid nonempty string';
   }
-  if (!Array.isArray(stops)) {
-    throw 'You must provide an array of all stops on your trip';
-  }
+  // if (!Array.isArray(stops)) {
+  //   throw 'You must provide an array of all stops on your trip';
+  // }
   // if (!Array.isArray(usersAllowed)) {
   //   throw 'You must provide an array of all users allowed on your trip';
   // }
@@ -78,11 +77,6 @@ const createTrip = async (
   endTime = endTime.trim();
   stops = stops.map((stop) => stop.trim());
   toDo = toDo.map((todo) => todo.trim());
-  if (usersAllowed.length !== 0) {
-    usersAllowed = usersAllowed.map((user) => user.trim());
-  } else {
-    usersAllowed = [];
-  }
   let st = startTime.split(':');
   let et = endTime.split(':');
   let regexNum = /^[0-9]*$/;
@@ -192,8 +186,7 @@ const createTrip = async (
     stops: stops,
     itinerary: [],
     to_do: toDo,
-    cost: 0,
-    users_allowed: usersAllowed
+    cost: 0
   };
   const tripCollection = await trips();
   if (await tripCollection.findOne({ name: tripName })) {
@@ -365,8 +358,7 @@ const updateTime = async (tripId, startTime, endTime) => {
     stops: oldTrip.stops,
     itinerary: oldTrip.itinerary,
     to_do: oldTrip.to_do,
-    cost: oldTrip.cost,
-    users_allowed: oldTrip.users_allowed
+    cost: oldTrip.cost
   };
   const tripCollection = await trips();
   const updatedTripInfo = await tripCollection.findOneAndUpdate(
@@ -735,9 +727,173 @@ const update = async (
   endDate,
   endTime,
   stops,
-  toDo,
-  usersAllowed
+  toDo
 ) => {
+  // console.log(1)
+  if (
+      !nameParams ||
+      !tripName ||
+      !startLocation ||
+      !startDate ||
+      !startTime ||
+      !endLocation ||
+      !endDate ||
+      !endTime
+    ) {
+      throw 'Error: All fields need to have valid values';
+    }
+    if (typeof nameParams != 'string' || nameParams.trim().length == 0) {
+      throw 'Error: Must provide the trip name as valid nonempty string';
+    }
+  if (typeof tripName != 'string' || tripName.trim().length == 0) {
+    throw 'Error: Must provide the trip name as valid nonempty string';
+  }
+  if (typeof startLocation != 'string' || startLocation.trim().length == 0) {
+    throw 'Error: Must provide the start location as valid nonempty string';
+  }
+  if (typeof startDate != 'string' || startDate.trim().length == 0) {
+    throw 'Error: Must provide start date as valid nonempty string';
+  }
+  if (typeof endLocation != 'string' || endLocation.trim().length == 0) {
+    throw 'Error: Must provide the end location as valid nonempty string';
+  }
+  // if (!Array.isArray(toDo) || toDo.length == 0) {
+  //   throw 'Error: Must provide to-do list as valid nonempty array';
+  // }
+  if (typeof endDate != 'string' || endDate.trim().length == 0) {
+    throw 'Error: Must provide end date as valid nonempty string';
+  }
+  if (typeof startTime != 'string' || startTime.trim().length == 0) {
+    throw 'Error: Must provide start time as valid nonempty string';
+  }
+  if (typeof endTime != 'string' || endTime.trim().length == 0) {
+    throw 'Error: Must provide end time as valid nonempty string';
+  }
+  // if (!Array.isArray(stops)) {
+  //   throw 'You must provide an array of all stops on your trip';
+  // }
+  // if (!Array.isArray(usersAllowed)) {
+  //   throw 'You must provide an array of all users allowed on your trip';
+  // }
+  if (startLocation == endLocation) {
+    throw 'Start location cannot be the same as end location';
+  }
+  if (startTime == endTime) {
+    throw 'Start time cannot be the same as end time';
+  }
+  if (startDate == endDate) {
+    throw 'Start date cannot be the same as end date';
+  }
+  // userId = userId.trim();
+  tripName = tripName.trim();
+  startLocation = startLocation.trim();
+  startDate = startDate.trim();
+  endLocation = endLocation.trim();
+  endDate = endDate.trim();
+  startTime = startTime.trim();
+  endTime = endTime.trim();
+  // stops = stops.map((stop) => stop.trim());
+  // toDo = toDo.map((todo) => todo.trim());
+  let st = startTime.split(':');
+  let et = endTime.split(':');
+  let regexNum = /^[0-9]*$/;
+  if (
+    st.length != 2 ||
+    st[0].length != 2 ||
+    st[1].length != 2 ||
+    !regexNum.test(st[0]) ||
+    !regexNum.test(st[1])
+  ) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (
+    et.length != 2 ||
+    et[0].length != 2 ||
+    et[1].length != 2 ||
+    !regexNum.test(et[0]) ||
+    !regexNum.test(et[1])
+  ) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  let sd = startDate.split('/');
+  let ed = endDate.split('/');
+  let currentYear = new Date();
+  let newCurrentYear = currentYear.getFullYear();
+  if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
+    throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
+  }
+  if (
+    sd.length != 3 ||
+    sd[0].length != 2 ||
+    sd[1].length != 2 ||
+    sd[2].length != 4 ||
+    !regexNum.test(sd[0]) ||
+    !regexNum.test(sd[1]) ||
+    !regexNum.test(sd[2])
+  ) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+
+  if (
+    ed.length != 3 ||
+    ed[0].length != 2 ||
+    ed[1].length != 2 ||
+    ed[2].length != 4 ||
+    !regexNum.test(ed[0]) ||
+    !regexNum.test(ed[1]) ||
+    !regexNum.test(ed[2])
+  ) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (ed[0] * 1 < 1 || ed[0] * 1 > 12) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (ed[1] * 1 < 1 || ed[1] * 1 > 31) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (ed[2] * 1 < sd[2] * 1 || ed[2] * 1 > ed[2] * 1 + 1) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (sd > ed) {
+    throw 'Error: Start date must be set to a date before end date';
+  }
+  if (stops.length === 0) throw 'You must supply at least one stop';
+  for (let i in stops) {
+    if (typeof stops[i] !== 'string' || stops[i].trim().length === 0) {
+      throw 'You must supply at least 1 stop';
+    }
+    stops[i] = stops[i].trim();
+  }
+  if (toDo.length === 0) throw 'You must supply at least one to-do item';
+  for (let i in toDo) {
+    if (typeof toDo[i] !== 'string' || toDo[i].trim().length === 0) {
+      throw 'You must supply at least 1 to-do item';
+    }
+    toDo[i] = toDo[i].trim();
+  }
+  // console.log(10)
+
   // Check that the id is provided
   // console.log(1);
   // if (
@@ -877,9 +1033,9 @@ const update = async (
   //   toDo[i] = toDo[i].trim();
   // }
   const tripCollection = await trips();
-  if (await tripCollection.findOne({ name: tripName })) {
-    throw 'Error: Trip name already exists';
-  }
+  // if (await tripCollection.findOne({ name: tripName })) {
+  //   throw 'Error: Trip name already exists';
+  // }
   const trip = await tripCollection.findOne({ name: nameParams });
 
   const updatedtrip = {
@@ -894,8 +1050,7 @@ const update = async (
     stops: stops,
     itinerary: trip.itinerary,
     to_do: toDo,
-    cost: trip.cost,
-    users_allowed: usersAllowed
+    cost: trip.cost
   };
   const updatedInfo = await tripCollection.replaceOne({ name: nameParams }, updatedtrip);
 
