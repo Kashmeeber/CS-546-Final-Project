@@ -188,6 +188,21 @@ router
   });
 
   router
+  .route("/edititinerary")
+  .get(async (req, res) => {
+    //code here for GET
+    let tData4 = await tripsData.getAll(req.session.user.id)
+    return res.render("edititinerary", {title: "edit itinerary", trips:tData4})
+  })
+  .post(async (req, res) => {
+    console.log("hihi8");
+    req.session.itineraryName = req.body.activityName;
+
+    return res.redirect(`/trips/itinerary/${req.params.tripName}/${req.session.itineraryName}/`)
+    // return res.render("edittrip", {title: "Edit Trip Info", currentTrips: req.session.currentTrips})
+  });
+
+  router
   .route("/edittrip")
   .get(async (req, res) => {
     //code here for GET

@@ -1,31 +1,13 @@
-<p>Would you like to edit an existing activity?</p>
-    <p>If you don't want to change a field, input the same information as before.</p>
-    <form>
-        <label for="activityInput">Name of Activity:
-            <input name="activityInput" id="activityInput" type="text">
-        </label>
-        <label for="dateInput">Date of Activity:
-            <input id="dateInput" name="dateInput" type="date">
-        </label>
-        <label for="itineraryStartTimeInput">Start Time for Activity:
-            <input id="startTimeInput" name="startTimeInput" type="time">
-        </label>
-        <label for="itineraryEndTimeInput">End Time for Activity:
-            <input id="endTimeInput" name="endTimeInput" type="time">
-        </label>
-        <label for="costInput">Estimated Cost:
-            <input id="costInput" name="costInput" type="number">
-        </label>
-        <label for="notesInput">Notes:
-            <input id="notesInput" name='notesInput' type="textarea">
-        </label>
-        <button type="submit">Submit</button>
-    </form>
+<p id="serverErr">{{error}}</p>
+<div id="error" hidden></div>
+<form id="selection" action="/trips/editItinerary" method="POST">
+    <select name="activityName" id="activityName" >
+        {{#each trips}}
+            {{#each itinerary}}
+            <option value="{{this.activityName}}">{{this.activityName}}</option>
+            {{/each}}
+        {{/each}}
+    </select>
+    <button id="submit" onclick="">Submit</button>
 
-    <p>Would you like to remove an activity instead?</p>
-    <form>
-        <label for="searchItineraryInput">
-            <input id="searchItineraryInput" name="searchItineraryInput" type="text">
-        </label>
-        <button type="submit">Submit</button>
-    </form>
+</form>
