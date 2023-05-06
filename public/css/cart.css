@@ -89,12 +89,15 @@ p.profile::before {
   text-align: left;
 }
 .trips {
-  column-width:unset;
-  max-height: fit-content;
-  column-gap: 25px;
-  grid-template-columns: 1fr 1fr 1fr;
-  border: 1px black solid;
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  background-color: #2196F3;
+  padding: 10px;
 }
 .content {
-  float: left;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 15px;
+  text-align: left;
 }
