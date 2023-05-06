@@ -3,6 +3,7 @@
 // const { create } = require('handlebars');
 // import create from 'handlebars';
 
+
 // for tripplannning.handlebars there needs to be a function that shows a hidden div on click
 let registrationForm = document.getElementById('registration-form');
 let loginForm = document.getElementById('login-form');
@@ -13,7 +14,7 @@ let createItinerary = document.getElementById('createItinerary');
 let promptQuestion1 = document.getElementById('promptQuestion1');
 
 
-//Taken and modified from Google API documentation
+//Taken and modified from Google API documentation 
 function Map() {
   try {
      let map = new google.maps.Map(document.getElementById('map'), {
@@ -33,16 +34,18 @@ function Map() {
             computeTotalDistance(directions);
         }
     });
-    displayRoute(`${document.currentScript.getAttribute("start")}`, `${document.currentScript.getAttribute("end")}`, `${document.currentScript.getAttribute("stops")}`,directionsService, directionsRenderer);
+    // google.maps.event.addDomListener(window, 'load', Map);
+    displayRoute(`${document.currentScript.getAttribute("start")}`, `${document.currentScript.getAttribute("end")}`, `${document.currentScript.getAttribute("stops")}`, directionsService, directionsRenderer);
   } catch (e) {
     throw e;
-    
   }
  
 }
 
+
 async function displayRoute(origin, destination, stops, service, display) {
   try {
+    console.log(stops);
     let stopsArr = [];
     let splitStops = stops.split('/');
     for(let i = splitStops.length - 1; i >= 0; i--) {

@@ -1,5 +1,5 @@
-<form action="/trips/map/{{userId}}/{{name}}" method="POST" id="mapSearch">
-    <label for="newStop">New Stop:
+<form action="/trips/map/" method="POST" id="mapSearch">
+    <label for="newStopInput">New Stop:
         <input name="newStopInput" id="newStopInput" type="text">
     </label>
     <input type="hidden" name="_method" value="PUT">
@@ -20,29 +20,5 @@
     stops="{{mData.stops}}"
     defer>
 </script>
-<script>
-    const myForm2 = document.getElementById('mapSearch');
-    myForm2.addEventListener('submit', function(event) {
-        event.preventDefault(); // prevent the form from submitting normally
-        
-        // create a new FormData object from the form data
-        const formData2 = new FormData(myForm2);
-        
-        // send the PUT request using fetch
-        fetch(myForm2.action, {
-        method: 'PUT',
-        body: formData2
-        })
-        .then(response => {
-        // handle the response
-        continue;
-        })
-        .catch(error => {
-        // handle the error
-        console.log(error)
-        });
-    });
-    </script>
-{{!-- <script  src="../public/js/cart.js"></script> --}}
 
 {{!-- ${INSERT_APIKEY_HERE} --}}
