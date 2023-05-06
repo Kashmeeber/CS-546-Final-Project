@@ -15,9 +15,8 @@ trip
 - }}
 <p id="serverErr">{{error}}</p>
 <div id="error"></div>
-<p>Create new trip here!</p>
 <div id="createTrip">
-    <form action= "/trips/map/{{userId}}" method = "POST" id="tripForm">
+    <form action="/trips/map/{{userId}}" method="POST" id="tripForm">
         <label for="tripNameInput">Trip Name:
             <input name="tripNameInput" id="tripNameInput" type="text">
         </label>
@@ -48,7 +47,7 @@ trip
         <label for="usersAllowedInput">Users Allowed:
             <input name="usersAllowedInput" id="usersAllowedInput" type="text">
         </label>
-        <button type="submit" onclick=promptQuestion()>Submit</button>
+        <button type="submit">Submit</button>
     </form>
 </div>
 <a href="/trips/edittrip">Click here to edit a trip</a>
