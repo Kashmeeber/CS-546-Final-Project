@@ -78,18 +78,30 @@ const createTrip = async (
   endTime = endTime.trim();
   stops = stops.map((stop) => stop.trim());
   toDo = toDo.map((todo) => todo.trim());
-  if(usersAllowed.length !== 0) {
+  if (usersAllowed.length !== 0) {
     usersAllowed = usersAllowed.map((user) => user.trim());
   } else {
-    usersAllowed = []
+    usersAllowed = [];
   }
   let st = startTime.split(':');
   let et = endTime.split(':');
-  let regexNum = /^[0-9]*$/
-  if (st.length != 2 || st[0].length != 2 || st[1].length != 2 || !regexNum.test(st[0]) || !regexNum.test(st[1])) {
+  let regexNum = /^[0-9]*$/;
+  if (
+    st.length != 2 ||
+    st[0].length != 2 ||
+    st[1].length != 2 ||
+    !regexNum.test(st[0]) ||
+    !regexNum.test(st[1])
+  ) {
     throw 'Error: Must provide start time in HH:MM format';
   }
-  if (et.length != 2 || et[0].length != 2 || et[1].length != 2 || !regexNum.test(et[0]) || !regexNum.test(et[1])) {
+  if (
+    et.length != 2 ||
+    et[0].length != 2 ||
+    et[1].length != 2 ||
+    !regexNum.test(et[0]) ||
+    !regexNum.test(et[1])
+  ) {
     throw 'Error: Must provide end time in HH:MM format';
   }
   if (st[0] * 1 < 0 || st[0] * 1 > 23) {
@@ -111,7 +123,15 @@ const createTrip = async (
   if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
     throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
   }
-  if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4 || !regexNum.test(sd[0]) || !regexNum.test(sd[1]) || !regexNum.test(sd[2])) {
+  if (
+    sd.length != 3 ||
+    sd[0].length != 2 ||
+    sd[1].length != 2 ||
+    sd[2].length != 4 ||
+    !regexNum.test(sd[0]) ||
+    !regexNum.test(sd[1]) ||
+    !regexNum.test(sd[2])
+  ) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
   if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
@@ -123,7 +143,15 @@ const createTrip = async (
   if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
-  if (ed.length != 3 || ed[0].length != 2 || ed[1].length != 2 || ed[2].length != 4 || !regexNum.test(ed[0]) || !regexNum.test(ed[1]) || !regexNum.test(ed[2])) {
+  if (
+    ed.length != 3 ||
+    ed[0].length != 2 ||
+    ed[1].length != 2 ||
+    ed[2].length != 4 ||
+    !regexNum.test(ed[0]) ||
+    !regexNum.test(ed[1]) ||
+    !regexNum.test(ed[2])
+  ) {
     throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
   if (ed[0] * 1 < 1 || ed[0] * 1 > 12) {
@@ -168,6 +196,9 @@ const createTrip = async (
     users_allowed: usersAllowed
   };
   const tripCollection = await trips();
+  if (await tripCollection.findOne({ name: tripName })) {
+    throw 'Error: Trip name already exists';
+  }
   const insertInfo = await tripCollection.insertOne(newTrip);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add trip';
   const newId = insertInfo.insertedId.toString();
@@ -207,7 +238,7 @@ const get = async (name) => {
   //   throw 'invalid object ID';
   // }
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({name: name });
+  const trip = await tripCollection.findOne({ name: name });
   if (trip === null) {
     throw 'No trip with that id';
   }
@@ -668,18 +699,18 @@ const usersAllowed = async (userId, tripId) => {
   }
 };
 
-const remove  = async (tripId) => {
-  if(!tripId){
+const remove = async (tripId) => {
+  if (!tripId) {
     throw 'You must provide an id to search for';
-  } 
-  if(typeof tripId !== 'string'){
+  }
+  if (typeof tripId !== 'string') {
     throw 'Id must be a string';
   }
-  if(tripId.trim().length === 0){
+  if (tripId.trim().length === 0) {
     throw 'id cannot be an empty string or just spaces';
   }
   tripId = tripId.trim();
-  if(!ObjectId.isValid(tripId)){
+  if (!ObjectId.isValid(tripId)) {
     throw 'invalid object ID';
   }
   const tripCollection = await trips();
@@ -691,14 +722,24 @@ const remove  = async (tripId) => {
     throw `Could not delete trip with id of ${tripId}`;
   }
   // return `${deletionInfo.value.name} has been successfully deleted!`;
-  return {"tripId": `${deletionInfo.value.tripId}`, "deleted": true};
+  return { 'tripId': `${deletionInfo.value.tripId}`, 'deleted': true };
 };
 
-const update = async (nameParams, tripName, startLocation, startDate, startTime, endLocation, 
-  endDate, endTime, stops, toDo, usersAllowed) => {
-  
+const update = async (
+  nameParams,
+  tripName,
+  startLocation,
+  startDate,
+  startTime,
+  endLocation,
+  endDate,
+  endTime,
+  stops,
+  toDo,
+  usersAllowed
+) => {
   // Check that the id is provided
-  console.log(1)
+  // console.log(1);
   // if (
   //   !nameParams ||
   //   !tripName ||
@@ -836,7 +877,10 @@ const update = async (nameParams, tripName, startLocation, startDate, startTime,
   //   toDo[i] = toDo[i].trim();
   // }
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({name: nameParams });
+  if (await tripCollection.findOne({ name: tripName })) {
+    throw 'Error: Trip name already exists';
+  }
+  const trip = await tripCollection.findOne({ name: nameParams });
 
   const updatedtrip = {
     userId: trip.userId,
@@ -852,16 +896,15 @@ const update = async (nameParams, tripName, startLocation, startDate, startTime,
     to_do: toDo,
     cost: trip.cost,
     users_allowed: usersAllowed
-  }
+  };
   const updatedInfo = await tripCollection.replaceOne({ name: nameParams }, updatedtrip);
 
   if (updatedInfo.modifiedCount === 0) {
-    throw "Could not update band successfully";
+    throw 'Could not update band successfully';
   }
 
   return await get(tripName);
 };
-
 
 export {
   createTrip,
