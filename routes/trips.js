@@ -465,7 +465,7 @@ router
   });
 
   router
-  .route("/map/:userId")
+  .route("/map")
   .get(async (req, res) => {
     //code here for GET
     try {
@@ -536,8 +536,7 @@ router
 
     try {
       const trip = await tripsData.createTrip(
-        // req.params.userId, 
-        req.session.user.id,
+        req.session.user.id, 
         req.body.tripNameInput, 
         req.body.startLocationInput, 
         req.body.startDateInput, 
@@ -546,15 +545,24 @@ router
         req.body.endDateInput, 
         req.body.endTimeInput, 
         stopsArr, 
-        toDoArr);
-      return res.status(200).render("map", {title: "map", mData: trip});
+        toDoArr,
+        req.body.usersAllowedInput);
+        req.session.currentTrip = req.body.tripNameInput;
+      return res.status(200).render("map", {title: "map", mData: trip, userId: req.session.user.id, currentTrip: req.body.tripNameInput});
     } catch (e) {
         return res.status(400).json(e);
     }
   })
-  // .put(async (req, res) => {
-
-  // });
+  .put(async (req, res) => {
+    try {
+      console.log(req.body.newStopInput);
+      const trip = await itineraryData.addStop(req.session.currentTrip, req.body.newStopInput);
+      console.log(trip);
+      return res.status(200).render("map", {title: "map", mData: trip, userId: req.session.user.id});
+    } catch (e) {
+        return res.status(400).json(e);
+    }
+  });
   
 
   router
