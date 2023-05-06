@@ -140,3 +140,32 @@ label::before {
   white-space: pre;
   display: block;
 }
+#vroom {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  z-index: 2;
+}
+#vroom-vroom {
+  padding-top: 195px;
+  float: left;
+  position: relative;
+  animation-name: driving;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  animation-timing-function: ease-in-out;
+}
+@keyframes driving {
+  0%   {left: 0px; top:0px; down: 50;}
+  25%  {left:1300px; top:0px;}
+  50%  {left:1300px; top:0px;}
+  75%  {left:1300px; top:0px;}
+  100% {left:0px; top:0px;}
+}
+#usa {
+  width: 800px;
+  height: 500px;
+  position: relative;
+  z-index: 1;
+}
