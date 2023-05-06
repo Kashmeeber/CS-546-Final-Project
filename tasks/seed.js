@@ -1,15 +1,32 @@
-import * as trips from '../data/users.js'
+import { userData, tripsData, itineraryData } from '../data/index.js';
 import {dbConnection, closeConnection} from '../config/mongoConnection.js';
 
 //lets drop the database each time this is run
 const db = await dbConnection();
-// await db.dropDatabase();
+await db.dropDatabase();
 
 async function main() {
     try{
-        const pinkFloyd = await bands.createUser("big", "bird", "sunglasses2@gmail.com", "lalalalalA25!", "admin");    }
+        const user1 = await userData.createUser("Areeb", "Chaudhry", "areeb@gmail.com", "Qwertyuiop@123");  
+        const user1_trip1 = await tripsData.createTrip(user1._id.toString(), "Trip 1", "Jersey City, NJ", "05/25/2023", "08:00", "New York City, NY", "05/26/2023", "09:00", ["Newport Mall","Hamilton Park Montessori School"], ["Chillax"]);
+        const user1_trip2 = await tripsData.createTrip(user1._id.toString(), "Trip 2", "San Francisco, CA", "05/25/2023", "08:00", "Jersey City, NJ", "05/26/2023", "09:00", ["Salt Lake City, UT","Kansas City, MO"], ["Chillax"]);  
+        const user1_activity1 = await itineraryData.createActivity(user1_trip1.name, "Watching a KCC game", "05/25/2023", "11:00", "14:00", 50);
+        const user1_addStop = await itineraryData.addStop(user1_trip1.name, "Madison Square Garden");
+    }
     catch(e){
-        console.log(e);
+        console.log("User 1: " + e);
+    }
+    try{
+        const user2 = await userData.createUser("big", "bird", "sunglasses2@gmail.com", "lalalalalA25!"); 
+    }
+    catch(e){
+        console.log("User 2: " + e);
+    }
+    try{
+        const user3 = await userData.createUser("Shailaja", "Vyas", "svyaslol@gmail.com", "Hello123!");    
+    }
+    catch(e){
+        console.log("User 3: " + e);
     }
 
     // try{

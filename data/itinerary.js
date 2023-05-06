@@ -128,7 +128,7 @@ const addStop = async (tripName, stop) => {
   if (!tripName || !stop) {
     throw 'Error: All fields need to have valid values';
   }
-  if (typeof tripName !== 'string' || tripId.trim().length === 0) {
+  if (typeof tripName !== 'string' || tripName.trim().length === 0) {
     throw 'Error: Must provide trip id as valid nonempty string';
   }
   tripName = tripName.trim();
@@ -140,9 +140,9 @@ const addStop = async (tripName, stop) => {
   //Need to figure out how what is in stops
 
   const tripCollection = await trips();
-  const tripInfo = await tripCollection.findOne({ _id: new ObjectId(tripId) });
+  const tripInfo = await tripCollection.findOne({ name: tripName });
   if (tripInfo === null) {
-    throw `Error: No trip with that id found`;
+    throw `Error: No trip with that name found`;
   }
   let stops = tripInfo.stops;
   for (let y = 0; y < stops.length; y++) {
@@ -151,13 +151,13 @@ const addStop = async (tripName, stop) => {
     }
   }
   stops.push(stop);
-  const updatedBand = await bandCollection.updateOne(
-    { _id: new ObjectId(tripId) },
+  const updatedTrip = await tripCollection.updateOne(
+    { name: tripName },
     { $set: { stops: stops } },
     { returnDocument: 'after' }
   );
-  if (updatedBand.modifiedCount === 0) {
-    throw [500, `Could not update stops of trip with id ${tripId}`];
+  if (updatedTrip.modifiedCount === 0) {
+    throw [500, `Could not update stops of trip with name ${tripName}`];
   }
   return `Successfully added ${stop} to trip`;
 };
@@ -323,7 +323,7 @@ const updateActivity = async (
   }
   const tripCollection = await trips();
   // Find the band given the band id
-  let trip = await tripCollection.findOne({ name: new ObjectId(tripName) });
+  let trip = await tripCollection.findOne({ name: tripName });
 
   // Update the band with the given id
   const updatedItinerary = {
@@ -377,7 +377,7 @@ const updateActivity = async (
 
   trip.overallCost = Number.parseFloat(newCost.toFixed(2));
 
-  const updatedInfo = await tripCollection.replaceOne({ name: new ObjectId(tripName) }, trip);
+  const updatedInfo = await tripCollection.replaceOne({ name: tripName }, trip);
 
   if (updatedInfo.modifiedCount === 0) {
     throw 'Could not update band successfully';
