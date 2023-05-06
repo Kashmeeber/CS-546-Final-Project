@@ -1,11 +1,12 @@
 <p id="serverErr">{{error}}</p>
 <div id="error" hidden></div>
 <form id="selection" action="/trips/itinerary" method="POST">
-    <select name="tripName" id="tripName" >
+    <select name="tripName" id="tripName">
         {{#each trips}}
-            <option value="{{this.name}}">{{this.name}}</option>
+        <option value="{{this.name}}">{{this.name}}</option>
         {{/each}}
     </select>
-    <button id="submit" onclick="">Submit</button>
-
+    <label for="submit">
+        <button type="submit" name="submit" id="submit">Submit</button>
+    </label>
 </form>
