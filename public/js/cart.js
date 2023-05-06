@@ -35,7 +35,6 @@ function Map() {
     });
     displayRoute(`${document.currentScript.getAttribute("start")}`, `${document.currentScript.getAttribute("end")}`, `${document.currentScript.getAttribute("stops")}`,directionsService, directionsRenderer);
   } catch (e) {
-    console.log(e);
     throw e;
     
   }
@@ -54,11 +53,9 @@ async function displayRoute(origin, destination, stops, service, display) {
       }
     }
     let way = [];
-    console.log(stops);
     for (let i = stopsArr.length - 1; i >= 0; i--) {
       way.push({location: stopsArr[i]});
     }
-    console.log(way);
       let serv = await service.route({
           origin: origin,
           destination: destination,
@@ -74,16 +71,62 @@ async function displayRoute(origin, destination, stops, service, display) {
 }
 
 function computeTotalDistance(result) {
-  let total = 0;
+  let totalDist = 0;
+  let totalTime = 0;
   let myroute = result.routes[0];
   if (!myroute) {
       return;
   }
   for (let i = 0; i < myroute.legs.length; i++) {
-      total += myroute.legs[i].distance.value;
+      totalDist += myroute.legs[i].distance.value;
   }
-  total = (total / 1000 / 1.609).toFixed(2);
-  // document.getElementById('total').innerHTML = total + ' miles';
+  for (let i = 0; i < myroute.legs.length; i++) {
+    totalTime += myroute.legs[i].duration.value;
+  }
+  totalDist = (totalDist / 1000 / 1.609).toFixed(2);
+  if (totalTime / 60 < 1.5) {
+
+    totalTime = "About 1 min";
+
+  } else if (totalTime / 60 >= 1.5 && totalTime / 3600 < 1) {
+
+    totalTime = "About " + Math.floor(totalTime / 60) + " mins";
+
+  } else if (totalTime / 3600 >= 1  && totalTime / 3600 < 2 && ((totalTime % 3600) / 60) < 1.5 ) {
+
+    totalTime = "About 1 hour " + ((totalTime % 3600) / 60).toFixed(0) + " min" 
+
+  } else if (totalTime / 3600 >= 1 && totalTime / 3600 < 2 &&  ((totalTime % 3600) / 60) >= 1.5) {
+
+    totalTime = "About 1 hour " + Math.floor((totalTime % 3600) / 60) + " mins" 
+
+  } else if (totalTime / 3600 >= 2 && totalTime / 86400 < 1 && (totalTime % 3600 / 60 < 1.5)) {
+
+    totalTime = "About " + Math.floor(totalTime / 3600) + " hours " + ((totalTime % 3600) / 60).toFixed(0) + " min" 
+
+  } else if (totalTime / 3600 >= 2 && totalTime / 86400 < 1 && ((totalTime % 3600) / 60) >= 1.5) {
+
+    totalTime = "About " + Math.floor(totalTime / 3600) + " hours " + Math.floor((totalTime % 3600) / 60) + " mins" 
+
+  } else if (totalTime / 86400 >= 1 && totalTime / 86400 < 2 && ((totalTime % 86400) / 3600) < 1.5) {
+
+    totalTime = "About " + Math.floor(totalTime / 86400) + " day " + ((totalTime % 86400) / 3600).toFixed(0) + " hour"
+
+  } else if (totalTime / 86400 >= 1 && totalTime / 86400 < 2 && ((totalTime % 86400) / 3600) >= 1.5) {
+
+    totalTime = "About " +  Math.floor(totalTime / 86400) + " day " + Math.floor((totalTime % 86400) / 3600) + " hours"
+
+  } else if (totalTime / 86400 >= 2 && (totalTime % 86400 / 3600 < 1.5)) {
+
+    totalTime = "About " + Math.floor(totalTime / 86400) + " days " + (totalTime % 86400 / 3600).toFixed(0) + " hour"
+
+  } else if (totalTime / 86400 >= 2 && (totalTime % 86400 / 3600 >= 1.5) && (totalTime % 86400 / 3600 < 24)) {
+
+    totalTime = "About " + Math.floor(totalTime / 86400) + " days " + Math.floor(totalTime % 86400 / 3600) + " hours"
+  
+  }
+  document.getElementById('totalDist').innerHTML = totalDist + ' miles';
+  document.getElementById('totalTime').innerHTML = totalTime;
 }
 
 function errorCheck(firstName, lastName, emailAddress, password, confirmPassword) {
