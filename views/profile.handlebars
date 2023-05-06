@@ -9,24 +9,29 @@
         <p class="profile">Email Address: {{emailAddressInput}}</p>
     </div>
 </div>
+<div>
+
+</div>
 <p>My Trips: </p>
 {{#each trips}}
-    <div id="{{this._id}}">
-        <p>{{this.name}}</p>
-        <p>{{this.start_location}}</p>
-        <p>{{this.start_date}}</p>
-        <p>{{this.start_time}}</p>
-        <p>{{this.end_location}}</p>
-        <p>{{this.end_date}}</p>
-        <p>{{this.end_time}}</p>
-        <p>Stops:</p>
-        {{#each this.stops}}
-            <p>{{this}}</p>
-        {{/each}}
-        <p>Things To Do:</p>
-        {{#each this.to_do}}
-            <p>{{this}}</p>
-        {{/each}}
+    <div class="trips">
+        <div class="content">
+            <p>Name of Trip: {{this.name}}</p>
+            <p>Start Location: {{this.start_location}}</p>
+            <p>Start Date: {{this.start_date}}</p>
+            <p>Start Time: {{this.start_time}}</p>
+            <p>End Location: {{this.end_location}}</p>
+            <p>End Date: {{this.end_date}}</p>
+            <p>End Time: {{this.end_time}}</p>
+            <p>Stops:</p>
+            {{#each this.stops}}
+                <p>{{this}}</p>
+            {{/each}}
+            <p>Things To Do:</p>
+            {{#each this.to_do}}
+                <p>{{this}}</p>
+            {{/each}}
+        </div>
     {{!-- <p>{{this.usersAllowed}}</p> --}}
     </div>
 
