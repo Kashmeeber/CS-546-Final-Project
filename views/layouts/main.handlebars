@@ -51,6 +51,29 @@
                     });
                 });
             </script>
+             <script>
+                const myForm3 = document.getElementById('editItineraryForm');
+                myForm3.addEventListener('submit', function(event) {
+                    event.preventDefault(); // prevent the form from submitting normally
+                    
+                    // create a new FormData object from the form data
+                    const formData = new FormData(myForm);
+                    
+                    // send the PUT request using fetch
+                    fetch(myForm.action, {
+                    method: 'PUT',
+                    body: formData
+                    })
+                    .then(response => {
+                    // handle the response
+                    continue;
+                    })
+                    .catch(error => {
+                    // handle the error
+                    console.log(error)
+                    });
+                });
+            </script>
             <script>
                 const myForm2 = document.getElementById('mapSearch');
                 myForm2.addEventListener('submit', function(event) {

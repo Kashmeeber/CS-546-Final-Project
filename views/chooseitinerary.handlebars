@@ -1,0 +1,14 @@
+
+<p id="serverErr">{{error}}</p>
+<div id="error" hidden></div>
+<p>Choose the itinerary you want to edit: </p>
+<form id="selection3" action="/trips/edititinerary/{{currentTrip}}" method="POST">
+{{!-- <form id="selection3">  --}}
+    <select name="activityName" id="activityName" >
+        {{#each trips}}
+            <option value="{{this.activityName}}">{{this.activityName}}</option>
+        {{/each}}
+    </select>
+    <button id="submit" onclick="">Submit</button>
+
+</form>
