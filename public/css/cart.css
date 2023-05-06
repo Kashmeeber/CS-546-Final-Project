@@ -132,4 +132,11 @@ h2 {
 label::before {
   content: '\A';
   white-space: pre;
+  display: block;
+}
+
+.a-format::before {
+  content: '\A';
+  white-space: pre;
+  display: block;
 }
