@@ -52,12 +52,12 @@
                     event.preventDefault(); // prevent the form from submitting normally
                     
                     // create a new FormData object from the form data
-                    const formData = new FormData(myForm);
+                    const formData3 = new FormData(myForm3);
                     
                     // send the PUT request using fetch
-                    fetch(myForm.action, {
+                    fetch(myForm3.action, {
                     method: 'PUT',
-                    body: formData
+                    body: formData3
                     })
                     .then(response => {
                     // handle the response
