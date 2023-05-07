@@ -30,40 +30,40 @@ body {
 
 #navbar {
   background-color: #79b791;
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-  overflow: hidden;
   display: block;
-  text-align: center;
+  list-style-type: none;
+  overflow: hidden;
+  padding: 10px 15px;
 }
 
 li {
-  float: left;
-  padding: 10px 160px;
-  text-align: center;
-  margin: auto;
+  float:left;
+  background-color:  #f5bfc8;
 }
-
+.nav-item {
+  display: block;
+  padding-left: 160px;
+  padding-right: 160px;
+  font-weight: bold;
+  color: #281A12;
+}
+.nav-item:visited {
+  color: initial;
+}
+.nav-item:hover {
+  color: #462829;
+}
 a {
   display: block;
   text-align: center;
+  text-decoration: none;
 }
 
 main {
   margin: auto;
   text-align: center;
 }
-#left {
-  float: left;
-  text-align: center;
-  margin: auto;
-}
 
-#right {
-  margin: 0px;
-  padding: 10px 170px;
-}
 h1 {
   font-style: italic;
   letter-spacing: 5px;
@@ -170,4 +170,7 @@ label::before {
   height: 500px;
   position: relative;
   z-index: 1;
+}
+#successful {
+  font-size: 30px;
 }
