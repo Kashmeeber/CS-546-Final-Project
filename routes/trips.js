@@ -168,6 +168,7 @@ router
     let et = actInfo.activityEndTimeInput.split(':');
     let sd = actInfo.dateInput.split('/');
 
+
     try{
       if(!regex.test(actInfo.activityInput)){
         throw 'Activity Name must be a string'
@@ -205,7 +206,9 @@ router
       }
       let currentYear = new Date();
       let newCurrentYear = currentYear.getFullYear();
-      if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
+      if (sd[2] < newCurrentYear 
+        // && ed[2] > newCurrentYear + 2
+        ) {
         throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
       }
       if (
@@ -225,7 +228,9 @@ router
       if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
         throw 'Error: Must provide start date in MM/DD/YYYY format';
       }
-      if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
+      if (sd[2] * 1 < 1900 
+        // || sd[2] * 1 > ed[2] * 1
+        ) {
         throw 'Error: Must provide start date in MM/DD/YYYY format';
       }
           
