@@ -3,7 +3,6 @@
 // const { create } = require('handlebars');
 // import create from 'handlebars';
 
-
 // for tripplannning.handlebars there needs to be a function that shows a hidden div on click
 let registrationForm = document.getElementById('registration-form');
 let loginForm = document.getElementById('login-form');
@@ -15,63 +14,65 @@ let createItinerary = document.getElementById('createItineraryForm');
 let editItinerary = document.getElementById('editItineraryForm');
 let promptQuestion1 = document.getElementById('promptQuestion1');
 
-
-
-//Taken and modified from Google API documentation 
+//Taken and modified from Google API documentation
 function Map() {
   try {
-     let map = new google.maps.Map(document.getElementById('map'), {
+    let map = new google.maps.Map(document.getElementById('map'), {
       zoom: 4,
       center: { lat: 40.743992, lng: -74.032364 }, // Hoboken
       streetViewControl: false
     });
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer({
-        draggable: true,
-        map: map,
-        panel: document.getElementById('panel'),
+      draggable: true,
+      map: map,
+      panel: document.getElementById('panel')
     });
     directionsRenderer.addListener('directions_changed', function () {
-        let directions = directionsRenderer.getDirections();
-        if (directions) {
-            computeTotalDistance(directions);
-        }
+      let directions = directionsRenderer.getDirections();
+      if (directions) {
+        computeTotalDistance(directions);
+      }
     });
     // google.maps.event.addDomListener(window, 'load', Map);
-    displayRoute(`${document.currentScript.getAttribute("start")}`, `${document.currentScript.getAttribute("end")}`, `${document.currentScript.getAttribute("stops")}`, directionsService, directionsRenderer);
+    displayRoute(
+      `${document.currentScript.getAttribute('start')}`,
+      `${document.currentScript.getAttribute('end')}`,
+      `${document.currentScript.getAttribute('stops')}`,
+      directionsService,
+      directionsRenderer
+    );
   } catch (e) {
     throw e;
   }
- 
 }
-
 
 async function displayRoute(origin, destination, stops, service, display) {
   try {
     let stopsArr = [];
     let splitStops = stops.split('/');
-    for(let i = splitStops.length - 1; i >= 0; i--) {
-      if(typeof splitStops[i] == "string"){
+    for (let i = splitStops.length - 1; i >= 0; i--) {
+      if (typeof splitStops[i] == 'string') {
         stopsArr.push(splitStops[i]);
-      }else{
-        throw 'One of the stops is not a valid string'
+      } else {
+        throw 'One of the stops is not a valid string';
       }
     }
     let way = [];
     for (let i = stopsArr.length - 1; i >= 0; i--) {
-      way.push({location: stopsArr[i]});
+      way.push({ location: stopsArr[i] });
     }
-      let serv = await service.route({
-          origin: origin,
-          destination: destination,
-          waypoints: way,
-          travelMode: google.maps.TravelMode.DRIVING,
-          avoidTolls: false,
-          provideRouteAlternatives: true
-      });
-      display.setDirections(serv);
+    let serv = await service.route({
+      origin: origin,
+      destination: destination,
+      waypoints: way,
+      travelMode: google.maps.TravelMode.DRIVING,
+      avoidTolls: false,
+      provideRouteAlternatives: true
+    });
+    display.setDirections(serv);
   } catch (e) {
-      throw 'Could not display directions due to: ' + e;
+    throw 'Could not display directions due to: ' + e;
   }
 }
 
@@ -80,55 +81,69 @@ function computeTotalDistance(result) {
   let totalTime = 0;
   let myroute = result.routes[0];
   if (!myroute) {
-      return;
+    return;
   }
   for (let i = 0; i < myroute.legs.length; i++) {
-      totalDist += myroute.legs[i].distance.value;
+    totalDist += myroute.legs[i].distance.value;
   }
   for (let i = 0; i < myroute.legs.length; i++) {
     totalTime += myroute.legs[i].duration.value;
   }
   totalDist = (totalDist / 1000 / 1.609).toFixed(2);
   if (totalTime / 60 < 1.5) {
-
-    totalTime = "About 1 min";
-
+    totalTime = 'About 1 min';
   } else if (totalTime / 60 >= 1.5 && totalTime / 3600 < 1) {
-
-    totalTime = "About " + Math.floor(totalTime / 60) + " mins";
-
-  } else if (totalTime / 3600 >= 1  && totalTime / 3600 < 2 && ((totalTime % 3600) / 60) < 1.5 ) {
-
-    totalTime = "About 1 hour " + ((totalTime % 3600) / 60).toFixed(0) + " min" 
-
-  } else if (totalTime / 3600 >= 1 && totalTime / 3600 < 2 &&  ((totalTime % 3600) / 60) >= 1.5) {
-
-    totalTime = "About 1 hour " + Math.floor((totalTime % 3600) / 60) + " mins" 
-
-  } else if (totalTime / 3600 >= 2 && totalTime / 86400 < 1 && (totalTime % 3600 / 60 < 1.5)) {
-
-    totalTime = "About " + Math.floor(totalTime / 3600) + " hours " + ((totalTime % 3600) / 60).toFixed(0) + " min" 
-
-  } else if (totalTime / 3600 >= 2 && totalTime / 86400 < 1 && ((totalTime % 3600) / 60) >= 1.5) {
-
-    totalTime = "About " + Math.floor(totalTime / 3600) + " hours " + Math.floor((totalTime % 3600) / 60) + " mins" 
-
-  } else if (totalTime / 86400 >= 1 && totalTime / 86400 < 2 && ((totalTime % 86400) / 3600) < 1.5) {
-
-    totalTime = "About " + Math.floor(totalTime / 86400) + " day " + ((totalTime % 86400) / 3600).toFixed(0) + " hour"
-
-  } else if (totalTime / 86400 >= 1 && totalTime / 86400 < 2 && ((totalTime % 86400) / 3600) >= 1.5) {
-
-    totalTime = "About " +  Math.floor(totalTime / 86400) + " day " + Math.floor((totalTime % 86400) / 3600) + " hours"
-
-  } else if (totalTime / 86400 >= 2 && (totalTime % 86400 / 3600 < 1.5)) {
-
-    totalTime = "About " + Math.floor(totalTime / 86400) + " days " + (totalTime % 86400 / 3600).toFixed(0) + " hour"
-
-  } else if (totalTime / 86400 >= 2 && (totalTime % 86400 / 3600 >= 1.5) && (totalTime % 86400 / 3600 < 24)) {
-
-    totalTime = "About " + Math.floor(totalTime / 86400) + " days " + Math.floor(totalTime % 86400 / 3600) + " hours"
-  
+    totalTime = 'About ' + Math.floor(totalTime / 60) + ' mins';
+  } else if (totalTime / 3600 >= 1 && totalTime / 3600 < 2 && (totalTime % 3600) / 60 < 1.5) {
+    totalTime = 'About 1 hour ' + ((totalTime % 3600) / 60).toFixed(0) + ' min';
+  } else if (totalTime / 3600 >= 1 && totalTime / 3600 < 2 && (totalTime % 3600) / 60 >= 1.5) {
+    totalTime = 'About 1 hour ' + Math.floor((totalTime % 3600) / 60) + ' mins';
+  } else if (totalTime / 3600 >= 2 && totalTime / 86400 < 1 && (totalTime % 3600) / 60 < 1.5) {
+    totalTime =
+      'About ' +
+      Math.floor(totalTime / 3600) +
+      ' hours ' +
+      ((totalTime % 3600) / 60).toFixed(0) +
+      ' min';
+  } else if (totalTime / 3600 >= 2 && totalTime / 86400 < 1 && (totalTime % 3600) / 60 >= 1.5) {
+    totalTime =
+      'About ' +
+      Math.floor(totalTime / 3600) +
+      ' hours ' +
+      Math.floor((totalTime % 3600) / 60) +
+      ' mins';
+  } else if (totalTime / 86400 >= 1 && totalTime / 86400 < 2 && (totalTime % 86400) / 3600 < 1.5) {
+    totalTime =
+      'About ' +
+      Math.floor(totalTime / 86400) +
+      ' day ' +
+      ((totalTime % 86400) / 3600).toFixed(0) +
+      ' hour';
+  } else if (totalTime / 86400 >= 1 && totalTime / 86400 < 2 && (totalTime % 86400) / 3600 >= 1.5) {
+    totalTime =
+      'About ' +
+      Math.floor(totalTime / 86400) +
+      ' day ' +
+      Math.floor((totalTime % 86400) / 3600) +
+      ' hours';
+  } else if (totalTime / 86400 >= 2 && (totalTime % 86400) / 3600 < 1.5) {
+    totalTime =
+      'About ' +
+      Math.floor(totalTime / 86400) +
+      ' days ' +
+      ((totalTime % 86400) / 3600).toFixed(0) +
+      ' hour';
+  } else if (
+    totalTime / 86400 >= 2 &&
+    (totalTime % 86400) / 3600 >= 1.5 &&
+    (totalTime % 86400) / 3600 < 24
+  ) {
+    totalTime =
+      'About ' +
+      Math.floor(totalTime / 86400) +
+      ' days ' +
+      Math.floor((totalTime % 86400) / 3600) +
+      ' hours';
   }
   document.getElementById('totalDist').innerHTML = totalDist + ' miles';
   document.getElementById('totalTime').innerHTML = totalTime;
@@ -166,22 +181,23 @@ function errorCheck(firstName, lastName, emailAddress, password, confirmPassword
   }
 
   if (!emailAddress.includes('@')) {
-    throw 'Error: Input valid email address';
+    throw 'Error: Email addres must include @';
   }
   let splitEmail = emailAddress.split('@');
   if (!splitEmail[1].includes('.')) {
-    throw 'Error: Input valid email address';
+    throw 'Error: Email address must include .____';
   }
+
   //REGEX SOURCE https://stackoverflow.com/questions/10557441/regex-to-allow-atleast-one-special-character-one-uppercase-one-lowercasein-an
 
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_!]).*$/;
 
   //figure out regex
   if (password.length == 0 || password.length < 8 || password.includes(' ')) {
-    throw 'Error: must input valid password';
+    throw 'Error: Password must be at least 8 characters long and cannot include empty spaces';
   }
   if (!regex.test(password)) {
-    throw 'Error: Must be valid password syntax';
+    throw 'Error: Password must include at least one capital letter, one number, and one special character';
   }
 
   if (password != confirmPassword) {
@@ -335,8 +351,8 @@ function errorCheck3(
   }
   let splitToDo = toDo.split(',');
   let splitStops = stops.split('/');
-  let toDoArr =[]
-  let stopsArr = []
+  let toDoArr = [];
+  let stopsArr = [];
 
   for (let i = 0; i < splitToDo.length; i++) {
     if (typeof splitToDo[i] == 'string') {
@@ -365,77 +381,77 @@ function errorCheck4(activityName, date, startTime, endTime, cost, notes) {
   let st = startTime.split(':');
   let et = endTime.split(':');
   let sd = date.split('/');
-    if (!regex.test(activityName)) {
-      throw 'Activity Name must be a string';
-    }
-
-    if (
-      st.length != 2 ||
-      st[0].length != 2 ||
-      st[1].length != 2 ||
-      !regexNum.test(st[0]) ||
-      !regexNum.test(st[1])
-    ) {
-      throw 'Error: Must provide start time in HH:MM format';
-    }
-    if (
-      et.length != 2 ||
-      et[0].length != 2 ||
-      et[1].length != 2 ||
-      !regexNum.test(et[0]) ||
-      !regexNum.test(et[1])
-    ) {
-      throw 'Error: Must provide end time in HH:MM format';
-    }
-    if (st[0] * 1 < 0 || st[0] * 1 > 23) {
-      throw 'Error: Must provide start time in HH:MM format';
-    }
-    if (st[1] * 1 < 0 || st[1] * 1 > 59) {
-      throw 'Error: Must provide start time in HH:MM format';
-    }
-    if (et[0] * 1 < 0 || et[0] * 1 > 23) {
-      throw 'Error: Must provide end time in HH:MM format';
-    }
-    if (et[1] * 1 < 0 || et[1] * 1 > 59) {
-      throw 'Error: Must provide end time in HH:MM format';
-    }
-    let currentYear = new Date();
-    let newCurrentYear = currentYear.getFullYear();
-    if (
-      sd[2] < newCurrentYear
-      // && ed[2] > newCurrentYear + 2
-    ) {
-      throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
-    }
-    if (
-      sd.length != 3 ||
-      sd[0].length != 2 ||
-      sd[1].length != 2 ||
-      sd[2].length != 4 ||
-      !regexNum.test(sd[0]) ||
-      !regexNum.test(sd[1]) ||
-      !regexNum.test(sd[2])
-    ) {
-      throw 'Error: Must provide start date in MM/DD/YYYY format';
-    }
-    if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
-      throw 'Error: Must provide start date in MM/DD/YYYY format';
-    }
-    if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
-      throw 'Error: Must provide start date in MM/DD/YYYY format';
-    }
-    if (
-      sd[2] * 1 <
-      1900
-      // || sd[2] * 1 > ed[2] * 1
-    ) {
-      throw 'Error: Must provide start date in MM/DD/YYYY format';
-    }
-    if(!regexNum.test(cost)){
-      throw 'Cost must be a number'
-    }
-  return;
+  if (!regex.test(activityName)) {
+    throw 'Activity Name must be a string';
   }
+
+  if (
+    st.length != 2 ||
+    st[0].length != 2 ||
+    st[1].length != 2 ||
+    !regexNum.test(st[0]) ||
+    !regexNum.test(st[1])
+  ) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (
+    et.length != 2 ||
+    et[0].length != 2 ||
+    et[1].length != 2 ||
+    !regexNum.test(et[0]) ||
+    !regexNum.test(et[1])
+  ) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+    throw 'Error: Must provide start time in HH:MM format';
+  }
+  if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+    throw 'Error: Must provide end time in HH:MM format';
+  }
+  let currentYear = new Date();
+  let newCurrentYear = currentYear.getFullYear();
+  if (
+    sd[2] < newCurrentYear
+    // && ed[2] > newCurrentYear + 2
+  ) {
+    throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
+  }
+  if (
+    sd.length != 3 ||
+    sd[0].length != 2 ||
+    sd[1].length != 2 ||
+    sd[2].length != 4 ||
+    !regexNum.test(sd[0]) ||
+    !regexNum.test(sd[1]) ||
+    !regexNum.test(sd[2])
+  ) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (
+    sd[2] * 1 <
+    1900
+    // || sd[2] * 1 > ed[2] * 1
+  ) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (!regexNum.test(cost)) {
+    throw 'Cost must be a number';
+  }
+  return;
+}
 
 if (registrationForm) {
   registrationForm.addEventListener('submit', (event) => {
