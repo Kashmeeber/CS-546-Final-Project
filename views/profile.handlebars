@@ -45,6 +45,9 @@
             <div id="contains">
                 <p class="next">End Time:</p><p>{{this.end_time}}</p>
             </div>
+            <div id="contains">
+                <p class="next">Overall Cost:</p><p>{{this.overallCost}}</p>
+            </div>
             <p class="pad">Stops:</p>
             {{#each this.stops}}
                 <p>- {{this}}</p>
@@ -53,9 +56,6 @@
             {{#each this.to_do}}
                 <p>- {{this}}</p>
             {{/each}}
-            <div id="contains">
-                <p class="next">Overall Cost:</p><p>{{this.overallCost}}</p>
-            </div>
         </div>
     {{!-- <p>{{this.usersAllowed}}</p> --}}
     </div>
