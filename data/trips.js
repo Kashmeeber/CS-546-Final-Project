@@ -61,9 +61,9 @@ const createTrip = async (
   if (startLocation == endLocation) {
     throw 'Start location cannot be the same as end location';
   }
-  if (startTime == endTime) {
-    throw 'Start time cannot be the same as end time';
-  }
+  // if (startTime == endTime) {
+  //   throw 'Start time cannot be the same as end time';
+  // }
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }
@@ -778,9 +778,9 @@ const update = async (
   if (startLocation == endLocation) {
     throw 'Start location cannot be the same as end location';
   }
-  if (startTime == endTime) {
-    throw 'Start time cannot be the same as end time';
-  }
+  // if (startTime == endTime) {
+  //   throw 'Start time cannot be the same as end time';
+  // }
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }

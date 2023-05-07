@@ -126,7 +126,7 @@ router
       // }
 
       let splitToDo = tripInfo.toDoInput.split(',')
-      let splitStops = tripInfo.stopsInput.split(',')
+      let splitStops = tripInfo.stopsInput.split('/')
   
       for(let i = 0; i < splitToDo.length; i++) {
         if(typeof splitToDo[i] == "string"){
@@ -517,7 +517,7 @@ router
       // }
 
       let splitToDo = tripInfo.toDoInput.split(',')
-      let splitStops = tripInfo.stopsInput.split(',')
+      let splitStops = tripInfo.stopsInput.split('/')
   
       for(let i = 0; i < splitToDo.length; i++) {
         if(typeof splitToDo[i] == "string"){
@@ -553,17 +553,34 @@ router
         toDoArr,
         req.body.usersAllowedInput);
         req.session.currentTrip = req.body.tripNameInput;
-      return res.status(200).render("map", {title: "map", mData: trip, userId: req.session.user.id, currentTrip: req.body.tripNameInput});
+
+        let slash = "";
+        if (trip.stops.length === 0) {
+          
+        } else {
+          for (let i = 0; i < trip.stops.length; i++) {
+            slash = slash + trip.stops[i] + "/"
+          }
+          slash = slash.substring(0, slash.length-1);
+        }
+         
+      return res.status(200).render("map", {title: "map", mData: trip, userId: req.session.user.id, currentTrip: req.body.tripNameInput, stops: slash});
     } catch (e) {
         return res.status(400).json(e);
     }
   })
   .put(async (req, res) => {
     try {
-      console.log(req.body.newStopInput);
       const trip = await itineraryData.addStop(req.session.currentTrip, req.body.newStopInput);
-      console.log(trip);
-      return res.status(200).render("map", {title: "map", mData: trip, userId: req.session.user.id});
+      let slash = "";
+        if (trip.stops.length === 0) {
+        } else {
+          for (let i = 0; i < trip.stops.length; i++) {
+            slash = slash + trip.stops[i] + "/"
+          }
+          slash = slash.substring(0, slash.length-1);
+        }
+      return res.status(200).render("map", {title: "map", mData: trip, userId: req.session.user.id, stops: slash});
     } catch (e) {
         return res.status(400).json(e);
     }
@@ -619,7 +636,7 @@ router
       // }
 
       let splitToDo = tripInfo.toDoInput.split(',')
-      let splitStops = tripInfo.stopsInput.split(',')
+      let splitStops = tripInfo.stopsInput.split('/')
   
       for(let i = 0; i < splitToDo.length; i++) {
         if(typeof splitToDo[i] == "string"){
