@@ -54,11 +54,39 @@ li {
   color: #462829;
 }
 a {
-  display: block;
-  text-align: center;
+  display: inline-flex;
+  /* width: auto;
+  height: auto; */
+  text-align: center !important;
   text-decoration: none;
+  background-color: #f5bfc8;
+  padding: 10px 10px;
+  padding-top: unset;
+  padding-bottom: unset;
+  border-radius: 20px;
+  /* padding-left: 10px; */
+  color: #281A12;
 }
-
+a:visited {
+  color: initial;
+}
+a:hover {
+  color: #462829;
+}
+.button {
+  align-items: center;
+  text-align: center;
+}
+.login-holder {
+  display: inline-flex;
+  border: 5px solid #301014;
+  padding: 30px;
+  background-color: #acc9ba;
+  border-radius: 20px;
+}
+#cat-cry {
+  border-radius: 100px;
+}
 main {
   margin: auto;
   text-align: center;
@@ -173,4 +201,13 @@ label::before {
 }
 #successful {
   font-size: 30px;
+}
+
+#serverError {
+  color: red;
+  font-weight: bold;
+}
+
+.requirement {
+  color: crimson;
 }

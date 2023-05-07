@@ -1,14 +1,18 @@
 <p id="serverErr">{{error}}</p>
 <div id="error" hidden></div>
-<div>
+<div class="login-holder">
     <form action "/login" method="POST" id="login-form">
         <p class="text">Email:</p>
         <label for="emailAddressInput"><input type="email" name="emailAddressInput" id="emailAddressInput"></label>
         <p class="text">Password:</p>
         <label for="passwordInput"><input type="password" name="passwordInput" id="passwordInput"></label>
         <label for="loginSubmit" class="submitButton">
-            <input type="submit" name="loginSubmit" id="loginSubmit">
+            <input type="submit" name="loginSubmit" id="loginSubmit" class="submit-button">
         </label>
     </form>
 </div>
-<a href="/register" class="a-format">Click here to register!</a>
+<p>
+</p>
+<div class="button">
+    <a href="/register" class="a-format">Click here to register!</a>
+</div>
