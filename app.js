@@ -74,6 +74,14 @@ app.use('/trips', (req, res, next) => {
   }
 });
 
+app.use('/homepage', (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect('/login')
+  } else {
+    next();
+  }
+});
+
 app.use('/logout', (req, res, next) => {
   if (!req.session.user) {
     return res.redirect('/login')
