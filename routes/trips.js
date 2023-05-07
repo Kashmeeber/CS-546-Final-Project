@@ -491,7 +491,7 @@ router
   .get(async (req, res) => {
     //code here for GET
     try {
-      let trip = await tripsData.get(req.session.currentTrip);
+      let trip = await tripsData.get(req.params.tripName);
       let slash = '';
       if (trip.stops.length === 0) {
       } else {
@@ -500,7 +500,7 @@ router
         }
         slash = slash.substring(0, slash.length - 1);
       }
-      return res.render('map', { title: `${req.session.currentTrip} map`, userId: req.session.user.id, currentName: req.session.currentTrip, mData: trip, stops: slash });
+      return res.render('map', { title: `${req.params.tripName} map`, userId: req.session.user.id, currentName: req.session.currentTrip, mData: trip, stops: slash });
     } catch (e) {
       return res.status(500).json(e);
     }
