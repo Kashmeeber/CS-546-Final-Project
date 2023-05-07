@@ -186,7 +186,7 @@ const createTrip = async (
     stops: stops,
     itinerary: [],
     to_do: toDo,
-    cost: 0
+    overallCost: 0
   };
   const tripCollection = await trips();
   if (await tripCollection.findOne({ name: tripName })) {
@@ -358,7 +358,7 @@ const updateTime = async (tripId, startTime, endTime) => {
     stops: oldTrip.stops,
     itinerary: oldTrip.itinerary,
     to_do: oldTrip.to_do,
-    cost: oldTrip.cost
+    overallCost: oldTrip.overallCost
   };
   const tripCollection = await trips();
   const updatedTripInfo = await tripCollection.findOneAndUpdate(
@@ -1050,7 +1050,7 @@ const update = async (
     stops: stops,
     itinerary: trip.itinerary,
     to_do: toDo,
-    cost: trip.cost
+    overallCost: trip.overallCost
   };
   const updatedInfo = await tripCollection.replaceOne({ name: nameParams }, updatedtrip);
 
