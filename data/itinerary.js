@@ -342,7 +342,6 @@ const updateActivity = async (
     cost: cost,
     notes: notes
   };
-
   let itineraryArr = trip.itinerary;
   let newItineraryArr = [];
   // itineraryArr.push(updatedItinerary);
@@ -357,16 +356,19 @@ const updateActivity = async (
     // console.log(currIt)
     // console.log(currIt._id.toString())
     // console.log(activityId);
+    // if (currIt.activityName !== activityName) {
+    //   newItineraryArr.push(currIt);
+    // }
     if (currIt._id.toString() !== activityId) {
       newItineraryArr.push(currIt);
     }
-  }
 
+  }
   // console.log(newItineraryArr);
   // console.log(itineraryArr);
 
   newItineraryArr.push(updatedItinerary);
-
+  console.log(newItineraryArr);
   // console.log(newItineraryArr);
 
   trip.itinerary = newItineraryArr;
@@ -385,12 +387,12 @@ const updateActivity = async (
   trip.overallCost = Number.parseFloat(newCost.toFixed(2));
 
   const updatedInfo = await tripCollection.replaceOne({ name: tripName }, trip);
-
+  // console.log(updatedInfo);
   if (updatedInfo.modifiedCount === 0) {
     throw 'Could not update band successfully';
   }
 
-  return 'You have sucessfully updated your itinerary';
+  return 'You have successfully updated your itinerary';
 };
 
 const getActivitybyName = async (activityName) => {

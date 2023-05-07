@@ -189,12 +189,12 @@ const createTrip = async (
     overallCost: 0
   };
   const tripCollection = await trips();
-  if (await tripCollection.findOne({ name: tripName })) {
+  if (await tripCollection.findOne({$and: [{ name: tripName }, {_id: userId}]})) {
     throw 'Error: Trip name already exists';
   }
   const insertInfo = await tripCollection.insertOne(newTrip);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add trip';
-  const newId = insertInfo.insertedId.toString();
+  // const newId = insertInfo.insertedId.toString();
   const trip = await get(newTrip.name);
   return trip;
 };
@@ -1033,9 +1033,9 @@ const update = async (
   //   toDo[i] = toDo[i].trim();
   // }
   const tripCollection = await trips();
-  // if (await tripCollection.findOne({ name: tripName })) {
-  //   throw 'Error: Trip name already exists';
-  // }
+  if (await tripCollection.findOne({$and: [{ name: tripName }, {_id: userId}]})) {
+    throw 'Error: Trip name already exists';
+  }
   const trip = await tripCollection.findOne({ name: nameParams });
 
   const updatedtrip = {
