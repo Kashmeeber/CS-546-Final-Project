@@ -10,8 +10,11 @@ let loginForm = document.getElementById('login-form');
 let error = document.getElementById('error');
 let serverErr = document.getElementById('serverErr');
 let createTrip = document.getElementById('createTrip');
-let createItinerary = document.getElementById('createItinerary');
+let editTrip = document.getElementById('editForm');
+let createItinerary = document.getElementById('createItineraryForm');
+let editItinerary = document.getElementById('editItineraryForm');
 let promptQuestion1 = document.getElementById('promptQuestion1');
+
 
 
 //Taken and modified from Google API documentation 
@@ -218,211 +221,221 @@ function errorCheck2(emailAddress, password) {
 }
 
 // for trip
-// function errorCheck3(
-//   tripName,
-//   startLocation,
-//   startDate,
-//   startTime,
-//   endLocation,
-//   endDate,
-//   endTime,
-//   stops,
-//   toDo,
-//   usersAllowed = []
-// ) {
-//   // console.log(1);
-//   if (
-//     !tripName ||
-//     !startLocation ||
-//     !startDate ||
-//     !startTime ||
-//     !endLocation ||
-//     !endDate ||
-//     !endTime ||
-//     !stops ||
-//     !toDo
-//   ) {
-//     throw 'Error: All fields need to have valid values';
-//   }
-//   if (Number.isNaN(parseInt(tripName)) || tripName.trim().length == 0) {
-//     throw 'Error: Must provide the trip name as valid nonempty string';
-//   }
-//   if (typeof startLocation != 'string' || startLocation.trim().length == 0) {
-//     throw 'Error: Must provide the start location as valid nonempty string';
-//   }
-//   if (typeof startDate != 'string' || startDate.trim().length == 0) {
-//     throw 'Error: Must provide start date as valid nonempty string';
-//   }
-//   if (typeof endLocation != 'string' || endLocation.trim().length == 0) {
-//     throw 'Error: Must provide the end location as valid nonempty string';
-//   }
-//   // console.log(1.5);
-//   //   if (!Array.isArray(toDo) || toDo.length == 0) {
-//   //     throw 'Error: Must provide to-do list as valid nonempty array';
-//   //   }
-//   if (typeof endDate != 'string' || endDate.trim().length == 0) {
-//     throw 'Error: Must provide end date as valid nonempty string';
-//   }
-//   if (typeof startTime != 'string' || startTime.trim().length == 0) {
-//     throw 'Error: Must provide start time as valid nonempty string';
-//   }
-//   if (typeof endTime != 'string' || endTime.trim().length == 0) {
-//     throw 'Error: Must provide end time as valid nonempty string';
-//   }
-//   //   if (!Array.isArray(stops)) {
-//   //     throw 'You must provide an array of all stops on your trip';
-//   //   }
-//   // if (!Array.isArray(usersAllowed)) {
-//   //   throw 'You must provide an array of all users allowed on your trip';
-//   // }
-//   if (startLocation == endLocation) {
-//     throw 'Start location cannot be the same as end location';
-//   }
-//   if (startTime == endTime) {
-//     throw 'Start time cannot be the same as end time';
-//   }
-//   if (startDate == endDate) {
-//     throw 'Start date cannot be the same as end date';
-//   }
-//   // console.log(2);
-//   tripName = tripName.trim();
-//   startLocation = startLocation.trim();
-//   startDate = startDate.trim();
-//   endLocation = endLocation.trim();
-//   endDate = endDate.trim();
-//   startTime = startTime.trim();
-//   endTime = endTime.trim();
-//   //   stops = stops.map((stop) => stop.trim());
-//   //   toDo = toDo.map((todo) => todo.trim());
-//   //   if(usersAllowed.length !== 0) {
-//   //     usersAllowed = usersAllowed.map((user) => user.trim());
-//   //   } else {
-//   //     usersAllowed = [];
-//   //   }
-//   let st = startTime.split(':');
-//   let et = endTime.split(':');
-//   if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
-//     throw 'Error: Must provide start time in HH:MM format';
-//   }
-//   if (et.length != 2 || et[0].length != 2 || et[1].length != 2) {
-//     throw 'Error: Must provide end time in HH:MM format';
-//   }
-//   if (st[0] * 1 < 0 || st[0] * 1 > 23) {
-//     throw 'Error: Must provide start time in HH:MM format';
-//   }
-//   if (st[1] * 1 < 0 || st[1] * 1 > 59) {
-//     throw 'Error: Must provide start time in HH:MM format';
-//   }
-//   if (et[0] * 1 < 0 || et[0] * 1 > 23) {
-//     throw 'Error: Must provide end time in HH:MM format';
-//   }
-//   if (et[1] * 1 < 0 || et[1] * 1 > 59) {
-//     throw 'Error: Must provide end time in HH:MM format';
-//   }
-//   let sd = startDate.split('/');
-//   let ed = endDate.split('/');
-//   let currentYear = new Date();
-//   let newCurrentYear = currentYear.getFullYear();
-//   if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
-//     throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
-//   }
-//   if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4) {
-//     throw 'Error: Must provide start date in MM/DD/YYYY format';
-//   }
-//   if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
-//     throw 'Error: Must provide start date in MM/DD/YYYY format';
-//   }
-//   if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
-//     throw 'Error: Must provide start date in MM/DD/YYYY format';
-//   }
-//   if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
-//     throw 'Error: Must provide start date in MM/DD/YYYY format';
-//   }
-//   if (ed.length != 3 || ed[0].length != 2 || ed[1].length != 2 || ed[2].length != 4) {
-//     throw 'Error: Must provide end date in MM/DD/YYYY format';
-//   }
-//   if (ed[0] * 1 < 1 || ed[0] * 1 > 12) {
-//     throw 'Error: Must provide end date in MM/DD/YYYY format';
-//   }
-//   if (ed[1] * 1 < 1 || ed[1] * 1 > 31) {
-//     throw 'Error: Must provide end date in MM/DD/YYYY format';
-//   }
-//   if (ed[2] * 1 < sd[2] * 1 || ed[2] * 1 > ed[2] * 1 + 1) {
-//     throw 'Error: Must provide end date in MM/DD/YYYY format';
-//   }
-//   if (sd > ed) {
-//     throw 'Error: Start date must be set to a date before end date';
-//   }
-
-//   let splitToDo = tripInfo.toDoInput.split(',');
-//   let splitStops = tripInfo.stopsInput.split(',');
-
-//   for (let i = 0; i < splitToDo.length; i++) {
-//     if (typeof splitToDo[i] != 'string') {
-//       throw 'One of the to-do items is not a valid string';
-//     }
-//   }
-//   for (let i = 0; i < splitStops.length; i++) {
-//     if (typeof splitStops[i] != 'string') {
-//       throw 'One of the stops is not a valid string';
-//     }
-//   }
-
-//   // console.log(3);
-//   return;
-// }
-
-// for itinerary
-function errorCheck4(activityName, date, startTime, endTime, cost, notes) {
-  if (!tripName || !activityName || !date || !startTime || !endTime || !cost) {
+function errorCheck3(
+  tripName,
+  startLocation,
+  startDate,
+  startTime,
+  endLocation,
+  endDate,
+  endTime,
+  stops,
+  toDo
+) {
+  // console.log(1);
+  if (
+    !tripName ||
+    !startLocation ||
+    !startDate ||
+    !startTime ||
+    !endLocation ||
+    !endDate ||
+    !endTime ||
+    !stops ||
+    !toDo
+  ) {
     throw 'Error: All fields need to have valid values';
   }
-  if (typeof tripName !== 'string' || tripName.trim().length === 0) {
-    throw 'Error: Must provide trip id as valid nonempty string';
+  let regex = /.*[a-zA-Z].*/;
+  if (!regex.test(tripName)) {
+    throw 'Trip Name must be a string';
   }
-  tripName = tripName.trim();
-  if (typeof activityName !== 'string' || activityName.trim().length === 0) {
-    throw 'Error: Must provide activity name as valid nonempty string';
+  let st = startTime.split(':');
+  let et = endTime.split(':');
+  let regexNum = /^[0-9]*$/;
+  if (
+    st.length != 2 ||
+    st[0].length != 2 ||
+    st[1].length != 2 ||
+    !regexNum.test(st[0]) ||
+    !regexNum.test(st[1])
+  ) {
+    throw 'Error: Must provide start time in HH:MM format';
   }
-  activityName = activityName.trim();
-  if (typeof date !== 'string' || date.trim().length === 0) {
-    throw 'Error: Must provide date as valid nonempty string';
+  if (
+    et.length != 2 ||
+    et[0].length != 2 ||
+    et[1].length != 2 ||
+    !regexNum.test(et[0]) ||
+    !regexNum.test(et[1])
+  ) {
+    throw 'Error: Must provide end time in HH:MM format';
   }
-  let splitDate = date.split('/');
-  if (splitDate.length !== 3) {
-    throw 'Error: Date must be in MM/DD/YYYY format';
+  if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+    throw 'Error: Must provide start time in HH:MM format';
   }
-  if (splitDate[0].length !== 2 || splitDate[1].length !== 2 || splitDate[2].length !== 4) {
-    throw 'Error: Date must be in MM/DD/YYYY format';
+  if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+    throw 'Error: Must provide start time in HH:MM format';
   }
-  if (splitDate[0] * 1 < 1 || splitDate[0] * 1 > 12) {
-    throw 'Error: Date must be in MM/DD/YYYY format';
+  if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+    throw 'Error: Must provide end time in HH:MM format';
   }
-  if (splitDate[1] * 1 < 1 || splitDate[1] * 1 > 31) {
-    throw 'Error: Date must be in MM/DD/YYYY format';
+  if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+    throw 'Error: Must provide end time in HH:MM format';
   }
-  date = date.trim();
-  if (typeof startTime !== 'string' || startTime.trim().length === 0) {
-    throw 'Error: Must provide start time as valid nonempty string';
+  let sd = startDate.split('/');
+  let ed = endDate.split('/');
+  let currentYear = new Date();
+  let newCurrentYear = currentYear.getFullYear();
+  if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
+    throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
   }
-  startTime = startTime.trim();
-  if (typeof endTime !== 'string' || endTime.trim().length === 0) {
-    throw 'Error: Must provide end time as valid nonempty string';
+  if (
+    sd.length != 3 ||
+    sd[0].length != 2 ||
+    sd[1].length != 2 ||
+    sd[2].length != 4 ||
+    !regexNum.test(sd[0]) ||
+    !regexNum.test(sd[1]) ||
+    !regexNum.test(sd[2])
+  ) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
-  endTime = endTime.trim();
-  if (typeof cost !== 'number') {
-    throw 'Error: Must provide cost as an integer';
+  if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
-  if (notes) {
-    notes = notes.trim();
-    if (typeof notes !== 'string' || notes.trim().length === 0) {
-      throw 'Error: Notes must be a string';
+  if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
+    throw 'Error: Must provide start date in MM/DD/YYYY format';
+  }
+  if (
+    ed.length != 3 ||
+    ed[0].length != 2 ||
+    ed[1].length != 2 ||
+    ed[2].length != 4 ||
+    !regexNum.test(ed[0]) ||
+    !regexNum.test(ed[1]) ||
+    !regexNum.test(ed[2])
+  ) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (ed[0] * 1 < 1 || ed[0] * 1 > 12) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (ed[1] * 1 < 1 || ed[1] * 1 > 31) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (ed[2] * 1 < sd[2] * 1 || ed[2] * 1 > ed[2] * 1 + 1) {
+    throw 'Error: Must provide end date in MM/DD/YYYY format';
+  }
+  if (sd > ed) {
+    throw 'Error: Start date must be set to a date before end date';
+  }
+  let splitToDo = toDo.split(',');
+  let splitStops = stops.split('/');
+  let toDoArr =[]
+  let stopsArr = []
+
+  for (let i = 0; i < splitToDo.length; i++) {
+    if (typeof splitToDo[i] == 'string') {
+      toDoArr.push(splitToDo[i]);
+    } else {
+      throw 'One of the to-do items is not a valid string';
     }
-  } else {
-    notes = '';
+  }
+  for (let i = 0; i < splitStops.length; i++) {
+    if (typeof splitStops[i] == 'string') {
+      stopsArr.push(splitStops[i]);
+    } else {
+      throw 'One of the stops is not a valid string';
+    }
   }
   return;
 }
+
+// for itinerary
+function errorCheck4(activityName, date, startTime, endTime, cost, notes) {
+  if (!activityName || !date || !startTime || !endTime || !cost) {
+    throw 'Error: All fields need to have valid values';
+  }
+  let regex = /.*[a-zA-Z].*/;
+  let regexNum = /^[0-9]*$/;
+  let st = startTime.split(':');
+  let et = endTime.split(':');
+  let sd = date.split('/');
+    if (!regex.test(activityName)) {
+      throw 'Activity Name must be a string';
+    }
+
+    if (
+      st.length != 2 ||
+      st[0].length != 2 ||
+      st[1].length != 2 ||
+      !regexNum.test(st[0]) ||
+      !regexNum.test(st[1])
+    ) {
+      throw 'Error: Must provide start time in HH:MM format';
+    }
+    if (
+      et.length != 2 ||
+      et[0].length != 2 ||
+      et[1].length != 2 ||
+      !regexNum.test(et[0]) ||
+      !regexNum.test(et[1])
+    ) {
+      throw 'Error: Must provide end time in HH:MM format';
+    }
+    if (st[0] * 1 < 0 || st[0] * 1 > 23) {
+      throw 'Error: Must provide start time in HH:MM format';
+    }
+    if (st[1] * 1 < 0 || st[1] * 1 > 59) {
+      throw 'Error: Must provide start time in HH:MM format';
+    }
+    if (et[0] * 1 < 0 || et[0] * 1 > 23) {
+      throw 'Error: Must provide end time in HH:MM format';
+    }
+    if (et[1] * 1 < 0 || et[1] * 1 > 59) {
+      throw 'Error: Must provide end time in HH:MM format';
+    }
+    let currentYear = new Date();
+    let newCurrentYear = currentYear.getFullYear();
+    if (
+      sd[2] < newCurrentYear
+      // && ed[2] > newCurrentYear + 2
+    ) {
+      throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
+    }
+    if (
+      sd.length != 3 ||
+      sd[0].length != 2 ||
+      sd[1].length != 2 ||
+      sd[2].length != 4 ||
+      !regexNum.test(sd[0]) ||
+      !regexNum.test(sd[1]) ||
+      !regexNum.test(sd[2])
+    ) {
+      throw 'Error: Must provide start date in MM/DD/YYYY format';
+    }
+    if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
+      throw 'Error: Must provide start date in MM/DD/YYYY format';
+    }
+    if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
+      throw 'Error: Must provide start date in MM/DD/YYYY format';
+    }
+    if (
+      sd[2] * 1 <
+      1900
+      // || sd[2] * 1 > ed[2] * 1
+    ) {
+      throw 'Error: Must provide start date in MM/DD/YYYY format';
+    }
+    if(!regexNum.test(cost)){
+      throw 'Cost must be a number'
+    }
+  return;
+  }
 
 if (registrationForm) {
   registrationForm.addEventListener('submit', (event) => {
@@ -488,18 +501,17 @@ if (createTrip) {
       let stops = document.getElementById('stopsInput');
       let toDo = document.getElementById('toDoInput');
       let usersAllowed = document.getElementById('usersAllowedInput');
-      // errorCheck3(
-      //   tripName.value,
-      //   startLocation.value,
-      //   startDate.value,
-      //   startTime.value,
-      //   endLocation.value,
-      //   endDate.value,
-      //   endTime.value,
-      //   stops.value,
-      //   toDo.value,
-      //   usersAllowed.value
-      // );
+      errorCheck3(
+        tripName.value,
+        startLocation.value,
+        startDate.value,
+        startTime.value,
+        endLocation.value,
+        endDate.value,
+        endTime.value,
+        stops.value,
+        toDo.value
+      );
     } catch (e) {
       event.preventDefault();
       serverErr.innerHTML = '';
@@ -509,6 +521,134 @@ if (createTrip) {
   });
 }
 
+if (createTrip) {
+  createTrip.addEventListener('submit', (event) => {
+    try {
+      serverErr.innerHTML = '';
+      error.hidden = true;
+      error.innerHTML = '';
+      let tripName = document.getElementById('tripNameInput');
+      let startLocation = document.getElementById('startLocationInput');
+      let startDate = document.getElementById('startDateInput');
+      let startTime = document.getElementById('startTimeInput');
+      let endLocation = document.getElementById('endLocationInput');
+      let endDate = document.getElementById('endDateInput');
+      let endTime = document.getElementById('endTimeInput');
+      let stops = document.getElementById('stopsInput');
+      let toDo = document.getElementById('toDoInput');
+      errorCheck3(
+        tripName.value,
+        startLocation.value,
+        startDate.value,
+        startTime.value,
+        endLocation.value,
+        endDate.value,
+        endTime.value,
+        stops.value,
+        toDo.value
+      );
+    } catch (e) {
+      event.preventDefault();
+      serverErr.innerHTML = '';
+      error.hidden = false;
+      error.innerHTML = e;
+    }
+  });
+}
+
+if (editTrip) {
+  editTrip.addEventListener('submit', (event) => {
+    try {
+      serverErr.innerHTML = '';
+      error.hidden = true;
+      error.innerHTML = '';
+      let tripName = document.getElementById('tripNameInput');
+      let startLocation = document.getElementById('startLocationInput');
+      let startDate = document.getElementById('startDateInput');
+      let startTime = document.getElementById('startTimeInput');
+      let endLocation = document.getElementById('endLocationInput');
+      let endDate = document.getElementById('endDateInput');
+      let endTime = document.getElementById('endTimeInput');
+      let stops = document.getElementById('stopsInput');
+      let toDo = document.getElementById('toDoInput');
+      errorCheck3(
+        tripName.value,
+        startLocation.value,
+        startDate.value,
+        startTime.value,
+        endLocation.value,
+        endDate.value,
+        endTime.value,
+        stops.value,
+        toDo.value
+      );
+    } catch (e) {
+      event.preventDefault();
+      serverErr.innerHTML = '';
+      error.hidden = false;
+      error.innerHTML = e;
+    }
+  });
+}
+
+if (createItinerary) {
+  createItinerary.addEventListener('submit', (event) => {
+    try {
+      serverErr.innerHTML = '';
+      error.hidden = true;
+      error.innerHTML = '';
+      let activityName = document.getElementById('activityInput');
+      let date = document.getElementById('dateInput');
+      let startTime = document.getElementById('activityStartTimeInput');
+      let endTime = document.getElementById('activityEndTimeInput');
+      let costInput = document.getElementById('costInput');
+      let notes = document.getElementById('notesInput');
+      errorCheck4(
+        activityName.value,
+        date.value,
+        startTime.value,
+        endTime.value,
+        costInput.value,
+        notes.value
+      );
+      return;
+    } catch (e) {
+      event.preventDefault();
+      serverErr.innerHTML = '';
+      error.hidden = false;
+      error.innerHTML = e;
+    }
+  });
+}
+if (editItinerary) {
+  editItinerary.addEventListener('submit', (event) => {
+    try {
+      serverErr.innerHTML = '';
+      error.hidden = true;
+      error.innerHTML = '';
+      let activityName = document.getElementById('activityInput');
+      let date = document.getElementById('dateInput');
+      let startTime = document.getElementById('activityStartTimeInput');
+      let endTime = document.getElementById('activityEndTimeInput');
+      let costInput = document.getElementById('costInput');
+      let notes = document.getElementById('notesInput');
+      errorCheck4(
+        activityName.value,
+        date.value,
+        startTime.value,
+        endTime.value,
+        costInput.value,
+        notes.value
+      );
+      return;
+    } catch (e) {
+      event.preventDefault();
+      serverErr.innerHTML = '';
+      error.hidden = false;
+      error.innerHTML = e;
+    }
+  });
+}
 function promptQuestion() {
   if (promptQuestion1) {
     promptQuestion1.addEventListener('submit', (event) => {
@@ -527,39 +667,6 @@ function promptQuestion() {
         } else {
           createItinerary1();
         }
-      } catch (e) {
-        event.preventDefault();
-        serverErr.innerHTML = '';
-        error.hidden = false;
-        error.innerHTML = e;
-      }
-    });
-  }
-}
-function createItinerary1() {
-  if (createItinerary) {
-    createItinerary.addEventListener('submit', (event) => {
-      try {
-        serverErr.innerHTML = '';
-        error.hidden = true;
-        error.innerHTML = '';
-        let createItineraryForm = document.getElementById('createItineraryForm');
-        createItineraryForm.hidden = false;
-        let activityName = document.getElementById('activityInput');
-        let date = document.getElementById('dateInput');
-        let startTime = document.getElementById('activityStartTimeInput');
-        let endTime = document.getElementById('activityEndTimeInput');
-        let costInput = document.getElementById('costInput');
-        let notes = document.getElementById('notesInput');
-        errorCheck4(
-          activityName.value,
-          date.value,
-          startTime.value,
-          endTime.value,
-          costInput.value,
-          notes.value
-        );
-        return;
       } catch (e) {
         event.preventDefault();
         serverErr.innerHTML = '';
