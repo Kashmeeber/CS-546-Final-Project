@@ -4,13 +4,14 @@
     <li><a href="/trips" class="nav-item">Plan a trip</a></li>
     <li id = "right"><a href="/logout" class="nav-item">Logout</a></li>
 </ul>
-<form action="/trips/map/" method="POST" id="mapSearch">
+<form action="/trips/map" method="POST" id="mapSearch">
     <label for="newStopInput">New Stop:
         <input name="newStopInput" id="newStopInput" type="text">
     </label>
     <input type="hidden" name="_method" value="PUT">
     <button type="submit">Submit</button>
 </form>
+<p></p>
 <div id="container">
     <div id="map"></div>
     <div id="sidebar">

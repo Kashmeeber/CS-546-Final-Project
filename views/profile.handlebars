@@ -27,7 +27,7 @@
         <div class="content">
             <div id="contains">
                 <p class ="next">Name of Trip:</p>
-                <p>{{this.name}}</p>
+                <a href="#" onclick='window.open("localhost:3000/trips/map/{{this.userId}}/{{this.name}}")' target="_self"/>{{this.name}}</a>
             </div>
             <div id="contains">
                 <p class="next">Start Location: </p>

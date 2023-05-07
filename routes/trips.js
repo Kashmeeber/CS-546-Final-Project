@@ -302,7 +302,7 @@ router
         req.body.notes
       );
       // return res.json(updatedTrip);
-      return res.render('/success', { success: 'You have successfully updated your itinerary!' });
+      return res.render('success', { success: 'You have successfully updated your itinerary!' });
     } catch (e) {
       return res.status(500).send({ error: `${e}` });
     }
@@ -370,11 +370,11 @@ router
       let test = await itineraryData.getActivitybyName(req.params.itineraryName);
       // console.log(test)
     } catch (e) {
-      console.log(`${e}`);
+        throw e;
     }
 
-    return res.render('editItinerary', {
-      title: 'editItinerary',
+    return res.render('edititinerary', {
+      title: 'edit itinerary for trip: ' + req.params.tripName ,
       currentTrip: req.params.tripName,
       currentIt: req.params.itineraryName
     });
@@ -485,6 +485,27 @@ router
     }
   });
 
+
+  router
+  .route("/map/:userId/:tripName")
+  .get(async (req, res) => {
+    //code here for GET
+    try {
+      let trip = await tripsData.get(req.session.currentTrip);
+      let slash = '';
+      if (trip.stops.length === 0) {
+      } else {
+        for (let i = 0; i < trip.stops.length; i++) {
+          slash = slash + trip.stops[i] + '/';
+        }
+        slash = slash.substring(0, slash.length - 1);
+      }
+      return res.render('map', { title: `${req.session.currentTrip} map`, userId: req.session.user.id, currentName: req.session.currentTrip, mData: trip, stops: slash });
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  })
+
 router
   .route('/edittrip')
   .get(async (req, res) => {
@@ -508,22 +529,6 @@ router.route('/edititinerary').get(async (req, res) => {
 
 router
   .route('/map')
-  .get(async (req, res) => {
-    //code here for GET
-    try {
-      // const trips = await tripsData.getAll(req.params.userId);
-      //   const returnTrips = bands.map((trip) => {
-      //     return {
-      //       _id: trip._id,
-      //       name: trip.name
-      //     }
-      //   });
-      // console.log(trips)
-      return res.render('map', { title: 'map' });
-    } catch (e) {
-      return res.status(500).json(e);
-    }
-  })
   .post(async (req, res) => {
     //code here for POST
     let tripInfo = req.body;
@@ -589,7 +594,6 @@ router
         req.body.usersAllowedInput
       );
       req.session.currentTrip = req.body.tripNameInput;
-
       let slash = '';
       if (trip.stops.length === 0) {
       } else {
@@ -598,14 +602,7 @@ router
         }
         slash = slash.substring(0, slash.length - 1);
       }
-
-      return res.status(200).render('map', {
-        title: 'map',
-        mData: trip,
-        userId: req.session.user.id,
-        currentTrip: req.body.tripNameInput,
-        stops: slash
-      });
+      return res.status(200).redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
     } catch (e) {
       return res.status(400).json(e);
     }
@@ -621,100 +618,104 @@ router
         }
         slash = slash.substring(0, slash.length - 1);
       }
-      return res
-        .status(200)
-        .render('map', { title: 'map', mData: trip, userId: req.session.user.id, stops: slash });
+      return res.status(200).redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
+      // return res
+      //   .status(200)
+      //   .render('map', { title: 'map', mData: trip, userId: req.session.user.id, stops: slash, currentName: req.session.currentTrip });
     } catch (e) {
       return res.status(400).json(e);
     }
   });
 
-router
-  .route('/:userId')
-  .get(async (req, res) => {
-    //code here for GET
-    try {
-      // console.log(req.session.user.id)
-      const trips = await tripsData.getAll(req.session.user.id);
-      //   const returnTrips = bands.map((trip) => {
-      //     return {
-      //       _id: trip._id,
-      //       name: trip.name
-      //     }
-      //   });
-      // console.log(trips)
-      return res.json(trips);
-    } catch (e) {
-      return res.status(500).json(e);
-    }
-  })
-  .post(async (req, res) => {
-    //code here for POST
-    let tripInfo = req.body;
 
-    let toDoArr = [];
-    let stopsArr = [];
-    let regex = /.*[a-zA-Z].*/;
-    let regexStringsOnly = /^[A-Za-z]+$/;
+  
 
-    try {
-      if (!regex.test(tripInfo.tripNameInput)) {
-        throw 'Trip Name must be a string';
-      }
-      // let splitSL = tripInfo.startLocationInput.split(' ');
-      // if(splitSL.length < 3){
-      //   throw 'You must have a full street name in your address'
-      // }
-      // // console.log(Number.isNaN(parseInt('123')))
-      // if(Number.isNaN(parseInt(splitSL[0]))){
-      //   throw 'You must include a number in the address'
-      // }
-      // if(!regexStringsOnly.test(splitSL[1])){
-      //   throw 'You must have a street name in your address'
-      // }
+// router
+//   .route('/:userId')
+//   .get(async (req, res) => {
+//     //code here for GET
+//     try {
+//       // console.log(req.session.user.id)
+//       const trips = await tripsData.getAll(req.session.user.id);
+//       //   const returnTrips = bands.map((trip) => {
+//       //     return {
+//       //       _id: trip._id,
+//       //       name: trip.name
+//       //     }
+//       //   });
+//       // console.log(trips)
+//       return res.json(trips);
+//     } catch (e) {
+//       return res.status(500).json(e);
+//     }
+//   })
+//   .post(async (req, res) => {
+//     //code here for POST
+//     let tripInfo = req.body;
 
-      // if(!regexStringsOnly.test(splitSL[2])){
-      //   throw 'You must have a full street name in your address'
-      // }
+//     let toDoArr = [];
+//     let stopsArr = [];
+//     let regex = /.*[a-zA-Z].*/;
+//     let regexStringsOnly = /^[A-Za-z]+$/;
 
-      let splitToDo = tripInfo.toDoInput.split(',');
-      let splitStops = tripInfo.stopsInput.split('/');
+//     try {
+//       if (!regex.test(tripInfo.tripNameInput)) {
+//         throw 'Trip Name must be a string';
+//       }
+//       // let splitSL = tripInfo.startLocationInput.split(' ');
+//       // if(splitSL.length < 3){
+//       //   throw 'You must have a full street name in your address'
+//       // }
+//       // // console.log(Number.isNaN(parseInt('123')))
+//       // if(Number.isNaN(parseInt(splitSL[0]))){
+//       //   throw 'You must include a number in the address'
+//       // }
+//       // if(!regexStringsOnly.test(splitSL[1])){
+//       //   throw 'You must have a street name in your address'
+//       // }
 
-      for (let i = 0; i < splitToDo.length; i++) {
-        if (typeof splitToDo[i] == 'string') {
-          toDoArr.push(splitToDo[i]);
-        } else {
-          throw 'One of the to-do items is not a valid string';
-        }
-      }
-      for (let i = 0; i < splitStops.length; i++) {
-        if (typeof splitStops[i] == 'string') {
-          stopsArr.push(splitStops[i]);
-        } else {
-          throw 'One of the stops is not a valid string';
-        }
-      }
-    } catch (e) {
-      return res.status(400).json(`${e}`);
-    }
+//       // if(!regexStringsOnly.test(splitSL[2])){
+//       //   throw 'You must have a full street name in your address'
+//       // }
 
-    try {
-      const trip = await tripsData.createTrip(
-        req.params.userId,
-        req.body.tripNameInput,
-        req.body.startLocationInput,
-        req.body.startDateInput,
-        req.body.startTimeInput,
-        req.body.endLocationInput,
-        req.body.endDateInput,
-        req.body.endTimeInput,
-        stopsArr,
-        toDoArr,
-        req.body.usersAllowedInput
-      );
-      return res.status(200).json(trip);
-    } catch (e) {
-      return res.status(400).json(e);
-    }
-  });
+//       let splitToDo = tripInfo.toDoInput.split(',');
+//       let splitStops = tripInfo.stopsInput.split('/');
+
+//       for (let i = 0; i < splitToDo.length; i++) {
+//         if (typeof splitToDo[i] == 'string') {
+//           toDoArr.push(splitToDo[i]);
+//         } else {
+//           throw 'One of the to-do items is not a valid string';
+//         }
+//       }
+//       for (let i = 0; i < splitStops.length; i++) {
+//         if (typeof splitStops[i] == 'string') {
+//           stopsArr.push(splitStops[i]);
+//         } else {
+//           throw 'One of the stops is not a valid string';
+//         }
+//       }
+//     } catch (e) {
+//       return res.status(400).json(`${e}`);
+//     }
+
+//     try {
+//       const trip = await tripsData.createTrip(
+//         req.params.userId,
+//         req.body.tripNameInput,
+//         req.body.startLocationInput,
+//         req.body.startDateInput,
+//         req.body.startTimeInput,
+//         req.body.endLocationInput,
+//         req.body.endDateInput,
+//         req.body.endTimeInput,
+//         stopsArr,
+//         toDoArr,
+//         req.body.usersAllowedInput
+//       );
+//       return res.status(200).json(trip);
+//     } catch (e) {
+//       return res.status(400).json(e);
+//     }
+//   });
 export default router;
