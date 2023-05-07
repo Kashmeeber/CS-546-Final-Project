@@ -211,3 +211,11 @@ label::before {
 .requirement {
   color: crimson;
 }
+#tripUrl {
+  color: black;
+  text-decoration: underline;
+  background-color: #acc9ba;
+  padding: 0px;
+  padding-top: 14px;
+  font-weight: bold;
+}
