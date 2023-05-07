@@ -41,7 +41,7 @@ const createUser = async (firstName, lastName, email, password) => {
   }
   let checkEmail = email.split('@');
   if (checkEmail.length != 2 || checkEmail[1].split('.')[1].length != 3) {
-    throw `Error: Email must be in format ____@____.com`;
+    throw `Error: Email must be in format ____@____.___`;
   }
   if (password.length > 8 && password.trim().length != 0) {
     let num = 0;
@@ -112,7 +112,7 @@ const getUserById = async (id) => {
 
 const removeUser = async (id) => {
   if (!id) {
-    throw `Error: Id must be inputed`;
+    throw `Error: Id must be inputted`;
   }
   if (typeof id != 'string') {
     throw `Error: Id must be a string`;
@@ -179,7 +179,7 @@ const updateUser = async (id, firstName, lastName, email, password) => {
   }
   let checkEmail = email.split('@');
   if (checkEmail.length != 2 || checkEmail[1].split('.')[1].length != 3) {
-    throw `Error: Email must be in format ____@____.com`;
+    throw `Error: Email must be in format ____@____.___`;
   }
   if (password.length > 8 && password.trim().length != 0) {
     let num = 0;
@@ -230,45 +230,45 @@ const checkUser = async (emailAddress, password) => {
   emailAddress = emailAddress.trim();
   password = password.trim();
 
-  if(!emailAddress.includes("@")){
-    throw 'Error: Input valid email address';
+  if (!emailAddress.includes('@')) {
+    throw 'Error: Email addres must include @';
   }
-  let splitEmail = emailAddress.split("@");
-  if(!splitEmail[1].includes(".")){
-    throw 'Error: Input valid email address';
+  let splitEmail = emailAddress.split('@');
+  if (!splitEmail[1].includes('.')) {
+    throw 'Error: Email address must include .____';
   }
 
   //figure out regex
-  let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_!]).*$/
-  
+  let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_!]).*$/;
+
   //figure out regex
-  if(password.length == 0 || password.length < 8 || password.includes(" ")){
-    throw 'Error: must input valid password';
+  if (password.length == 0 || password.length < 8 || password.includes(' ')) {
+    throw 'Error: Password must be at least 8 characters long and cannot include empty spaces';
   }
-  if(!(regex.test(password))) {
-    throw 'Error: Must be valid password syntax';
+  if (!regex.test(password)) {
+    throw 'Error: Password must include at least one capital letter, one number, and one special character';
   }
   const userCollection = await users();
-  const findUser = await userCollection.findOne({"email": emailAddress.toLowerCase()});
-  if(!findUser) {
-    throw 'missing user'
+  const findUser = await userCollection.findOne({ 'email': emailAddress.toLowerCase() });
+  if (!findUser) {
+    throw 'missing user';
   }
   let comparelmao = false;
-try {
-  comparelmao = await bcrypt.compare(password, findUser.password);
-} catch (e) {
-  //no op
-}
-  if(!comparelmao) {
-    throw "no"
+  try {
+    comparelmao = await bcrypt.compare(password, findUser.password);
+  } catch (e) {
+    //no op
+  }
+  if (!comparelmao) {
+    throw 'no';
   }
 
   let retObj = {
     id: findUser._id.toString(),
     firstName: findUser.firstName,
     lastName: findUser.lastName,
-    emailAddress: findUser.email,
-  }
+    emailAddress: findUser.email
+  };
 
   return retObj;
 };
