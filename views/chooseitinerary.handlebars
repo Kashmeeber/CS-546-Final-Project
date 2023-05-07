@@ -1,7 +1,13 @@
 
 <p id="serverErr">{{error}}</p>
 <div id="error" hidden></div>
-<p>Choose the itinerary you want to edit: </p>
+<ul id="navbar">
+    <li id = "left"><a href="/homepage">Home</a></li>
+    <li><a href="/profile">Profile</a></li>
+    <li><a href="/trips">Plan a trip</a></li>
+    <li id = "right"><a href="/logout">Logout</a></li>
+</ul>
+<p>choose the itinerary you want to edit: </p>
 <form id="selection3" action="/trips/edititinerary/{{currentTrip}}" method="POST">
 {{!-- <form id="selection3">  --}}
     <select name="activityName" id="activityName" >

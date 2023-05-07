@@ -1,5 +1,11 @@
 <p id="serverErr">{{error}}</p>
 <div id="error" hidden></div>
+<ul id="navbar">
+    <li id = "left"><a href="/homepage">Home</a></li>
+    <li><a href="/profile">Profile</a></li>
+    <li><a href="/trips">Plan a trip</a></li>
+    <li id = "right"><a href="/logout">Logout</a></li>
+</ul>
 <form id="selection" action="/trips/itinerary" method="POST">
     <select name="tripName" id="tripName">
         {{#each trips}}
