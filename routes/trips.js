@@ -158,7 +158,8 @@ router
         stopsArr,
         toDoArr
       );
-      return res.status(200).json(updatedTrip);
+      // return res.status(200).json(updatedTrip);
+      return res.render('success', { success: 'You have successfully updated your trip!' });
     } catch (e) {
       return res.status(400).json(e);
     }
@@ -254,7 +255,8 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
       req.body.costInput,
       req.body.notesInput
     );
-    return res.status(200).json(itinerary);
+    // return res.status(200).json(itinerary);
+    return res.render('success', { success: 'You have successfully added an activity!' });
   } catch (e) {
     return res.status(400).json(e);
   }
@@ -299,7 +301,8 @@ router
         req.body.cost,
         req.body.notes
       );
-      return res.json(updatedTrip);
+      // return res.json(updatedTrip);
+      return res.render('/success', { success: 'You have successfully updated your itinerary!' });
     } catch (e) {
       return res.status(500).send({ error: `${e}` });
     }
@@ -472,8 +475,11 @@ router
         req.body.costInput,
         req.body.notesInput
       );
-      console.log(updatedActivity);
-      return res.status(200).json(updatedActivity);
+      // console.log(updatedActivity);
+      // return res.status(200).json(updatedActivity);
+      return res.render('success.handlebars', {
+        success: 'You have successfully updated your activity'
+      });
     } catch (e) {
       return res.status(400).json(e);
     }
