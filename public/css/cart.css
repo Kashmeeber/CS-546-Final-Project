@@ -93,6 +93,7 @@ p.profile::before {
   text-align: left;
   /* padding-right: 50px; */
 }
+/* trip board posting design taken from: https://www.w3schools.com/css/tryit.asp?filename=trycss_grid_display_inline-grid */
 .trips {
   display: inline-grid;
   grid-template-columns: auto auto auto;
@@ -120,6 +121,7 @@ h2 {
 .next {
   background-color: #f5bfc8;
 }
+/*code for displaying two p tags on the same line taken from: https://stackoverflow.com/questions/67249439/how-can-i-keep-several-p-tags-on-the-same-line */
 #contains {
   display: flex;
   gap: 0.5rem;
