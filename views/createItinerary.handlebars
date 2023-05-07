@@ -1,5 +1,3 @@
-<p id="serverErr">{{error}}</p>
-<div id="error" hidden></div>
 <ul id="navbar">
     <li id = "left"><a href="/homepage" class="nav-item">Home</a></li>
     <li><a href="/profile" class="nav-item">Profile</a></li>
@@ -7,6 +5,8 @@
     <li id = "right" class="nav-item"><a href="/logout">Logout</a></li>
 </ul>
 <div id="createItinerary">
+    <p id="serverErr">{{error}}</p>
+    <div id="error"></div>
     <form action="/trips/itinerary/{{currentTrip}}" method="POST" id="createItineraryForm">
         <p class="text">Name of Activity:</p>
         <label for="activityInput">
