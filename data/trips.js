@@ -1033,9 +1033,9 @@ const update = async (
   //   toDo[i] = toDo[i].trim();
   // }
   const tripCollection = await trips();
-  if (await tripCollection.findOne({$and: [{ name: tripName }, {_id: userId}]})) {
-    throw 'Error: Trip name already exists';
-  }
+  // if (await tripCollection.findOne({$and: [{ name: tripName }, {_id: userId}]})) {
+  //   throw 'Error: Trip name already exists';
+  // }
   const trip = await tripCollection.findOne({ name: nameParams });
 
   const updatedtrip = {
