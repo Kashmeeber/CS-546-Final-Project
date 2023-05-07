@@ -5,91 +5,92 @@
         <meta charset="utf-8" />
         <title>{{title}}</title>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-        <link rel="stylesheet" type="text/css" href="../../public/css/cart.css">
+        <link rel="stylesheet" type="text/css" href="../../../public/css/cart.css">
     </head>
 
     <body>
         {{!-- <main> --}}
-            <h1>{{title}}</h1>                           
+            <h1>{{title}}</h1>
             {{{body}}}
-        {{!-- </main> --}}
+            {{!--
+        </main> --}}
         <footer>
             {{!--
             <script src="https://code.jquery.com/jquery-2.2.4.min.js"
                 integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script> --}}
-            {{!-- 
+            {{!--
             <script src="../../public/js/ajax.js"></script> --}}
-            <script src="../../public/js/cart.js"></script>
+            <script src="../../../public/js/cart.js"></script>
             {{!-- CITATIONSSSS --}}
             {{!-- https://stackoverflow.com/questions/8054165/using-put-method-in-html-form --}}
             {{!-- https://jasonwatmore.com/post/2021/09/20/fetch-http-put-request-examples --}}
             <script>
                 const myForm = document.getElementById('editForm');
-                myForm.addEventListener('submit', function(event) {
+                myForm.addEventListener('submit', function (event) {
                     event.preventDefault(); // prevent the form from submitting normally
-                    
+
                     // create a new FormData object from the form data
                     const formData = new FormData(myForm);
-                    
+
                     // send the PUT request using fetch
                     fetch(myForm.action, {
-                    method: 'PUT',
-                    body: formData
+                        method: 'PUT',
+                        body: formData
                     })
-                    .then(response => {
-                    // handle the response
-                    continue;
-                    })
-                    .catch(error => {
-                    // handle the error
-                    console.log(error)
-                    });
+                        .then(response => {
+                            // handle the response
+                            continue;
+                        })
+                        .catch(error => {
+                            // handle the error
+                            console.log(error)
+                        });
                 });
             </script>
-             <script>
+            <script>
                 const myForm3 = document.getElementById('editItineraryForm');
-                myForm3.addEventListener('submit', function(event) {
+                myForm3.addEventListener('submit', function (event) {
                     event.preventDefault(); // prevent the form from submitting normally
-                    
+
                     // create a new FormData object from the form data
                     const formData3 = new FormData(myForm3);
-                    
+
                     // send the PUT request using fetch
                     fetch(myForm3.action, {
-                    method: 'PUT',
-                    body: formData3
+                        method: 'PUT',
+                        body: formData3
                     })
-                    .then(response => {
-                    // handle the response
-                    continue;
-                    })
-                    .catch(error => {
-                    // handle the error
-                    console.log(error)
-                    });
+                        .then(response => {
+                            // handle the response
+                            continue;
+                        })
+                        .catch(error => {
+                            // handle the error
+                            console.log(error)
+                        });
                 });
             </script>
             <script>
                 const myForm2 = document.getElementById('mapSearch');
-                myForm2.addEventListener('submit', function(event) {
+                myForm2.addEventListener('submit', function (event) {
                     event.preventDefault(); // prevent the form from submitting normally
-                    
+
                     // create a new FormData object from the form data
                     const formData2 = new FormData(myForm2);
-                    
+
                     // send the PUT request using fetch
                     fetch(myForm2.action, {
-                    method: 'PUT',
-                    body: formData2
+                        method: 'PUT',
+                        body: formData2
                     })
-                    .then(response => {
-                    // handle the response
-                    continue;
-                    })
-                    .catch(error => {
-                    // handle the error
-                    console.log(error)
-                    });
+                        .then(response => {
+                            // handle the response
+                            continue;
+                        })
+                        .catch(error => {
+                            // handle the error
+                            console.log(error)
+                        });
                 });
             </script>
         </footer>
