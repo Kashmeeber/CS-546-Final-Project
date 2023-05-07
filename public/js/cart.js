@@ -45,7 +45,6 @@ function Map() {
 
 async function displayRoute(origin, destination, stops, service, display) {
   try {
-    console.log(stops);
     let stopsArr = [];
     let splitStops = stops.split('/');
     for(let i = splitStops.length - 1; i >= 0; i--) {
