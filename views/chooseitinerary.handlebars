@@ -1,6 +1,4 @@
 
-<p id="serverErr">{{error}}</p>
-<div id="error" hidden></div>
 <div class="resize">
     <ul id="navbar">
         <li id="left"><a href="/homepage" class="nav-item">Home</a></li>
@@ -9,7 +7,8 @@
         <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
     </ul>
 </div>
-
+<p id="serverErr">{{error}}</p>
+<div id="error" hidden></div>
 {{#if trips.length}}
 <form id="selection2" action="/trips/edititinerary/{{currentTrip}}" method="POST">
     <p>choose the itinerary you want to edit: </p>
