@@ -30,6 +30,9 @@ const createTrip = async (
   ) {
     throw 'Error: All fields need to have valid values';
   }
+   if (typeof userId != 'string' || userId.trim().length == 0) {
+    throw 'Error: Must provide the userId as valid nonempty string';
+  }
   if (typeof tripName != 'string' || tripName.trim().length == 0) {
     throw 'Error: Must provide the trip name as valid nonempty string';
   }
@@ -69,7 +72,7 @@ const createTrip = async (
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }
-  // userId = userId.trim();
+  userId = userId.trim();
   tripName = tripName.trim();
   startLocation = startLocation.trim();
   startDate = startDate.trim();
@@ -190,8 +193,7 @@ const createTrip = async (
   
   if (usersAllowed.length === 1 && usersAllowed[0].trim() === "") {
     try {
-      let uId = userId;
-      let user_email = await getUserById(uId);
+      let user_email = await getUserById(userId);
       user_email = user_email.email;
       usersAllowed[0] = user_email;
     } catch (e) {
@@ -204,8 +206,7 @@ const createTrip = async (
       }
     }
     try {
-      let uId = userId;
-      let user_email = await getUserById(uId);
+      let user_email = await getUserById(userId);
       user_email = user_email.email;
       if (!usersAllowed.includes(user_email.trim())) {
         usersAllowed.push(user_email.trim());
@@ -767,6 +768,7 @@ const remove = async (tripId) => {
 };
 
 const update = async (
+  userId,
   nameParams,
   tripName,
   startLocation,
@@ -781,6 +783,7 @@ const update = async (
 ) => {
   // console.log(1)
   if (
+      !userId ||
       !nameParams ||
       !tripName ||
       !startLocation ||
@@ -793,9 +796,12 @@ const update = async (
     ) {
       throw 'Error: All fields need to have valid values';
     }
-    if (typeof nameParams != 'string' || nameParams.trim().length == 0) {
-      throw 'Error: Must provide the trip name as valid nonempty string';
-    }
+  if (typeof userId != 'string' || userId.trim().length == 0) {
+    throw 'Error: Must provide the userId as valid nonempty string';
+  }
+  if (typeof nameParams != 'string' || nameParams.trim().length == 0) {
+    throw 'Error: Must provide the trip name as valid nonempty string';
+  }
   if (typeof tripName != 'string' || tripName.trim().length == 0) {
     throw 'Error: Must provide the trip name as valid nonempty string';
   }
@@ -835,7 +841,7 @@ const update = async (
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }
-  // userId = userId.trim();
+  userId = userId.trim();
   tripName = tripName.trim();
   startLocation = startLocation.trim();
   startDate = startDate.trim();
@@ -845,6 +851,7 @@ const update = async (
   endTime = endTime.trim();
   // stops = stops.map((stop) => stop.trim());
   // toDo = toDo.map((todo) => todo.trim());
+  // usersAllowed = usersAllowed.map((usersAllowed) => usersAllowed.trim());
   let st = startTime.split(':');
   let et = endTime.split(':');
   if (tripName.includes("/")) {
@@ -956,8 +963,7 @@ const update = async (
   
   if (usersAllowed.length === 1 && usersAllowed[0].trim() === "") {
     try {
-      let uId = userId;
-      let user_email = await getUserById(uId);
+      let user_email = await getUserById(userId);
       user_email = user_email.email;
       usersAllowed[0] = user_email;
     } catch (e) {
@@ -970,8 +976,7 @@ const update = async (
       }
     }
     try {
-      let uId = userId;
-      let user_email = await getUserById(uId);
+      let user_email = await getUserById(userId);
       user_email = user_email.email;
       if (!usersAllowed.includes(user_email.trim())) {
         usersAllowed.push(user_email.trim());
@@ -1126,14 +1131,15 @@ const update = async (
   //   }
   //   toDo[i] = toDo[i].trim();
   // }
+  let trippers = await get(tripName);
   const tripCollection = await trips();
-  if (await tripCollection.findOne({$and: [{ name: tripName }, {userId: userId}]})) {
+  if (await tripCollection.findOne({ name: tripName , userId: userId, _id: {$ne: trippers._id}})) {
     throw 'Error: Trip name already exists';
   }
   const trip = await tripCollection.findOne({ name: nameParams });
 
   const updatedtrip = {
-    userId: trip.userId,
+    userId: userId,
     name: tripName,
     start_location: startLocation,
     start_date: startDate,
@@ -1150,7 +1156,7 @@ const update = async (
   const updatedInfo = await tripCollection.replaceOne({ name: nameParams }, updatedtrip);
 
   if (updatedInfo.modifiedCount === 0) {
-    throw 'Could not update band successfully';
+    throw 'Could not update trip successfully';
   }
 
   return await get(tripName);
