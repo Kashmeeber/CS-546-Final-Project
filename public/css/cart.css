@@ -30,22 +30,27 @@ body {
 
 #navbar {
   background-color: #79b791;
-  display: block;
+  display: flex;
   list-style-type: none;
   overflow: hidden;
   padding: 10px 15px;
+  justify-content: space-around;
 }
 
 li {
   float: left;
   background-color: #f5bfc8;
+  display: inline-flex;
+  text-align: center !important;
+  padding: 10px 10px;
+  border-radius: 20px;
 }
 .nav-item {
-  display: block;
-  padding-left: 160px;
-  padding-right: 160px;
+  display: inline-flex;
   font-weight: bold;
   color: #281a12;
+  padding-top: unset;
+  padding-bottom: unset;
 }
 .nav-item:visited {
   color: initial;
@@ -234,4 +239,9 @@ label::before {
   padding: 0px;
   padding-top: 14px;
   font-weight: bold;
+}
+.resize {
+  height: auto;
+  width: 1000px; 
+  margin: 0 auto;
 }
