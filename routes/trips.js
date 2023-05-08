@@ -6,6 +6,7 @@ const router = Router();
 import { tripsData } from '../data/index.js';
 import { itineraryData } from '../data/index.js';
 import validation from '../validation.js';
+import xss from "xss";
 
 router.route('/').get(async (req, res) => {
   //code here for GET
@@ -97,6 +98,18 @@ router
   .put(async (req, res) => {
     //code here for PUT
     let tripInfo = req.body;
+    let tripNameInput = xss(tripInfo.tripNameInput);
+    let startLocationInput = xss(tripInfo.startLocationInput);
+    let endLocationInput = xss(tripInfo.endLocationInput);
+    let startDateInput = xss(tripInfo.startDateInput);
+    let endDateInput = xss(tripInfo.endDateInput);
+    let startTimeInput = xss(tripInfo.startTimeInput);
+    let endTimeInput = xss(tripInfo.endTimeInput);
+    let stopsInput = xss(tripInfo.stopsInput);
+    let toDoInput = xss(tripInfo.toDoInput);
+
+
+
 
     let toDoArr = [];
     let stopsArr = [];
@@ -104,7 +117,7 @@ router
     let regexStringsOnly = /^[A-Za-z]+$/;
 
     try {
-      if (!regex.test(tripInfo.tripNameInput)) {
+      if (!regex.test(tripNameInput)) {
         throw 'Trip Name must be a string';
       }
       // let splitSL = tripInfo.startLocationInput.split(',');
@@ -123,8 +136,8 @@ router
       //   throw 'You must have a full street name in your address'
       // }
 
-      let splitToDo = tripInfo.toDoInput.split(',');
-      let splitStops = tripInfo.stopsInput.split('/');
+      let splitToDo = toDoInput.split(',');
+      let splitStops = stopsInput.split('/');
 
       for (let i = 0; i < splitToDo.length; i++) {
         if (typeof splitToDo[i] == 'string') {
@@ -161,20 +174,26 @@ router
       // return res.status(200).json(updatedTrip);
       return res.render('success', { success: 'You have successfully updated your trip!' });
     } catch (e) {
-      return res.status(400).json(e);
+      return res.status(400).render("edittrip", {error: e});
     }
   });
 
 router.route('/itinerary/:tripName').post(async (req, res) => {
   let actInfo = req.body;
+  let activityInput = xss(actInfo.activityInput);
+  let dateInput = xss(actInfo.dateInput);
+  let activityStartTimeInput = xss(actInfo.activityStartTimeInput);
+  let activityEndTimeInput = xss(actInfo.activityEndTimeInput);
+  let costInput = xss(actInfo.costInput);
+  let notesInput = xss(actInfo.notesInput);
   let regex = /.*[a-zA-Z].*/;
   let regexNum = /^[0-9]*$/;
-  let st = actInfo.activityStartTimeInput.split(':');
-  let et = actInfo.activityEndTimeInput.split(':');
-  let sd = actInfo.dateInput.split('/');
+  let st = activityStartTimeInput.split(':');
+  let et = activityEndTimeInput.split(':');
+  let sd = dateInput.split('/');
 
   try {
-    if (!regex.test(actInfo.activityInput)) {
+    if (!regex.test(activityInput)) {
       throw 'Activity Name must be a string';
     }
 
@@ -258,7 +277,7 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
     // return res.status(200).json(itinerary);
     return res.render('successitinerary', { success: 'You have successfully added an activity!' });
   } catch (e) {
-    return res.status(400).json(e);
+    return res.status(400).render("createItinerary", {error: e});
   }
 });
 
@@ -388,14 +407,21 @@ router
   })
   .put(async (req, res) => {
     let actInfo = req.body;
+    let activityInput = xss(actInfo.activityInput);
+    let dateInput = xss(actInfo.dateInput);
+    let activityStartTimeInput = xss(actInfo.activityStartTimeInput);
+    let activityEndTimeInput = xss(actInfo.activityEndTimeInput);
+    let costInput = xss(actInfo.costInput);
+    let notesInput = xss(actInfo.notesInput);
+
     let regex = /.*[a-zA-Z].*/;
     let regexNum = /^[0-9]*$/;
-    let st = actInfo.activityStartTimeInput.split(':');
+    let st = activityStartTimeInput.split(':');
     let et = actInfo.activityEndTimeInput.split(':');
-    let sd = actInfo.dateInput.split('/');
+    let sd = dateInput.split('/');
 
     try {
-      if (!regex.test(actInfo.activityInput)) {
+      if (!regex.test(activityInput)) {
         throw 'Activity Name must be a string';
       }
 
@@ -483,7 +509,7 @@ router
         success: 'You have successfully updated your activity!'
       });
     } catch (e) {
-      return res.status(400).json(e);
+      return res.status(400).render("edititinerary", {error: e});
     }
   });
 
@@ -538,6 +564,15 @@ router
   .post(async (req, res) => {
     //code here for POST
     let tripInfo = req.body;
+    let tripNameInput = xss(tripInfo.tripNameInput);
+    let startLocationInput = xss(tripInfo.startLocationInput);
+    let endLocationInput = xss(tripInfo.endLocationInput);
+    let startDateInput = xss(tripInfo.startDateInput);
+    let endDateInput = xss(tripInfo.endDateInput);
+    let startTimeInput = xss(tripInfo.startTimeInput);
+    let endTimeInput = xss(tripInfo.endTimeInput);
+    let stopsInput = xss(tripInfo.stopsInput);
+    let toDoInput = xss(tripInfo.toDoInput);
 
     let toDoArr = [];
     let stopsArr = [];
@@ -545,7 +580,7 @@ router
     let regexStringsOnly = /^[A-Za-z]+$/;
 
     try {
-      if (!regex.test(tripInfo.tripNameInput)) {
+      if (!regex.test(tripNameInput)) {
         throw 'Trip Name must be a string';
       }
       // let splitSL = tripInfo.startLocationInput.split(',');
@@ -564,8 +599,8 @@ router
       //   throw 'You must have a full street name in your address'
       // }
 
-      let splitToDo = tripInfo.toDoInput.split(',');
-      let splitStops = tripInfo.stopsInput.split('/');
+      let splitToDo = toDoInput.split(',');
+      let splitStops = stopsInput.split('/');
 
       for (let i = 0; i < splitToDo.length; i++) {
         if (typeof splitToDo[i] == 'string') {
@@ -612,7 +647,7 @@ router
         .status(200)
         .redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
     } catch (e) {
-      return res.status(400).json(e);
+      return res.status(400).render("tripplanning", {error: e});
     }
   })
   .put(async (req, res) => {
