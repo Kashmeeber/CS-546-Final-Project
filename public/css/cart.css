@@ -37,15 +37,15 @@ body {
 }
 
 li {
-  float:left;
-  background-color:  #f5bfc8;
+  float: left;
+  background-color: #f5bfc8;
 }
 .nav-item {
   display: block;
   padding-left: 160px;
   padding-right: 160px;
   font-weight: bold;
-  color: #281A12;
+  color: #281a12;
 }
 .nav-item:visited {
   color: initial;
@@ -65,7 +65,7 @@ a {
   padding-bottom: unset;
   border-radius: 20px;
   /* padding-left: 10px; */
-  color: #281A12;
+  color: #281a12;
 }
 a:visited {
   color: initial;
@@ -187,11 +187,27 @@ label::before {
   animation-timing-function: ease-in-out;
 }
 @keyframes driving {
-  0%   {left: 0px; top:0px; down: 50;}
-  25%  {left:1300px; top:0px;}
-  50%  {left:1300px; top:0px;}
-  75%  {left:1300px; top:0px;}
-  100% {left:0px; top:0px;}
+  0% {
+    left: 0px;
+    top: 0px;
+    down: 50;
+  }
+  25% {
+    left: 1300px;
+    top: 0px;
+  }
+  50% {
+    left: 1300px;
+    top: 0px;
+  }
+  75% {
+    left: 1300px;
+    top: 0px;
+  }
+  100% {
+    left: 0px;
+    top: 0px;
+  }
 }
 #usa {
   width: 800px;
@@ -203,7 +219,7 @@ label::before {
   font-size: 30px;
 }
 
-#serverError {
+#error {
   color: red;
   font-weight: bold;
 }

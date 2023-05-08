@@ -1,13 +1,13 @@
 <ul id="navbar">
-    <li id = "left"><a href="/homepage" class="nav-item">Home</a></li>
+    <li id="left"><a href="/homepage" class="nav-item">Home</a></li>
     <li><a href="/profile" class="nav-item">Profile</a></li>
     <li><a href="/trips" class="nav-item">Plan a trip</a></li>
-    <li id = "right"><a href="/logout" class="nav-item">Logout</a></li>
+    <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
 </ul>
 <div>
     <p>If you don't want to change a field, input the same information as before.</p>
-<p id="serverErr">{{error}}</p>
-<div id="error"></div>
+    <p id="serverErr">{{error}}</p>
+    <div id="error"></div>
     <form action="/trips/trip/{{currentTrips}}" method="POST" id="editForm">
         <p class="text">Trip Name:</p>
         <label for="tripNameInput">
@@ -18,10 +18,12 @@
             <input name="startLocationInput" id="startLocationInput" type="text">
         </label>
         <p class="text">Start Date:</p>
+        <p class="requirement">(must be in the format MM/DD/YYYY)</p>
         <label for="startDateInput">
             <input name="startDateInput" id="startDateInput" type="text">
         </label>
         <p class="text">Start Time:</p>
+        <p class="requirement">(must be in the format HH:MM)</p>
         <label for="startTimeInput">
             <input name="startTimeInput" id="startTimeInput" type="text">
         </label>
@@ -30,14 +32,17 @@
             <input name="endLocationInput" id="endLocationInput" type="text">
         </label>
         <p class="text">End Date:</p>
+        <p class="requirement">(must be in the format MM/DD/YYYY)</p>
         <label for="endDateInput">
             <input name="endDateInput" id="endDateInput" type="text">
         </label>
         <p class="text">End Time:</p>
+        <p class="requirement">(must be in the format HH:MM)</p>
         <label for="endTimeInput">
             <input name="endTimeInput" id="endTimeInput" type="text">
         </label>
         <p class="text">Stops:</p>
+        <p class="requirement">(must be separated by a /)</p>
         <label for="stopsInput">
             <input name="stopsInput" id="stopsInput" type="text">
         </label>
