@@ -8,39 +8,49 @@
 </div>
 
 {{#each trips}}
-  {{#if this.itinerary}}
+{{#if this.itinerary}}
 
-    <div class="trips">
-        <div class="content">
-            <div id="contains">
-                <p class ="next">Name of Trip:</p>
-                <a href="#" onclick='window.open("localhost:3000/trips/map/{{this.userId}}/{{this.name}}")' id="tripUrl"/>{{this.name}}</a>
-            </div>
-            {{#each itinerary}}
-            <div id="contains">
-                <p class="next">Activity Name: </p>
-                <p>{{this.activityName}}</p>
-            </div>
-            <div id="contains">
-                <p class="next">Start Date:</p>
-                <p> {{this.date}}</p>
-            </div>
-            <div id="contains">
-                <p class="next">Start Time: </p>
-                <p>{{this.startTime}}</p>
-            </div>
-            <div id="contains">
-                <p class="next">End Time:</p>
-                <p>{{this.endTime}}</p>
-            </div>
-            <div id="contains">
-                <p class="next">Cost: </p><p>{{this.cost}}</p>
-            </div>
-            <div id="contains">
-                <p class="next">Notes:</p><p>{{this.notes}}</p>
-            </div>
-            {{/each}}
+<div class="trips">
+    <div class="content">
+        <div id="contains">
+            <p class="next">Name of Trip:</p>
+            <a href="#" onclick='window.open("localhost:3000/trips/map/{{this.userId}}/{{this.name}}")'
+                id="tripUrl" />{{this.name}}</a>
         </div>
+        {{#each itinerary}}
+        <div id="contains">
+            <p class="next">Activity Name: </p>
+            <p>{{this.activityName}}</p>
+        </div>
+        <div id="contains">
+            <p class="next">Start Date:</p>
+            <p> {{this.date}}</p>
+        </div>
+        <div id="contains">
+            <p class="next">Start Time: </p>
+            <p>{{this.startTime}}</p>
+        </div>
+        <div id="contains">
+            <p class="next">End Time:</p>
+            <p>{{this.endTime}}</p>
+        </div>
+        <div id="contains">
+            <p class="next">Cost: </p>
+            <p>{{this.cost}}</p>
+        </div>
+        {{#if this.notes}}
+        <div id="contains">
+            <p class="next">Notes:</p>
+            <p>{{this.notes}}</p>
+        </div>
+        {{else}}
+        <div id="contains">
+            <p class="next">Notes:</p>
+            <p>N/A</p>
+        </div>
+        {{/if}}
+        {{/each}}
     </div>
-    {{/if}}
+</div>
+{{/if}}
 {{/each}}
