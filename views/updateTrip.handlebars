@@ -10,12 +10,16 @@
 </div>
 <p></p>
 <form id="selection" action="/trips/edittrip" method="POST">
-    <select name="tripName" id="tripName">
-        {{#each trips}}
-        <option value="{{this.name}}">{{this.name}}</option>
-        {{/each}}
-    </select>
-    <label for="submit">
-        <button type="submit" name="submit" id="submit">Submit</button>
-    </label>
+        {{#if trips.length}}
+            <select name="tripName" id="tripName">
+            {{#each trips}}
+                <option value="{{this.name}}">{{this.name}}</option>
+            {{/each}}
+            </select>
+            <label for="submit">
+                <button type="submit" name="submit" id="submit">Submit</button>
+            </label>
+        {{else}}
+            <a href="/trips">create a trip first!</a>
+        {{/if}}
 </form>

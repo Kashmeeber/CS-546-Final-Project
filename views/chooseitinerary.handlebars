@@ -9,14 +9,20 @@
         <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
     </ul>
 </div>
-<p>choose the itinerary you want to edit: </p>
-<form id="selection3" action="/trips/edititinerary/{{currentTrip}}" method="POST">
-{{!-- <form id="selection3">  --}}
-    <select name="activityName" id="activityName" >
+
+{{#if trips.length}}
+<form id="selection2" action="/trips/edititinerary/{{currentTrip}}" method="POST">
+    <p>choose the itinerary you want to edit: </p>
+    <select name="activityName" id="activityName">
         {{#each trips}}
             <option value="{{this.activityName}}">{{this.activityName}}</option>
         {{/each}}
     </select>
-    <button id="submit" onclick="">Submit</button>
+    <label for="submit">
+        <button type="submit" name="submit" id="submit">Submit</button>
+    </label>
+    </form>
+{{else}}
+    <a href="/trips/itinerary">create an itinerary first!</a>
 
-</form>
+{{/if}}

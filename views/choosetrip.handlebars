@@ -8,15 +8,27 @@
         <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
     </ul>
 </div>
-<p>choose the trip your itinerary is in:</p>
 <form id="selection2" action="/trips/edititinerary" method="POST">
-    <select name="tripName" id="tripName" >
+    {{#if trips.length}}
+        <p>Choose the trip your itinerary is in:</p>
+        <select name="tripName" id="tripName">
         {{#each trips}}
-              {{#if this.itinerary}}
             <option value="{{this.name}}">{{this.name}}</option>
-            {{/if}}
         {{/each}}
+        </select>
+        <label for="submit">
+            <button type="submit" name="submit" id="submit">Submit</button>
+        </label>
+    {{else}}
+        <a href="/trips">create a trip first!</a>
+    {{/if}}
+    {{!-- <select name="tripName" id="tripName" >
+        {{#if trips}}
+            {{#each trips}}
+                <option value="{{this.name}}">{{this.name}}</option>
+            {{/each}}
+        {{/if}}
     </select>
-    <button id="submit" onclick="">Submit</button>
+    <button id="submit" onclick="">Submit</button> --}}
 
 </form>

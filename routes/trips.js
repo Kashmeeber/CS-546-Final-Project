@@ -7,6 +7,7 @@ import { tripsData } from '../data/index.js';
 import { itineraryData } from '../data/index.js';
 import validation from '../validation.js';
 import xss from "xss";
+import { getActivitybyName } from '../data/itinerary.js';
 
 router.route('/').get(async (req, res) => {
   //code here for GET
@@ -65,6 +66,13 @@ router
     let regex = /.*[a-zA-Z].*/;
     let regexStringsOnly = /^[A-Za-z]+$/;
 
+    try{
+      let querying4= await tripsData.get(req.body.tripName)
+    }catch(e){
+      return res.status(400).render("updateTrip", {error: e})
+    }
+
+
     try {
       if (!regex.test(tripNameInput)) {
         throw 'Trip Name must be a string';
@@ -117,6 +125,7 @@ router
     try {
       req.params.tripName = validation.checkString(req.params.tripName);
       const updatedTrip = await tripsData.update(
+        req.session.user.id,
         req.params.tripName,
         req.body.tripNameInput,
         req.body.startLocationInput,
@@ -149,6 +158,13 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
   let st = activityStartTimeInput.split(':');
   let et = activityEndTimeInput.split(':');
   let sd = dateInput.split('/');
+
+  try{
+    let querying5 = await tripsData.get(req.params.tripName)
+    // console.log(querying5)
+  }catch(e){
+    return res.status(400).render("itinerary", {error: e})
+  }
 
   try {
     if (!regex.test(activityInput)) {
@@ -296,6 +312,11 @@ router
   })
   .post(async (req, res) => {
     req.session.currentTrip = req.body.tripName;
+    try{
+      let querying5 = await tripsData.get(req.body.tripName)
+    }catch(e){
+     return res.status(400).render("itinerary", {error: e})
+    }
     return res.render('createItinerary', {
       title: 'itinerary for ' + req.body.tripName,
       currentTrip: req.session.currentTrip
@@ -307,12 +328,17 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData4 = await tripsData.getAll(req.session.user.id);
+    
     return res.render('choosetrip', { title: 'edit itinerary', trips: tData4 });
   })
   .post(async (req, res) => {
     // console.log("hihi8");
     // req.session.tripForIt = req.body.tripName;
-
+    // try{
+    //   let querying2 = await tripsData.getAll(req.session.user.id)
+    // }catch(e){
+    //   res.status
+    // }
     return res.redirect(`/trips/edititinerary/${req.body.tripName}/`);
     // return res.render("edittrip", {title: "Edit Trip Info", currentTrips: req.session.currentTrips})
   });
@@ -322,7 +348,22 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData4 = await tripsData.getAll(req.session.user.id);
-    let itData = await tripsData.get(req.params.tripName);
+    // let itData = await tripsData.get(req.params.tripName);
+    let itData;
+    for(let i = 0; i<tData4.length; i++) {
+      if(tData4[i].name == req.params.tripName) {
+        itData = tData4[i]
+        break;
+      }
+    }
+    try{
+      if(!itData) {
+        throw "activity with given name DNE"
+      }
+    }catch(e){
+      return res.status(400).render("chooseitinerary", {error: e})
+    }
+
     // console.log(req.params.tripName)
     // console.log(itData)
     return res.render('chooseitinerary', {
@@ -334,6 +375,12 @@ router
   .post(async (req, res) => {
     // req.session.tripForIt = req.body.tripName;
     // console.log(req.body.activityName)
+    try{
+      let querying = await itineraryData.getActivitybyName(req.body.activityName);
+    }catch(e){
+      return res.status(400).render("chooseitinerary", {error: e});
+    }
+    
     return res.redirect(`/trips/edititinerary/${req.params.tripName}/${req.body.activityName}`);
     // return res.render("edittrip", {title: "Edit Trip Info", currentTrips: req.session.currentTrips})
   });
@@ -349,7 +396,7 @@ router
       let test = await itineraryData.getActivitybyName(req.params.itineraryName);
       // console.log(test)
     } catch (e) {
-      throw e;
+      return res.status(400).render("chooseitinerary", {error: e});
     }
 
     return res.render('edititinerary', {
@@ -476,11 +523,19 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData3 = await tripsData.getAll(req.session.user.id);
+
     return res.render('updateTrip', { title: 'edit trip', trips: tData3 });
   })
   .post(async (req, res) => {
     req.session.currentTrips = req.body.tripName;
     // return res.redirect(`/trips/trip/${req.body.tripName}`)
+    try{
+      let querying3= await tripsData.get(req.body.tripName)
+    }catch(e){
+      let tData3 = await tripsData.getAll(req.session.user.id);
+      return res.status(400).render("updateTrip", {error: e, trips: tData3})
+    }
+
     return res.render('edittrip', {
       title: 'edit trip: ' + req.body.tripName,
       currentTrips: req.session.currentTrips
