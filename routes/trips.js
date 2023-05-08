@@ -486,26 +486,6 @@ router
   });
 
 
-  router
-  .route("/map/:userId/:tripName")
-  .get(async (req, res) => {
-    //code here for GET
-    try {
-      let trip = await tripsData.get(req.params.tripName);
-      let slash = '';
-      if (trip.stops.length === 0) {
-      } else {
-        for (let i = 0; i < trip.stops.length; i++) {
-          slash = slash + trip.stops[i] + '/';
-        }
-        slash = slash.substring(0, slash.length - 1);
-      }
-      return res.render('map', { title: `${req.params.tripName} map`, userId: req.session.user.id, currentName: req.session.currentTrip, mData: trip, stops: slash });
-    } catch (e) {
-      return res.status(500).json(e);
-    }
-  })
-
 router
   .route('/edittrip')
   .get(async (req, res) => {
@@ -526,6 +506,27 @@ router.route('/edititinerary').get(async (req, res) => {
   //code here for GET
   return res.render('edititinerary', { title: 'edit itinerary' });
 });
+
+router
+  .route("/map/:userId/:tripName")
+  .get(async (req, res) => {
+    //code here for GET
+    try {
+      req.session.currentTrip = req.params.tripName;
+      let trip = await tripsData.get(req.params.tripName);
+      let slash = '';
+      if (trip.stops.length === 0) {
+      } else {
+        for (let i = 0; i < trip.stops.length; i++) {
+          slash = slash + trip.stops[i] + '/';
+        }
+        slash = slash.substring(0, slash.length - 1);
+      }
+      return res.render('map', { title: `${req.params.tripName} map`, userId: req.session.user.id, currentName: req.session.currentTrip, mData: trip, stops: slash });
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  })
 
 router
   .route('/map')
