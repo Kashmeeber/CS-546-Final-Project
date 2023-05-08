@@ -66,11 +66,11 @@ router
     let regex = /.*[a-zA-Z].*/;
     let regexStringsOnly = /^[A-Za-z]+$/;
 
-    try{
-      let querying4= await tripsData.get(req.body.tripName)
-    }catch(e){
-      return res.status(400).render("updateTrip", {error: e})
-    }
+    // try{
+    //   let querying4= await tripsData.get(req.body.tripName)
+    // }catch(e){
+    //   return res.status(400).render("updateTrip", {error: e})
+    // }
 
 
     try {
