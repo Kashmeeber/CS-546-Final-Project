@@ -8,6 +8,7 @@ import { itineraryData } from '../data/index.js';
 import validation from '../validation.js';
 import xss from "xss";
 import { getActivitybyName } from '../data/itinerary.js';
+import { checkUserAllowed } from '../helpers.js';
 
 router.route('/').get(async (req, res) => {
   //code here for GET
@@ -547,7 +548,7 @@ router.route('/edititinerary').get(async (req, res) => {
   return res.render('edititinerary', { title: 'edit itinerary' });
 });
 
-router.route('/map/:userId/:tripName').get(async (req, res) => {
+router.route('/map/:userId/:tripName').get(checkUserAllowed, async (req, res) => {
   //code here for GET
   try {
     req.session.currentTrip = req.params.tripName;
