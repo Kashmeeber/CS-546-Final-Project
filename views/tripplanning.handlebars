@@ -1,11 +1,17 @@
-<ul id="navbar">
-    <li id="left"><a href="/homepage" class="nav-item">Home</a></li>
-    <li><a href="/profile" class="nav-item">Profile</a></li>
-    <li><a href="/trips" class="nav-item">Plan a trip</a></li>
-    <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
-</ul>
+<div class="resize">
+    <ul id="navbar">
+        <li id="left"><a href="/homepage" class="nav-item">Home</a></li>
+        <li><a href="/profile" class="nav-item">Profile</a></li>
+        <li><a href="/trips" class="nav-item">Plan a trip</a></li>
+        <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
+    </ul>
+</div>
 <p id="serverErr">{{error}}</p>
 <div id="error"></div>
+<a href="/trips/edittrip" class="a-format">Click here to edit a trip</a>
+<a href="/trips/itinerary" class="a-format">Click here to add an itinerary</a>
+<a href="/trips/edititinerary" class="a-format">Click here to edit an existing itinerary</a>
+<p></p>
 <div id="createTrip">
     <form action="/trips/map" method="POST" id="tripForm">
         <p class="text">Trip Name:</p>
@@ -54,7 +60,3 @@
         </label>
     </form>
 </div>
-<p></p>
-<a href="/trips/edittrip" class="a-format">Click here to edit a trip</a>
-<a href="/trips/itinerary" class="a-format">Click here to add an itinerary</a>
-<a href="/trips/edititinerary" class="a-format">Click here to edit an existing itinerary</a>
