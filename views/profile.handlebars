@@ -23,54 +23,67 @@
 </div>
 <h2>my trip board</h2>
 <p>view any trips you create here!</p>
-<a href = "/displayitinerary">Click here to view your itineraries!</a>
+<a href="/displayitinerary">Click here to view your itineraries!</a>
 <p></p>
 <div id="trip-holder">
-{{#each trips}}
+    {{#each trips}}
     <div class="trips">
         <div class="content">
-            <div id="contains">
-                <p class ="next">Name of Trip:</p>
-                <a href="#" onclick='window.open("localhost:3000/trips/map/{{this.userId}}/{{this.name}}")' id="tripUrl"/>{{this.name}}</a>
+            <div class="contains">
+                <p class="next">Name of Trip:</p>
+                <a href="#" onclick='window.open("localhost:3000/trips/map/{{this.userId}}/{{this.name}}")'
+                    id="tripUrl" />{{this.name}}</a>
             </div>
-            <div id="contains">
+            <div class="contains">
                 <p class="next">Start Location: </p>
                 <p>{{this.start_location}}</p>
             </div>
-            <div id="contains">
+            <div class="contains">
                 <p class="next">Start Date:</p>
                 <p> {{this.start_date}}</p>
             </div>
-            <div id="contains">
+            <div class="contains">
                 <p class="next">Start Time: </p>
                 <p>{{this.start_time}}</p>
             </div>
-            <div id="contains">
+            <div class="contains">
                 <p class="next">End Location:</p>
                 <p>{{this.end_location}}</p>
             </div>
-            <div id="contains">
-                <p class="next">End Date: </p><p>{{this.end_date}}</p>
+            <div class="contains">
+                <p class="next">End Date: </p>
+                <p>{{this.end_date}}</p>
             </div>
-            <div id="contains">
-                <p class="next">End Time:</p><p>{{this.end_time}}</p>
+            <div class="contains">
+                <p class="next">End Time:</p>
+                <p>{{this.end_time}}</p>
             </div>
-            <div id="contains">
-                <p class="next">Overall Cost:</p><p>{{this.overallCost}}</p>
+            <div class="contains">
+                <p class="next">Overall Cost:</p>
+                <p>{{this.overallCost}}</p>
             </div>
             <p class="pad">Stops:</p>
             {{#each this.stops}}
-                <p>- {{this}}</p>
+            <p>- {{this}}</p>
             {{/each}}
             <p class="pad">Things To Do:</p>
             {{#each this.to_do}}
-                <p>- {{this}}</p>
+            {{#if @first}}
+            <div class="contains">
+                <p>-</p>
+                <p id="highlight-red">{{this}}</p>
+            </div>
+            {{else}}
+            <div class="contains">
+                <p>-</p>
+                <p id="list-{{@index}}">{{this}}</p>
+            </div>
+            {{/if}}
             {{/each}}
         </div>
-    {{!-- <p>{{this.usersAllowed}}</p> --}}
+        {{!-- <p>{{this.usersAllowed}}</p> --}}
     </div>
-
-{{/each}}
+    {{/each}}
 </div>
 
 

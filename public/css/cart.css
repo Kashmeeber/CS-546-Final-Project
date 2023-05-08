@@ -155,7 +155,7 @@ h2 {
   background-color: #f5bfc8;
 }
 /*code for displaying two p tags on the same line taken from: https://stackoverflow.com/questions/67249439/how-can-i-keep-several-p-tags-on-the-same-line */
-#contains {
+.contains {
   display: flex;
   gap: 0.5rem;
 }
@@ -242,6 +242,21 @@ label::before {
 }
 .resize {
   height: auto;
-  width: 1000px; 
+  width: 1000px;
   margin: 0 auto;
+}
+
+#highlight-red {
+  background-color: rgb(215, 138, 138);
+  font-weight: bold;
+}
+
+#list-1 {
+  background-color: rgb(251, 211, 138);
+  font-weight: bold;
+}
+
+#list-2 {
+  background-color: rgb(253, 255, 158);
+  font-weight: bold;
 }
