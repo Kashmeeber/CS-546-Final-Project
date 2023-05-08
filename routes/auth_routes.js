@@ -3,6 +3,7 @@ import { users } from '../config/mongoCollections.js';
 import { Router } from 'express';
 import * as userData from '../data/users.js';
 import * as tripData from '../data/trips.js';
+import * as itineraryData from '../data/itinerary.js';
 
 const router = Router();
 router.route('/').get(async (req, res) => {
@@ -92,6 +93,19 @@ router.route('/profile').get(async (req, res) => {
     emailAddressInput: req.session.user.emailAddress,
     trips: tData,
     title: 'profile'
+  });
+});
+
+router.route('/displayItinerary').get(async (req, res) => {
+  //code here for GET
+  let tData = await tripData.getAll(req.session.user.id);
+
+  return res.render('displayItinerary', {
+    firstNameInput: req.session.user.firstName,
+    lastNameInput: req.session.user.lastName,
+    emailAddressInput: req.session.user.emailAddress,
+    trips: tData,
+    title: 'itinerary'
   });
 });
 
