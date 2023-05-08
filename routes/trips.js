@@ -19,59 +19,7 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-// router
-//   .route("/trip/:tripName")
-//   .get(async (req, res) => {
-//     //code here for GET
-//     try {
-//       req.params.tripName = validation.checkString(req.params.tripName);
-//       const trip = await tripsData.get(req.params.tripName);
-//       return res.render('editTrips', {trips: trip})
-//       // return res.status(200).json(trip);
-//     } catch (e) {
-//       // if the id is not a valid ObjectId, return a 400
-//       if (e == "The id provided is not a valid ObjectId") {
-//         return res.status(400).json(e);
-//       }
-//       // if no band exists with that id, return a 404
-//       if (e == "No trip with that id") {
-//         return res.status(404).json(e);
-//       }
-//     }
-//   })
-//   .post(async (req, res) => {
-//     //code here for GET
-//     try {
-//       // req.params.tripName = validation.checkString(req.params.tripName);
-//       // const trip = await tripsData.get(req.params.tripName);
-//       // return res.render('editTrips', {trips: trip})
-//       return res.redirect(`/trip/${req.body.tripName}`)
-//       // return res.status(200).json(trip);
-//     } catch (e) {
-//       // if the id is not a valid ObjectId, return a 400
-//       if (e == "The id provided is not a valid ObjectId") {
-//         return res.status(400).json(e);
-//       }
-//       // if no band exists with that id, return a 404
-//       if (e == "No trip with that id") {
-//         return res.status(404).json(e);
-//       }
-//     }
-//   })
-//   .delete(async (req, res) => {
-//     //code here for DELETE
-//     try {
-//       req.params.tripName = validation.checkString(req.params.tripName);
-//       const deletedTrip = await tripsData.remove(req.params.tripName);
-//       return res.status(200).json(deletedTrip);
-//     } catch (e) {
-//       // if no band exists with that id, return a 404
-//         return res.status(404).json(e);
-//     }
-//   })
-//   //should we just try to keep this one w id?
 
-// console.log("/trip/:tripName");
 router
   .route('/trip/:tripName')
   .get(async (req, res) => {
@@ -113,6 +61,7 @@ router
 
     let toDoArr = [];
     let stopsArr = [];
+    let usersArr = [];
     let regex = /.*[a-zA-Z].*/;
     let regexStringsOnly = /^[A-Za-z]+$/;
 
@@ -138,6 +87,7 @@ router
 
       let splitToDo = toDoInput.split(',');
       let splitStops = stopsInput.split('/');
+      let splitUsers = tripInfo.allowedInput.split(',');
 
       for (let i = 0; i < splitToDo.length; i++) {
         if (typeof splitToDo[i] == 'string') {
@@ -151,6 +101,13 @@ router
           stopsArr.push(splitStops[i]);
         } else {
           throw 'One of the stops is not a valid string';
+        }
+      }
+      for (let i = 0; i < splitUsers.length; i++) {
+        if (typeof splitUsers[i] === 'string') {
+          usersArr.push(splitUsers[i].trim());
+        } else {
+          throw 'One of the users_allowed items is not a valid string';
         }
       }
     } catch (e) {
@@ -169,7 +126,8 @@ router
         req.body.endDateInput,
         req.body.endTimeInput,
         stopsArr,
-        toDoArr
+        toDoArr,
+        usersArr
       );
       // return res.status(200).json(updatedTrip);
       return res.render('success', { success: 'You have successfully updated your trip!' });
@@ -576,6 +534,7 @@ router
 
     let toDoArr = [];
     let stopsArr = [];
+    let usersArr = [];
     let regex = /.*[a-zA-Z].*/;
     let regexStringsOnly = /^[A-Za-z]+$/;
 
@@ -601,6 +560,7 @@ router
 
       let splitToDo = toDoInput.split(',');
       let splitStops = stopsInput.split('/');
+      let splitUsers = tripInfo.allowedInput.split(',');
 
       for (let i = 0; i < splitToDo.length; i++) {
         if (typeof splitToDo[i] == 'string') {
@@ -614,6 +574,13 @@ router
           stopsArr.push(splitStops[i]);
         } else {
           throw 'One of the stops is not a valid string';
+        }
+      }
+      for (let i = 0; i < splitUsers.length; i++) {
+        if (typeof splitUsers[i] === 'string') {
+          usersArr.push(splitUsers[i].trim());
+        } else {
+          throw 'One of the users_allowed items is not a valid string';
         }
       }
     } catch (e) {
@@ -632,7 +599,7 @@ router
         req.body.endTimeInput,
         stopsArr,
         toDoArr,
-        req.body.usersAllowedInput
+        usersArr
       );
       req.session.currentTrip = req.body.tripNameInput;
       let slash = '';
