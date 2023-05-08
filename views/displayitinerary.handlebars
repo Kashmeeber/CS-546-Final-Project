@@ -1,27 +1,44 @@
-{{!-- <p>My Trips: </p>
-{{#each trips}}
-<div class="trips">
-    <div class="content">
-        {{#each itinerary}}
-        <p>Name of Trip: {{this.name}}</p>
-        <p>Start Location: {{this.start_location}}</p>
-        <p>Start Date: {{this.start_date}}</p>
-        <p>Start Time: {{this.start_time}}</p>
-        <p>End Location: {{this.end_location}}</p>
-        <p>End Date: {{this.end_date}}</p>
-        <p>End Time: {{this.end_time}}</p>
-        <p>Stops:</p>
-        {{#each this.stops}}
-        <p>{{this}}</p>
-        {{/each}}
-        <p>Things To Do:</p>
-        {{#each this.to_do}}
-        <p>{{this}}</p>
-        {{/each}}
-        {{/each}}
-    </div>
-    {{!-- <p>{{this.usersAllowed}}</p> --}}
-    {{!--
-</div> --}}
+<ul id="navbar">
+    <li id = "left"><a href="/homepage" class="nav-item">Home</a></li>
+    <li><a href="/profile" class="nav-item">Profile</a></li>
+    <li><a href="/trips" class="nav-item">Plan a trip</a></li>
+    <li id = "right"><a href="/logout" class="nav-item">Logout</a></li>
+</ul>
 
-{{!-- {{/each}} --}}
+{{#each trips}}
+  {{#if this.itinerary}}
+
+    <div class="trips">
+        <div class="content">
+            <div id="contains">
+                <p class ="next">Name of Trip:</p>
+                <a href="#" onclick='window.open("localhost:3000/trips/map/{{this.userId}}/{{this.name}}")' id="tripUrl"/>{{this.name}}</a>
+            </div>
+            {{#each itinerary}}
+            <div id="contains">
+                <p class="next">Activity Name: </p>
+                <p>{{this.activityName}}</p>
+            </div>
+            <div id="contains">
+                <p class="next">Start Date:</p>
+                <p> {{this.date}}</p>
+            </div>
+            <div id="contains">
+                <p class="next">Start Time: </p>
+                <p>{{this.startTime}}</p>
+            </div>
+            <div id="contains">
+                <p class="next">End Time:</p>
+                <p>{{this.endTime}}</p>
+            </div>
+            <div id="contains">
+                <p class="next">Cost: </p><p>{{this.cost}}</p>
+            </div>
+            <div id="contains">
+                <p class="next">Notes:</p><p>{{this.notes}}</p>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+{{/each}}

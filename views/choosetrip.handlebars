@@ -10,7 +10,9 @@
 <form id="selection2" action="/trips/edititinerary" method="POST">
     <select name="tripName" id="tripName" >
         {{#each trips}}
+              {{#if this.itinerary}}
             <option value="{{this.name}}">{{this.name}}</option>
+            {{/if}}
         {{/each}}
     </select>
     <button id="submit" onclick="">Submit</button>
