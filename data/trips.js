@@ -1,5 +1,7 @@
 import { trips, users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
+import { getUserById } from './users.js';
+import e from 'express';
 
 // API call
 const createTrip = async (
@@ -12,7 +14,8 @@ const createTrip = async (
   endDate,
   endTime,
   stops,
-  toDo
+  toDo,
+  usersAllowed
 ) => {
   if (
     !userId ||
@@ -23,8 +26,7 @@ const createTrip = async (
     !endLocation ||
     !endDate ||
     !endTime ||
-    !stops ||
-    !toDo
+    !stops
   ) {
     throw 'Error: All fields need to have valid values';
   }
@@ -40,9 +42,9 @@ const createTrip = async (
   if (typeof endLocation != 'string' || endLocation.trim().length == 0) {
     throw 'Error: Must provide the end location as valid nonempty string';
   }
-  if (!Array.isArray(toDo) || toDo.length == 0) {
-    throw 'Error: Must provide to-do list as valid nonempty array';
-  }
+  // if (!Array.isArray(toDo) || toDo.length == 0) {
+  //   throw 'Error: Must provide to-do list as valid nonempty array';
+  // }
   if (typeof endDate != 'string' || endDate.trim().length == 0) {
     throw 'Error: Must provide end date as valid nonempty string';
   }
@@ -52,12 +54,12 @@ const createTrip = async (
   if (typeof endTime != 'string' || endTime.trim().length == 0) {
     throw 'Error: Must provide end time as valid nonempty string';
   }
-  // if (!Array.isArray(stops)) {
-  //   throw 'You must provide an array of all stops on your trip';
-  // }
-  // if (!Array.isArray(usersAllowed)) {
-  //   throw 'You must provide an array of all users allowed on your trip';
-  // }
+  if (!Array.isArray(stops)) {
+    throw 'You must provide an array of all stops on your trip';
+  }
+  if (!Array.isArray(usersAllowed)) {
+    throw 'You must provide an array of all users allowed on your trip';
+  }
   if (startLocation == endLocation) {
     throw 'Start location cannot be the same as end location';
   }
@@ -67,7 +69,7 @@ const createTrip = async (
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }
-  userId = userId.trim();
+  // userId = userId.trim();
   tripName = tripName.trim();
   startLocation = startLocation.trim();
   startDate = startDate.trim();
@@ -75,10 +77,14 @@ const createTrip = async (
   endDate = endDate.trim();
   startTime = startTime.trim();
   endTime = endTime.trim();
-  stops = stops.map((stop) => stop.trim());
-  toDo = toDo.map((todo) => todo.trim());
+  // stops = stops.map((stop) => stop.trim());
+  // toDo = toDo.map((todo) => todo.trim());
+  // usersAllowed = usersAllowed.map((usersAllowed) => usersAllowed.trim());
   let st = startTime.split(':');
   let et = endTime.split(':');
+  if (tripName.includes("/")) {
+    throw `Error: Trip name cannot include '/'`;
+  }
   let regexNum = /^[0-9]*$/;
   if (
     st.length != 2 ||
@@ -174,6 +180,47 @@ const createTrip = async (
     }
     toDo[i] = toDo[i].trim();
   }
+  for (let i in usersAllowed) {
+    if (typeof usersAllowed[i] !== 'string') {
+      throw 'Invalid users Allowed value given';
+    }
+    usersAllowed[i] = usersAllowed[i].trim();
+  }
+  const userCollection = await users();
+  
+  if (usersAllowed.length === 1 && usersAllowed[0].trim() === "") {
+    try {
+      let uId = userId;
+      let user_email = await getUserById(uId);
+      user_email = user_email.email;
+      usersAllowed[0] = user_email;
+    } catch (e) {
+      throw `Error: Could not get user's id`;
+    }
+  } else {
+    for (let z in usersAllowed) {
+      if(! (await userCollection.findOne({email: usersAllowed[z]}))) {
+        throw `Error: Invalid user email given`
+      }
+    }
+    try {
+      let uId = userId;
+      let user_email = await getUserById(uId);
+      user_email = user_email.email;
+      if (!usersAllowed.includes(user_email.trim())) {
+        usersAllowed.push(user_email.trim());
+      }
+    } catch (e) {
+      throw `Error: Could not get user's id`;
+    }
+  }
+
+  for (let g = 0; g < usersAllowed.length; g++) {
+    if (usersAllowed.slice(g + 1, usersAllowed.length).includes(usersAllowed[g])) {
+      usersAllowed.splice(g, 1);
+    }
+  }
+  
   let newTrip = {
     userId: userId,
     name: tripName,
@@ -186,10 +233,12 @@ const createTrip = async (
     stops: stops,
     itinerary: [],
     to_do: toDo,
+    users_allowed: usersAllowed,
     overallCost: 0
   };
+    
   const tripCollection = await trips();
-  if (await tripCollection.findOne({$and: [{ name: tripName }, {_id: userId}]})) {
+  if (await tripCollection.findOne({$and: [{ name: tripName }, {userId: userId}]})) {
     throw 'Error: Trip name already exists';
   }
   const insertInfo = await tripCollection.insertOne(newTrip);
@@ -727,7 +776,8 @@ const update = async (
   endDate,
   endTime,
   stops,
-  toDo
+  toDo, 
+  usersAllowed
 ) => {
   // console.log(1)
   if (
@@ -738,7 +788,8 @@ const update = async (
       !startTime ||
       !endLocation ||
       !endDate ||
-      !endTime
+      !endTime  ||
+      !stops
     ) {
       throw 'Error: All fields need to have valid values';
     }
@@ -769,12 +820,12 @@ const update = async (
   if (typeof endTime != 'string' || endTime.trim().length == 0) {
     throw 'Error: Must provide end time as valid nonempty string';
   }
-  // if (!Array.isArray(stops)) {
-  //   throw 'You must provide an array of all stops on your trip';
-  // }
-  // if (!Array.isArray(usersAllowed)) {
-  //   throw 'You must provide an array of all users allowed on your trip';
-  // }
+  if (!Array.isArray(stops)) {
+    throw 'You must provide an array of all stops on your trip';
+  }
+  if (!Array.isArray(usersAllowed)) {
+    throw 'You must provide an array of all users allowed on your trip';
+  }
   if (startLocation == endLocation) {
     throw 'Start location cannot be the same as end location';
   }
@@ -796,6 +847,9 @@ const update = async (
   // toDo = toDo.map((todo) => todo.trim());
   let st = startTime.split(':');
   let et = endTime.split(':');
+  if (tripName.includes("/")) {
+    throw `Error: Trip name cannot include '/'`;
+  }
   let regexNum = /^[0-9]*$/;
   if (
     st.length != 2 ||
@@ -891,6 +945,46 @@ const update = async (
       throw 'You must supply at least 1 to-do item';
     }
     toDo[i] = toDo[i].trim();
+  }
+  for (let i in usersAllowed) {
+    if (typeof usersAllowed[i] !== 'string') {
+      throw 'Invalid users Allowed value given';
+    }
+    usersAllowed[i] = usersAllowed[i].trim();
+  }
+  const userCollection = await users();
+  
+  if (usersAllowed.length === 1 && usersAllowed[0].trim() === "") {
+    try {
+      let uId = userId;
+      let user_email = await getUserById(uId);
+      user_email = user_email.email;
+      usersAllowed[0] = user_email;
+    } catch (e) {
+      throw `Error: Could not get user's id`;
+    }
+  } else {
+    for (let z in usersAllowed) {
+      if(! (await userCollection.findOne({email: usersAllowed[z]}))) {
+        throw `Error: Invalid user email given`
+      }
+    }
+    try {
+      let uId = userId;
+      let user_email = await getUserById(uId);
+      user_email = user_email.email;
+      if (!usersAllowed.includes(user_email.trim())) {
+        usersAllowed.push(user_email.trim());
+      }
+    } catch (e) {
+      throw `Error: Could not get user's id`;
+    }
+  }
+
+  for (let g = 0; g < usersAllowed.length; g++) {
+    if (usersAllowed.slice(g + 1, usersAllowed.length).includes(usersAllowed[g])) {
+      usersAllowed.splice(g, 1);
+    }
   }
   // console.log(10)
 
@@ -1033,9 +1127,9 @@ const update = async (
   //   toDo[i] = toDo[i].trim();
   // }
   const tripCollection = await trips();
-  // if (await tripCollection.findOne({$and: [{ name: tripName }, {_id: userId}]})) {
-  //   throw 'Error: Trip name already exists';
-  // }
+  if (await tripCollection.findOne({$and: [{ name: tripName }, {userId: userId}]})) {
+    throw 'Error: Trip name already exists';
+  }
   const trip = await tripCollection.findOne({ name: nameParams });
 
   const updatedtrip = {
@@ -1050,6 +1144,7 @@ const update = async (
     stops: stops,
     itinerary: trip.itinerary,
     to_do: toDo,
+    users_allowed: usersAllowed,
     overallCost: trip.overallCost
   };
   const updatedInfo = await tripCollection.replaceOne({ name: nameParams }, updatedtrip);
