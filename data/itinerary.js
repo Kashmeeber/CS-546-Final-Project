@@ -23,7 +23,9 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
   let regexNum = /^[0-9]*$/
-  
+  if(activityName.includes("/")) {
+    throw `Error: Activity name cannot include '/'`
+  }
   if (splitDate[0].length !== 2 || splitDate[1].length !== 2 || splitDate[2].length !== 4 || !regexNum.test(splitDate[0]) || !regexNum.test(splitDate[1]) || !regexNum.test(splitDate[2])) {
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
@@ -312,6 +314,9 @@ const updateActivity = async (
     throw 'Error: Must provide end time as valid nonempty string';
   }
   endTime = endTime.trim();
+  if(activityName.includes("/")) {
+    throw `Error: Activity name cannot include '/'`
+  }
   let regexNum = /^[0-9]*$/
   if(!regexNum.test(cost)){
     throw 'Cost must be a number'
