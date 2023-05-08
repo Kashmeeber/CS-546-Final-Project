@@ -6,8 +6,9 @@
         <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
     </ul>
 </div>
-<p id="serverErr">{{error}}</p>
-<div id="error"></div>
+    <div id="error">
+         <p id="serverErr">{{error}}</p>
+    </div>
 <a href="/trips/edittrip" class="a-format">Click here to edit a trip</a>
 <a href="/trips/itinerary" class="a-format">Click here to add an itinerary</a>
 <a href="/trips/edititinerary" class="a-format">Click here to edit an existing itinerary</a>
@@ -54,6 +55,10 @@
         <p class="text">To Do:</p>
         <label for="toDoInput">
             <input name="toDoInput" id="toDoInput" type="text">
+        </label>
+        <p class="text">User(s) Allowed:</p>
+        <label for="allowedInput">
+            <input name="allowedInput" id="allowedInput" type="text">
         </label>
         <label for="create-trip-button" class="submitButton">
             <button type="submit" name="create-trip-button" id="create-trip-button">Submit</button>

@@ -6,8 +6,9 @@
         <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
     </ul>
 </div>
-<p id="serverErr">{{error}}</p>
-<div id="error" hidden></div>
+<div id="error" hidden>
+    <p id="serverErr">{{error}}</p>
+</div>
 <div id="editItinerary">
     <form action="/trips/edititinerary/{{currentTrip}}/{{currentIt}}" method="POST" id="editItineraryForm">
         <p class="text">Name of Activity:</p>

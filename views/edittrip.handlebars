@@ -8,8 +8,9 @@
 </div>
 <div>
     <p>If you don't want to change a field, input the same information as before.</p>
-    <p id="serverErr">{{error}}</p>
-    <div id="error"></div>
+    <div id="error">
+         <p id="serverErr">{{error}}</p>
+    </div>
     <form action="/trips/trip/{{currentTrips}}" method="POST" id="editForm">
         <p class="text">Trip Name:</p>
         <label for="tripNameInput">

@@ -7,8 +7,9 @@
     </ul>
 </div>
 <div id="createItinerary">
-    <p id="serverErr">{{error}}</p>
-    <div id="error"></div>
+        <div id="error">
+         <p id="serverErr">{{error}}</p>
+    </div>
     <form action="/trips/itinerary/{{currentTrip}}" method="POST" id="createItineraryForm">
         <p class="text">Name of Activity:</p>
         <label for="activityInput">
