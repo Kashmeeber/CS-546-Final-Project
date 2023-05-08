@@ -256,7 +256,7 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
       req.body.notesInput
     );
     // return res.status(200).json(itinerary);
-    return res.render('success', { success: 'You have successfully added an activity!' });
+    return res.render('successitinerary', { success: 'You have successfully added an activity!' });
   } catch (e) {
     return res.status(400).json(e);
   }
@@ -302,7 +302,9 @@ router
         req.body.notes
       );
       // return res.json(updatedTrip);
-      return res.render('success', { success: 'You have successfully updated your itinerary!' });
+      return res.render('successitinerary', {
+        success: 'You have successfully updated your activity!'
+      });
     } catch (e) {
       return res.status(500).send({ error: `${e}` });
     }
@@ -370,11 +372,11 @@ router
       let test = await itineraryData.getActivitybyName(req.params.itineraryName);
       // console.log(test)
     } catch (e) {
-        throw e;
+      throw e;
     }
 
     return res.render('edititinerary', {
-      title: 'edit itinerary for trip: ' + req.params.tripName ,
+      title: 'edit itinerary for trip: ' + req.params.tripName,
       currentTrip: req.params.tripName,
       currentIt: req.params.itineraryName
     });
@@ -477,14 +479,13 @@ router
       );
       // console.log(updatedActivity);
       // return res.status(200).json(updatedActivity);
-      return res.render('success.handlebars', {
-        success: 'You have successfully updated your activity'
+      return res.render('successitinerary', {
+        success: 'You have successfully updated your activity!'
       });
     } catch (e) {
       return res.status(400).json(e);
     }
   });
-
 
 router
   .route('/edittrip')
@@ -507,26 +508,30 @@ router.route('/edititinerary').get(async (req, res) => {
   return res.render('edititinerary', { title: 'edit itinerary' });
 });
 
-router
-  .route("/map/:userId/:tripName")
-  .get(async (req, res) => {
-    //code here for GET
-    try {
-      req.session.currentTrip = req.params.tripName;
-      let trip = await tripsData.get(req.params.tripName);
-      let slash = '';
-      if (trip.stops.length === 0) {
-      } else {
-        for (let i = 0; i < trip.stops.length; i++) {
-          slash = slash + trip.stops[i] + '/';
-        }
-        slash = slash.substring(0, slash.length - 1);
+router.route('/map/:userId/:tripName').get(async (req, res) => {
+  //code here for GET
+  try {
+    req.session.currentTrip = req.params.tripName;
+    let trip = await tripsData.get(req.params.tripName);
+    let slash = '';
+    if (trip.stops.length === 0) {
+    } else {
+      for (let i = 0; i < trip.stops.length; i++) {
+        slash = slash + trip.stops[i] + '/';
       }
-      return res.render('map', { title: `${req.params.tripName} map`, userId: req.session.user.id, currentName: req.session.currentTrip, mData: trip, stops: slash });
-    } catch (e) {
-      return res.status(500).json(e);
+      slash = slash.substring(0, slash.length - 1);
     }
-  })
+    return res.render('map', {
+      title: `${req.params.tripName} map`,
+      userId: req.session.user.id,
+      currentName: req.session.currentTrip,
+      mData: trip,
+      stops: slash
+    });
+  } catch (e) {
+    return res.status(500).json(e);
+  }
+});
 
 router
   .route('/map')
@@ -603,7 +608,9 @@ router
         }
         slash = slash.substring(0, slash.length - 1);
       }
-      return res.status(200).redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
+      return res
+        .status(200)
+        .redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
     } catch (e) {
       return res.status(400).json(e);
     }
@@ -619,7 +626,9 @@ router
         }
         slash = slash.substring(0, slash.length - 1);
       }
-      return res.status(200).redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
+      return res
+        .status(200)
+        .redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
       // return res
       //   .status(200)
       //   .render('map', { title: 'map', mData: trip, userId: req.session.user.id, stops: slash, currentName: req.session.currentTrip });
@@ -627,9 +636,6 @@ router
       return res.status(400).json(e);
     }
   });
-
-
-  
 
 // router
 //   .route('/:userId')
