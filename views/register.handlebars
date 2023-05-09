@@ -13,12 +13,20 @@
     <label for="emailAddressInput">
         <input name="emailAddressInput" id="emailAddressInput" type="email">
     </label>
-    <p class="text">Password:</p>
-    <p class="requirement">- must be at least 8 characters</p>
+    <p></p>
+    <div class="password">Password:
+    <span class="tooltiptext">
+        - must be at least 8 characters
+        - cannot include a space
+        - must contain at least one capital letter
+        - must contain at least one special character
+    </span>
+    </div>
+    {{!-- <p class="requirement">- must be at least 8 characters</p>
     <p class="requirement">- cannot include a space</p>
     <p class="requirement">- must contain at least one capital
         letter</p>
-    <p class='requirement'>- must contain at least one special character</p>
+    <p class='requirement'>- must contain at least one special character</p> --}}
     <label for="passwordInput">
         <input name="passwordInput" id="passwordInput" type="password">
     </label>
