@@ -712,34 +712,50 @@ const deleteTodoList = async (tripId) => {
   return updatedTrip.value;
 };
 
-const usersAllowed = async (userId, tripId) => {
-  if (!userId || !tripId) {
+const getTripsAllowed = async (userId) => {
+  if (!userId) {
     throw 'All fields need to have valid values';
-  }
-  if (!ObjectId.isValid(userId) || !ObjectId.isValid(tripId)) {
-    throw 'All fields must be valid ObjectIds';
   }
   if (typeof userId !== 'string' || userId.trim() === '') {
     throw 'userId must be a non-empty string';
   }
-  if (typeof tripId !== 'string' || tripId.trim() === '') {
-    throw 'tripId must be a non-empty string';
-  }
   userId = userId.trim();
-  tripId = tripId.trim();
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ _id: new ObjectId(tripId) });
+  const trip = await tripCollection.find({ "users_allowed": { $in: [userId] } })
+  console.log(trip);
   if (!trip) {
-    throw 'Trip does not exist';
-  }
-  const usersCollection = await users();
-  const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-  if (!user) {
-    throw 'This user does not exist';
+    return [];
   } else {
-    return true;
+    return trip;
   }
 };
+
+// const usersAllowed = async (userId, tripName) => {
+//   if (!userId || !tripName) {
+//     throw 'All fields need to have valid values';
+//   }
+//   if (typeof userId !== 'string' || userId.trim() === '') {
+//     throw 'userId must be a non-empty string';
+//   }
+//   if (typeof tripName !== 'string' || tripName.trim() === '') {
+//     throw 'tripId must be a non-empty string';
+//   }
+//   userId = userId.trim();
+//   tripName = tripName.trim();
+//   const tripCollection = await trips();
+//   let triperoonie = await get(tripName);
+//   const trip = await tripCollection.find({ "users_allowed": { $in: [userId] } })
+//   if (!trip) {
+//     throw 'Trip does not exist';
+//   }
+//   const usersCollection = await users();
+//   const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+//   if (!user) {
+//     throw 'This user does not exist';
+//   } else {
+//     return true;
+//   }
+// };
 
 const remove = async (tripId) => {
   if (!tripId) {
@@ -1173,7 +1189,7 @@ export {
   addToTodoList,
   deleteFromTodoList,
   deleteTodoList,
-  usersAllowed,
+  getTripsAllowed,
   remove,
   update
 };

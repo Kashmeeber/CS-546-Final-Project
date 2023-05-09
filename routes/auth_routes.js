@@ -95,12 +95,14 @@ router.route('/trips/trip/:tripName').get(async (req, res) => {
 router.route('/profile').get(async (req, res) => {
   //code here for GET
   let tData = await tripData.getAll(req.session.user.id);
+  let allowed = await tripData.getTripsAllowed(req.session.user.id);
 
   return res.render('profile', {
     firstNameInput: req.session.user.firstName,
     lastNameInput: req.session.user.lastName,
     emailAddressInput: req.session.user.emailAddress,
     trips: tData,
+    allowed: allowed,
     title: 'profile'
   });
 });
