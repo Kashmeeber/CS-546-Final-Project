@@ -720,8 +720,10 @@ const getTripsAllowed = async (userId) => {
     throw 'userId must be a non-empty string';
   }
   userId = userId.trim();
+  let user = await getUserById(userId);
+  let email = user.email;
   const tripCollection = await trips();
-  const trip = await tripCollection.find({ "users_allowed": { $in: [userId] } })
+  const trip = await tripCollection.find({ "users_allowed": { $in: [email] } })
   console.log(trip);
   if (!trip) {
     return [];
