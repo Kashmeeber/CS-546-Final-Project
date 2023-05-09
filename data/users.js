@@ -8,8 +8,17 @@ const createUser = async (firstName, lastName, email, password) => {
   if (!firstName) {
     throw `Error: Must enter first name`;
   }
+  if (firstName.includes("/")) {
+    throw `Error: First name cannot include '/'`;
+  }
   if (!lastName) {
     throw `Error: Must enter last name`;
+  }
+  if (lastName.includes("/")) {
+    throw `Error: Last name cannot include '/'`;
+  }
+  if (email.includes("/")) {
+    throw `Error: Email Address cannot include '/'`;
   }
   if (!email) {
     throw `Error: Must enter email`;

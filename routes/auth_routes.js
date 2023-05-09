@@ -3,6 +3,7 @@ import { users } from '../config/mongoCollections.js';
 import { Router } from 'express';
 import * as userData from '../data/users.js';
 import * as tripData from '../data/trips.js';
+import xss from "xss";
 import * as itineraryData from '../data/itinerary.js';
 
 const router = Router();
@@ -20,6 +21,11 @@ router
   .post(async (req, res) => {
     //code here for POST
     let userInfo = req.body;
+    let firstNameInput = xss(userInfo.firstNameInput);
+    let lastNameInput = xss(userInfo.lastNameInput);
+    let emailAddressInput = xss(userInfo.emailAddressInput);
+    let passwordInput = xss(userInfo.passwordInput);
+
     if (!userInfo || Object.keys(userInfo).length === 0) {
       return res.status(400).json({ error: 'There are no fields in the request body' });
     }
@@ -27,10 +33,10 @@ router
     let retVal = undefined;
     try {
       retVal = await userData.createUser(
-        userInfo.firstNameInput,
-        userInfo.lastNameInput,
-        userInfo.emailAddressInput,
-        userInfo.passwordInput
+        firstNameInput,
+        lastNameInput,
+        emailAddressInput,
+        passwordInput
       );
       // return res.json(retVal);
     } catch (e) {
@@ -50,12 +56,15 @@ router
   .post(async (req, res) => {
     //code here for POST
     let userInfo = req.body;
-    if (!userInfo.emailAddressInput || !userInfo.passwordInput) {
+    let emailAddressInput = xss(userInfo.emailAddressInput);
+    let passwordInput = xss(userInfo.passwordInput);
+
+    if (!emailAddressInput || !passwordInput) {
       return res.render('login', { title: 'login' });
     }
     let retVal = undefined;
     try {
-      retVal = await userData.checkUser(userInfo.emailAddressInput, userInfo.passwordInput);
+      retVal = await userData.checkUser(emailAddressInput, passwordInput);
       // res.json(retVal);
     } catch (e) {
       return res
