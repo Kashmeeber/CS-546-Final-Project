@@ -723,8 +723,7 @@ const getTripsAllowed = async (userId) => {
   let user = await getUserById(userId);
   let email = user.email;
   const tripCollection = await trips();
-  const trip = await tripCollection.find({ "users_allowed": { $in: [email] } })
-  console.log(trip);
+  const trip = await tripCollection.find({ $and: [{"users_allowed": { $in: [email] }}, {userId: {$ne: userId}}]}).toArray();
   if (!trip) {
     return [];
   } else {

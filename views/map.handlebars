@@ -8,7 +8,7 @@
 </div>
 <form action="/trips/map" method="POST" id="mapSearch">
     <label for="newStopInput">New Stop:
-        <input name="newStopInput" id="newStopInput" type="text" onchange={doGeocode(newStopInput)}>
+        <input name="newStopInput" id="newStopInput" type="text" onchange="doGeocode('newStopInput', 'mapSearch', event)">
     </label>
     <input type="hidden" name="_method" value="PUT">
     <button type="submit">Submit</button>
