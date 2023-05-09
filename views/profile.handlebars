@@ -80,8 +80,11 @@
             </div>
             {{/if}}
             {{/each}}
+             <p class="pad">Users Allowed:</p>
+            {{#each this.users_allowed}}
+            <p>- {{this}}</p>
+            {{/each}}
         </div>
-        {{!-- <p>{{this.usersAllowed}}</p> --}}
     </div>
     {{/each}}
 </div>
