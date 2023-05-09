@@ -88,3 +88,71 @@
     </div>
     {{/each}}
 </div>
+<div>
+
+</div>
+<h2>my shared trips</h2>
+<p>view any trips shared with you here!</p>
+<div id="trip-holder">
+    {{#each allowed}}
+    <div class="trips">
+        <div class="content">
+            <div class="contains">
+                <p class="next">Name of Trip:</p>
+                <a href="http://localhost:3000/trips/map/{{this.userId}}/{{this.name}}" target="_self"
+                    id="tripUrl">{{this.name}}</a>
+            </div>
+            <div class="contains">
+                <p class="next">Start Location: </p>
+                <p>{{this.start_location}}</p>
+            </div>
+            <div class="contains">
+                <p class="next">Start Date:</p>
+                <p> {{this.start_date}}</p>
+            </div>
+            <div class="contains">
+                <p class="next">Start Time: </p>
+                <p>{{this.start_time}}</p>
+            </div>
+            <div class="contains">
+                <p class="next">End Location:</p>
+                <p>{{this.end_location}}</p>
+            </div>
+            <div class="contains">
+                <p class="next">End Date: </p>
+                <p>{{this.end_date}}</p>
+            </div>
+            <div class="contains">
+                <p class="next">End Time:</p>
+                <p>{{this.end_time}}</p>
+            </div>
+            <div class="contains">
+                <p class="next">Overall Cost:</p>
+                <p>{{this.overallCost}}</p>
+            </div>
+            <p class="pad">Stops:</p>
+            {{#each this.stops}}
+            <p>- {{this}}</p>
+            {{/each}}
+            <p class="pad">Things To Do:</p>
+            {{#each this.to_do}}
+            {{#if @first}}
+            <div class="contains">
+                <p>-</p>
+                <p id="highlight-red">{{this}}</p>
+            </div>
+            {{else}}
+            <div class="contains">
+                <p>-</p>
+                <p id="list-{{@index}}">{{this}}</p>
+            </div>
+            {{/if}}
+            {{/each}}
+            <p class="pad">Users Allowed:</p>
+            {{#each this.users_allowed}}
+            <p>- {{this}}</p>
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+</div>
