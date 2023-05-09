@@ -166,8 +166,8 @@ const createTrip = async (
   if (ed[2] * 1 < sd[2] * 1 || ed[2] * 1 > ed[2] * 1 + 1) {
     throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
-  if (sd > ed) {
-    throw 'Error: Start date must be set to a date before end date';
+  if (!(ed[2]*1 >= sd[2]*1)) {
+    throw 'Error: Start date must be set to a date before end date'
   }
   if (stops.length === 0) throw 'You must supply at least one stop';
   for (let i in stops) {
