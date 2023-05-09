@@ -32,7 +32,7 @@
             <div class="contains">
                 <p class="next">Name of Trip:</p>
                 <a href="http://localhost:3000/trips/map/{{this.userId}}/{{this.name}}" target="_self"
-                    id="tripUrl" />{{this.name}}</a>
+                    id="tripUrl">{{this.name}}</a>
             </div>
             <div class="contains">
                 <p class="next">Start Location: </p>
@@ -80,7 +80,7 @@
             </div>
             {{/if}}
             {{/each}}
-             <p class="pad">Users Allowed:</p>
+            <p class="pad">Users Allowed:</p>
             {{#each this.users_allowed}}
             <p>- {{this}}</p>
             {{/each}}
@@ -88,8 +88,3 @@
     </div>
     {{/each}}
 </div>
-
-
-{{! link to trips }}
-{{! link to logout }}
-{{! filter trips }}
