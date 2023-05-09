@@ -48,7 +48,6 @@ function Map() {
 }
  //https://stackoverflow.com/questions/34339521/google-maps-api-how-to-check-if-an-address-or-location-is-valid
 function doGeocode(input) {
-  console.log(input)
   var addr = document.getElementById(input);
   // Get geocoder instance
  
