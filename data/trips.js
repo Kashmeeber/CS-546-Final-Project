@@ -239,7 +239,7 @@ const createTrip = async (
   };
     
   const tripCollection = await trips();
-  if (await tripCollection.findOne({$and: [{ name: tripName }, {userId: userId}]})) {
+  if (await tripCollection.findOne({ name: tripName })) {
     throw 'Error: Trip name already exists';
   }
   const insertInfo = await tripCollection.insertOne(newTrip);

@@ -142,7 +142,7 @@ router
       // return res.status(200).json(updatedTrip);
       return res.render('success', { success: 'You have successfully updated your trip!' });
     } catch (e) {
-      return res.status(400).render("edittrip", {error: e});
+      return res.status(400).render("edittrip", {error: e, currentTrips: req.session.currentTrips});
     }
   });
 

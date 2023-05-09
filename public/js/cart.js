@@ -46,6 +46,29 @@ function Map() {
     throw e;
   }
 }
+ //https://stackoverflow.com/questions/34339521/google-maps-api-how-to-check-if-an-address-or-location-is-valid
+function doGeocode(input) {
+  console.log(input)
+  var addr = document.getElementById(input);
+  // Get geocoder instance
+ 
+  var geocoder = new google.maps.Geocoder();
+   
+  // Geocode the address
+  geocoder.geocode({
+      'address': addr.value
+  }, function(results, status) {
+      if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
+   
+          // set it to the correct, formatted address if it's valid
+          addr.value = results[0].formatted_address;;
+      } else {
+
+         // show an error if it's not
+         alert("Invalid address");
+      }
+  });
+};
 
 async function displayRoute(origin, destination, stops, service, display) {
   try {
