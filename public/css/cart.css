@@ -272,8 +272,8 @@ label::before {
   visibility: hidden;
   width: 350px;
   white-space: pre-wrap;
-  background-color: black;
-  color: #fff;
+  background-color: #acc9ba;
+  color: #301014;
   text-align: left;
   border-radius: 10px;
   position: absolute;
@@ -288,4 +288,8 @@ label::before {
 .password:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+.bottom {
+  padding-bottom: 25px;
 }

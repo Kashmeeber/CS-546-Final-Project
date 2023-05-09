@@ -9,7 +9,7 @@
 <div>
     <p>If you don't want to change a field, input the same information as before.</p>
     <div id="error">
-         <p id="serverErr">{{error}}</p>
+        <p id="serverErr">{{error}}</p>
     </div>
     <form action="/trips/trip/{{currentTrips}}" method="POST" id="editForm">
         <p class="text">Trip Name:</p>
@@ -20,21 +20,25 @@
         <label for="startLocationInput">
             <input name="startLocationInput" id="startLocationInput" type="text" onchange={doGeocode(startLocationInput)}>
         </label>
+        <p></p>
         <div class="password">Start Date:
-        <span class="tooltiptext">
-            - must be in the format 
-              MM/DD/YYYY
-        </span>
+            <p></p>
+            <span class="tooltiptext">
+                - must be in the format
+                MM/DD/YYYY
+            </span>
         </div>
         <p></p>
         <label for="startDateInput">
             <input name="startDateInput" id="startDateInput" type="text">
         </label>
+        <p></p>
         <div class="password">Start Time:
-        <span class="tooltiptext">
-            - must use military time
-            - must be in the format HH:MM
-        </span>
+            <p></p>
+            <span class="tooltiptext">
+                - must use military time
+                - must be in the format HH:MM
+            </span>
         </div>
         <label for="startTimeInput">
             <input name="startTimeInput" id="startTimeInput" type="text">
@@ -45,41 +49,45 @@
         </label>
         <p></p>
         <div class="password">End Date:
-        <span class="tooltiptext">
-            - must be in the format 
-              MM/DD/YYYY
-        </span>
+            <p></p>
+            <span class="tooltiptext">
+                - must be in the format
+                MM/DD/YYYY
+            </span>
         </div>
         <label for="endDateInput">
             <input name="endDateInput" id="endDateInput" type="text">
         </label>
         <p></p>
         <div class="password">End Time:
-        <span class="tooltiptext">
-            - must use military time
-            - must be in the format HH:MM
-        </span>
+            <p></p>
+            <span class="tooltiptext">
+                - must use military time
+                - must be in the format HH:MM
+            </span>
         </div>
         <label for="endTimeInput">
             <input name="endTimeInput" id="endTimeInput" type="text">
         </label>
         <p></p>
         <div class="password">Stops:
-        <span class="tooltiptext">
-            - all stops must be separated by 
-              a forward-slash (/)
-        </span>
+            <p></p>
+            <span class="tooltiptext">
+                - all stops must be separated by
+                a forward-slash (/)
+            </span>
         </div>
         <label for="stopsInput">
             <input name="stopsInput" id="stopsInput" type="text">
         </label>
         <p></p>
         <div class="password">To Do:
-        <span class="tooltiptext">
-            - list tasks to complete before your trip 
-            - list tasks from most to least important
-            - all tasks should be separated by a comma (,)
-        </span>
+            <p></p>
+            <span class="tooltiptext">
+                - list tasks to complete before your trip
+                - list tasks from most to least important
+                - tasks should be separated by a comma (,)
+            </span>
         </div>
         <label for="toDoInput">
             <input name="toDoInput" id="toDoInput" type="text">
@@ -92,5 +100,6 @@
         <label for="edit-trip-button" class="submitButton">
             <button type="submit" name="edit-trip-button" id="edit-trip-button">Submit</button>
         </label>
+        <div class="bottom"></div>
     </form>
 </div>
