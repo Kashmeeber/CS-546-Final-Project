@@ -7,8 +7,8 @@
     </ul>
 </div>
 <div id="createItinerary">
-        <div id="error">
-         <p id="serverErr">{{error}}</p>
+    <div id="error">
+        <p id="serverErr">{{error}}</p>
     </div>
     <form action="/trips/itinerary/{{currentTrip}}" method="POST" id="createItineraryForm">
         <p class="text">Name of Activity:</p>
@@ -52,7 +52,7 @@
         </label>
         <p class="text">Notes:</p>
         <label for="notesInput">
-            <input id="notesInput" name='notesInput' type="textarea">
+            <input id="notesInput" name='notesInput' type="text">
         </label>
         <label for="create-itinerary-button" class="submitButton">
             <button type="submit" name="create-itinerary-button" id="create-itinerary-button">Submit</button>
