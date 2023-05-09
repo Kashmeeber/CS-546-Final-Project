@@ -22,25 +22,14 @@
         <label for="startLocationInput">
             <input name="startLocationInput" id="startLocationInput" type="text" onchange={doGeocode("startLocationInput")}>
         </label>
-        <p></p>
-        <div class="password">Start Date:
-            <span class="tooltiptext">
-                - must be in the format
-                MM/DD/YYYY
-            </span>
-        </div>
-        <p></p>
+        <p class="text">Start Date:</p>
+        <p class="requirement">(must be in the format MM/DD/YYYY)</p>
         <label for="startDateInput">
             <input name="startDateInput" id="startDateInput" type="text">
         </label>
-        <p></p>
-        <div class="password">Start Time:
-            <p></p>
-            <span class="tooltiptext">
-                - must use military time
-                - must be in the format HH:MM
-            </span>
-        </div>
+        <p class="text">Start Time:</p>
+        <p class="requirement">(must be in the format HH:MM)</p>
+        <p class="requirement">(must be in military time)</p>
         <label for="startTimeInput">
             <input name="startTimeInput" id="startTimeInput" type="text">
         </label>
@@ -48,50 +37,25 @@
         <label for="endLocationInput">
             <input name="endLocationInput" id="endLocationInput" type="text" onchange={doGeocode("endLocationInput")}>
         </label>
-        <p></p>
-        <div class="password">End Date:
-            <p></p>
-            <span class="tooltiptext">
-                - must be in the format
-                MM/DD/YYYY
-            </span>
-        </div>
+        <p class="text">End Date:</p>
+        <p class="requirement">(must be in the format MM/DD/YYYY)</p>
         <label for="endDateInput">
             <input name="endDateInput" id="endDateInput" type="text">
         </label>
-        <p></p>
-        <div class="password">End Time:
-            <p></p>
-            <span class="tooltiptext">
-                - must use military time
-                - must be in the format HH:MM
-            </span>
-        </div>
-        {{!-- <p class="requirement">()</p> --}}
+        <p class="text">End Time:</p>
+        <p class="requirement">(must be in the format HH:MM)</p>
+        <p class="requirement">(must be in military time)</p>
         <label for="endTimeInput">
             <input name="endTimeInput" id="endTimeInput" type="text">
         </label>
-        <p></p>
-        <div class="password">Stops:
-            <p></p>
-            <span class="tooltiptext">
-                - all stops must be separated by
-                a forward-slash (/)
-            </span>
-        </div>
+        <p class="text">Stops:</p>
+        <p class="requirement">(all stops must be separated by a forward-slash (/))</p>
         <label for="stopsInput">
             <input name="stopsInput" id="stopsInput" type="text">
         </label>
-        <p></p>
-        <div class="password">To Do:
-            <p></p>
-            <span class="tooltiptext">
-                - list tasks to complete before your trip
-                - list tasks from most to least important
-                - tasks should be separated by a comma (,)
-            </span>
-        </div>
-        {{!-- <p class="requirement">(tasks must be separated by a comma)</p> --}}
+        <p class="text">To Do:</p>
+        <p class="requirement">(list tasks to complete before your trip from most to least important)</p>
+        <p class="requirement">(tasks should be separated by a comma (,))</p>
         <label for="toDoInput">
             <input name="toDoInput" id="toDoInput" type="text">
         </label>
