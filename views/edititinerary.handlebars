@@ -6,10 +6,11 @@
         <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
     </ul>
 </div>
-<div id="error" hidden>
-    <p id="serverErr">{{error}}</p>
-</div>
 <div id="editItinerary">
+    <p>If you don't want to change a field, input the same information as before.</p>
+    <div id="error" hidden>
+        <p id="serverErr">{{error}}</p>
+    </div>
     <form action="/trips/edititinerary/{{currentTrip}}/{{currentIt}}" method="POST" id="editItineraryForm">
         <p class="text">Name of Activity:</p>
         <label for="activityInput">
