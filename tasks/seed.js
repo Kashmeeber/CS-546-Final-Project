@@ -1,5 +1,6 @@
 import { userData, tripsData, itineraryData } from '../data/index.js';
 import { dbConnection, closeConnection } from '../config/mongoConnection.js';
+import { trips } from '../config/mongoCollections.js';
 
 //lets drop the database each time this is run
 const db = await dbConnection();
@@ -153,6 +154,158 @@ async function main() {
     );
   } catch (e) {
     console.log('User 2: ' + e);
+  }
+  // User 3
+  try {
+    const user3 = await userData.createUser('Mariam', 'Dardir', 'mdardir@gmail.com', 'Hello123!');
+    const user3_trip1 = await tripsData.createTrip(
+      user3._id.toString(),
+      'the americas tour',
+      'Quito, Ecuador',
+      '12/30/2023',
+      '23:00',
+      'Rio de Janeiro, Brazil',
+      '01/05/2024',
+      '05:00',
+      ['Santiago, Chile'],
+      ['renew passport', 'buy museum tickets', 'get cash', 'pack bags'],
+      ['svyaslol@gmail.com']
+    );
+    const user3_trip1_activity = await itineraryData.createActivity(
+      user3_trip1.name,
+      'Dig a hole',
+      '12/30/2023',
+      '03:13',
+      '03:14',
+      5,
+      'haha, hehe, hoho'
+    );
+    const user3_trip1_activity2 = await itineraryData.createActivity(
+      user3_trip1.name,
+      'Goes to convience store to buy gloves',
+      '12/30/2023',
+      '03:15',
+      '03:30',
+      15,
+      'haha, hehe, hoho'
+    );
+    const user3_trip1_activity3 = await itineraryData.createActivity(
+      user3_trip1.name,
+      'Buy acid',
+      '12/30/2023',
+      '03:31',
+      '03:35',
+      10,
+      'haha, hehe, hoho'
+    );
+    const user3_trip1_activity4 = await itineraryData.createActivity(
+      user3_trip1.name,
+      'Fill the hole',
+      '12/30/2023',
+      '03:36',
+      '04:00',
+      0,
+      'haha, hehe, hoho'
+    );
+    const user3_trip2 = await tripsData.createTrip(
+      user3._id.toString(),
+      'the crisis',
+      'New York, NY',
+      '02/14/2024',
+      '12:00',
+      'Jersey City, NJ',
+      '03/28/2024',
+      '12:00',
+      ['San Francisco, CA'],
+      ['buy a house', 'buy a car', 'buy a dog', 'buy a cat', 'buy a fish'],
+      ['areeb@gmail.com', 'svyaslol@gmail.com']
+    );
+    const user3_trip2_addStop = await itineraryData.addStop(user3_trip2.name, 'Boston, MA');
+    const user3_trip2_addStop2 = await itineraryData.addStop(user3_trip2.name, 'Las Vegas, NV');
+    const user3_trip2_activity1 = await itineraryData.createActivity(
+      user3_trip2.name,
+      'Cry',
+      '02/14/2024',
+      '12:00',
+      '12:01',
+      0,
+      ':('
+    );
+    const user3_trip2_activity2 = await itineraryData.createActivity(
+      user3_trip2.name,
+      'Cry some more',
+      '02/14/2024',
+      '12:01',
+      '12:02',
+      0,
+      ':('
+    );
+  } catch (e) {
+    console.log('User 3: ' + e);
+  }
+  try {
+    const user4 = await userData.createUser(
+      'tamnhu',
+      'nguyen',
+      'tamnhunguyen@gmail.com',
+      'Password@123'
+    );
+    const user4_trip1 = await tripsData.createTrip(
+      user4._id.toString(),
+      'summertime sadness',
+      'New York, NY',
+      '06/01/2024',
+      '12:00',
+      'Los Angeles, CA',
+      '06/30/2024',
+      '12:00',
+      ['San Francisco, CA'],
+      ['buy tickets', 'buy a car', 'get gas', 'buy food'],
+      ['svyaslol@gmail.com', 'areeb@gmail.com', 'mdardir@gmail.com']
+    );
+    const user4_trip1_addStop = await itineraryData.addStop(user4_trip1.name, 'Boston, MA');
+    const user4_trip1_activity1 = await itineraryData.createActivity(
+      user4_trip1.name,
+      'Go to the beach',
+      '06/01/2024',
+      '01:00',
+      '02:00',
+      0,
+      'swim, tan, relax'
+    );
+    const user4_trip1_activity2 = await itineraryData.createActivity(
+      user4_trip1.name,
+      'Go to the pool',
+      '06/01/2024',
+      '02:00',
+      '03:00',
+      0,
+      'more swimming, tanning, relaxing'
+    );
+    const user4_trip2 = await tripsData.createTrip(
+      user4._id.toString(),
+      'birthday bash',
+      'Jersey City, NJ',
+      '01/02/2024',
+      '00:00',
+      'Orlando, FL',
+      '01/05/2024',
+      '00:00',
+      ['Miami, FL'],
+      ['eat cake', 'buy presents', 'buy decorations', 'buy food'],
+      []
+    );
+    const user4_trip2_activity1 = await itineraryData.createActivity(
+      user4_trip2.name,
+      'Shopping',
+      '01/02/2024',
+      '11:00',
+      '12:00',
+      0,
+      'buy presents, decorations, food'
+    );
+  } catch (e) {
+    console.log('User 4: ' + e);
   }
 }
 

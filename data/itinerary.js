@@ -3,8 +3,16 @@ import { trips } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import { getAll, get } from './trips.js';
 
-const createActivity = async (tripName, activityName, date, startTime, endTime, cost, notes) => {
-  if (!tripName || !activityName || !date || !startTime || !endTime || !cost) {
+const createActivity = async (
+  tripName,
+  activityName,
+  date,
+  startTime,
+  endTime,
+  cost = 0,
+  notes
+) => {
+  if (!tripName || !activityName || !date || !startTime || !endTime) {
     throw 'Error: All fields need to have valid values';
   }
   if (typeof tripName !== 'string' || tripName.trim().length === 0) {
@@ -22,11 +30,18 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
   if (splitDate.length !== 3) {
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
-  let regexNum = /^[0-9]*$/
-  if(activityName.includes("/")) {
-    throw `Error: Activity name cannot include '/'`
+  let regexNum = /^[0-9]*$/;
+  if (activityName.includes('/')) {
+    throw `Error: Activity name cannot include '/'`;
   }
-  if (splitDate[0].length !== 2 || splitDate[1].length !== 2 || splitDate[2].length !== 4 || !regexNum.test(splitDate[0]) || !regexNum.test(splitDate[1]) || !regexNum.test(splitDate[2])) {
+  if (
+    splitDate[0].length !== 2 ||
+    splitDate[1].length !== 2 ||
+    splitDate[2].length !== 4 ||
+    !regexNum.test(splitDate[0]) ||
+    !regexNum.test(splitDate[1]) ||
+    !regexNum.test(splitDate[2])
+  ) {
     throw 'Error: Date must be in MM/DD/YYYY format';
   }
   if (splitDate[0] * 1 < 1 || splitDate[0] * 1 > 12) {
@@ -46,10 +61,22 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
   endTime = endTime.trim();
   let st = startTime.split(':');
   let et = endTime.split(':');
-  if (st.length != 2 || st[0].length != 2 || st[1].length != 2 || !regexNum.test(st[0]) || !regexNum.test(st[1])) {
+  if (
+    st.length != 2 ||
+    st[0].length != 2 ||
+    st[1].length != 2 ||
+    !regexNum.test(st[0]) ||
+    !regexNum.test(st[1])
+  ) {
     throw 'Error: Must provide start time in HH:MM format';
   }
-  if (et.length != 2 || et[0].length != 2 || et[1].length != 2 || !regexNum.test(et[0]) || !regexNum.test(et[1])) {
+  if (
+    et.length != 2 ||
+    et[0].length != 2 ||
+    et[1].length != 2 ||
+    !regexNum.test(et[0]) ||
+    !regexNum.test(et[1])
+  ) {
     throw 'Error: Must provide end time in HH:MM format';
   }
   if (st[0] * 1 < 0 || st[0] * 1 > 23) {
@@ -72,8 +99,8 @@ const createActivity = async (tripName, activityName, date, startTime, endTime, 
   } else {
     notes = '';
   }
-  if(!regexNum.test(cost)){
-    throw 'Cost must be a number'
+  if (!regexNum.test(cost)) {
+    throw 'Cost must be a number';
   }
   cost = parseInt(cost);
   let newActivity = {
@@ -314,12 +341,12 @@ const updateActivity = async (
     throw 'Error: Must provide end time as valid nonempty string';
   }
   endTime = endTime.trim();
-  if(activityName.includes("/")) {
-    throw `Error: Activity name cannot include '/'`
+  if (activityName.includes('/')) {
+    throw `Error: Activity name cannot include '/'`;
   }
-  let regexNum = /^[0-9]*$/
-  if(!regexNum.test(cost)){
-    throw 'Cost must be a number'
+  let regexNum = /^[0-9]*$/;
+  if (!regexNum.test(cost)) {
+    throw 'Cost must be a number';
   }
   cost = parseInt(cost);
   if (typeof cost !== 'number') {
@@ -367,7 +394,6 @@ const updateActivity = async (
     if (currIt._id.toString() !== activityId) {
       newItineraryArr.push(currIt);
     }
-
   }
   // console.log(newItineraryArr);
   // console.log(itineraryArr);
@@ -402,7 +428,10 @@ const updateActivity = async (
 
 const getActivitybyName = async (activityName) => {
   const tripCollection = await trips();
-  const trip = await tripCollection.findOne({ "itinerary.activityName": activityName }, {projection: {_id: 0, itinerary: 1}});
+  const trip = await tripCollection.findOne(
+    { 'itinerary.activityName': activityName },
+    { projection: { _id: 0, itinerary: 1 } }
+  );
   if (trip === null) {
     throw 'No trip with that activity';
   }
