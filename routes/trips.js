@@ -523,9 +523,15 @@ router
   .route('/edittrip')
   .get(async (req, res) => {
     //code here for GET
-    let tData3 = await tripsData.getAll(req.session.user.id);
 
-    return res.render('updateTrip', { title: 'edit trip', trips: tData3 });
+    //May need to change what happens when an error occurs
+    try {
+      let tData3 = await tripsData.getAll(req.session.user.id); 
+      return res.render('updateTrip', { title: 'edit trip', trips: tData3 });
+    } catch (e) {
+      return res.status(400).render("edittrip", {error: e});
+    }
+   
   })
   .post(async (req, res) => {
     req.session.currentTrips = req.body.tripName;
