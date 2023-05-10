@@ -1,6 +1,8 @@
 <p id="serverErr">{{error}}</p>
 <div id="error" hidden></div>
-<form action="/register" method="POST" id="registration-form">
+{{!-- <form action="/register" method="POST" id="registration-form"> --}}
+<form id="registration-form">
+
     <p class="text">First Name:</p>
     <label for="firstNameInput">
         <input name="firstNameInput" id="firstNameInput" type="text">
@@ -30,5 +32,7 @@
             id="register-button"></label>
 
 </form>
+<div id="registrationResult"></div>
+
 <p></p>
 <a href="/login" class="a-format">Already have an account? Login here.</a>
