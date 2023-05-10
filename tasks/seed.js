@@ -7,9 +7,7 @@ const db = await dbConnection();
 await db.dropDatabase();
 
 async function main() {
-  // Create first user and trips/itineraries
   try {
-    // User 1
     const user1 = await userData.createUser(
       'Areeb',
       'Chaudhry',
@@ -83,9 +81,7 @@ async function main() {
   } catch (e) {
     console.log('User 1: ' + e);
   }
-  // Create second user and trips/itineraries
   try {
-    // User 2
     const user2 = await userData.createUser('Shailaja', 'Vyas', 'svyaslol@gmail.com', 'Hello!123');
     const user2_trip1 = await tripsData.createTrip(
       user2._id.toString(),
@@ -155,7 +151,6 @@ async function main() {
   } catch (e) {
     console.log('User 2: ' + e);
   }
-  // User 3
   try {
     const user3 = await userData.createUser('Mariam', 'Dardir', 'mdardir@gmail.com', 'Hello123!');
     const user3_trip1 = await tripsData.createTrip(
