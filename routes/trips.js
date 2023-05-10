@@ -1,6 +1,3 @@
-// Import the express router as shown in the lecture code
-// Note: please do not forget to export the router!
-
 import e, { Router } from 'express';
 const router = Router();
 import { tripsData } from '../data/index.js';
@@ -11,9 +8,7 @@ import { get } from '../data/trips.js';
 import { checkUserAllowed } from '../helpers.js';
 
 router.route('/').get(async (req, res) => {
-  //code here for GET
   try {
-    // const trips = await tripsData.getAll(req.session.user.id);
     let tData = await tripsData.getAll(req.session.user.id);
     return res.render('tripplanning', { userId: req.session.user.id, trips: tData });
   } catch (e) {
@@ -30,13 +25,10 @@ router
       req.params.tripName = validation.checkString(req.params.tripName);
       const trip = await tripsData.get(req.params.tripName);
       return res.render('edittrip', { trips: trip, currentTrips: req.params.tripName });
-      // return res.status(200).json(trip);
     } catch (e) {
-      // if the id is not a valid ObjectId, return a 400
       if (e == 'The id provided is not a valid ObjectId') {
         return res.status(400).json(e);
       }
-      // if no band exists with that id, return a 404
       if (e == 'No trip with that id') {
         return res.status(404).json(e);
       }
@@ -115,7 +107,6 @@ router
         toDoArr,
         usersArr
       );
-      // return res.status(200).json(updatedTrip);
       return res.render('success', { success: 'You have successfully updated your trip!' });
     } catch (e) {
       return res.status(400).render("edittrip", {error: e, currentTrips: req.session.currentTrips});
@@ -138,7 +129,6 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
 
   try{
     let querying5 = await tripsData.get(req.params.tripName)
-    // console.log(querying5)
   }catch(e){
     return res.status(400).render("itinerary", {error: e})
   }
@@ -182,7 +172,6 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
     let newCurrentYear = currentYear.getFullYear();
     if (
       sd[2] < newCurrentYear
-      // && ed[2] > newCurrentYear + 2
     ) {
       throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
     }
@@ -206,7 +195,6 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
     if (
       sd[2] * 1 <
       1900
-      // || sd[2] * 1 > ed[2] * 1
     ) {
       throw 'Error: Must provide start date in MM/DD/YYYY format';
     }
@@ -215,7 +203,6 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
   }
 
   try {
-    // console.log(req.body);
     const itinerary = await itineraryData.createActivity(
       req.params.tripName,
       req.body.activityInput,
@@ -225,7 +212,6 @@ router.route('/itinerary/:tripName').post(async (req, res) => {
       req.body.costInput,
       req.body.notesInput
     );
-    // return res.status(200).json(itinerary);
     return res.render('successitinerary', { success: 'You have successfully added an activity!' });
   } catch (e) {
     return res.status(400).render("createItinerary", {error: e});
@@ -271,7 +257,6 @@ router
         req.body.cost,
         req.body.notes
       );
-      // return res.json(updatedTrip);
       return res.render('successitinerary', {
         success: 'You have successfully updated your activity!'
       });
@@ -311,15 +296,8 @@ router
     return res.render('choosetrip', { title: 'edit itinerary', trips: tData6 });
   })
   .post(async (req, res) => {
-    // console.log("hihi8");
-    // req.session.tripForIt = req.body.tripName;
-    // try{
-    //   let querying2 = await tripsData.getAll(req.session.user.id)
-    // }catch(e){
-    //   res.status
-    // }
+    
     return res.redirect(`/trips/edititinerary/${req.body.tripName}/`);
-    // return res.render("edittrip", {title: "Edit Trip Info", currentTrips: req.session.currentTrips})
   });
 
 router
@@ -329,7 +307,6 @@ router
     let tData4 = await tripsData.getAll(req.session.user.id);
     let tData5 = await tripsData.getTripsAllowed(req.session.user.id);
     let tData6 = tData4.concat(tData5);
-    // let itData = await tripsData.get(req.params.tripName);
     let itData;
     for(let i = 0; i<tData6.length; i++) {
       if(tData6[i].name == req.params.tripName) {
@@ -345,8 +322,7 @@ router
       return res.status(400).render("chooseitinerary", {error: e})
     }
 
-    // console.log(req.params.tripName)
-    // console.log(itData)
+
     return res.render('chooseitinerary', {
       title: 'edit itinerary for trip: ' + req.params.tripName,
       trips: itData.itinerary,
@@ -354,8 +330,6 @@ router
     });
   })
   .post(async (req, res) => {
-    // req.session.tripForIt = req.body.tripName;
-    // console.log(req.body.activityName)
     try{
       let querying = await itineraryData.getActivitybyName(req.body.activityName);
     }catch(e){
@@ -363,7 +337,6 @@ router
     }
     
     return res.redirect(`/trips/edititinerary/${req.params.tripName}/${req.body.activityName}`);
-    // return res.render("edittrip", {title: "Edit Trip Info", currentTrips: req.session.currentTrips})
   });
 
 router
@@ -373,7 +346,6 @@ router
     
     try {
       let test = await itineraryData.getActivitybyName(req.params.itineraryName);
-      // console.log(test)
     } catch (e) {
       return res.status(400).render("chooseitinerary", {error: e});
     }
@@ -385,9 +357,7 @@ router
     });
   })
   .post(async (req, res) => {
-    //YOU COOK FOR THIS
     console.log('hola');
-    //YOU GOT THIS
   })
   .put(async (req, res) => {
     let actInfo = req.body;
@@ -443,7 +413,6 @@ router
       let newCurrentYear = currentYear.getFullYear();
       if (
         sd[2] < newCurrentYear
-        // && ed[2] > newCurrentYear + 2
       ) {
         throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
       }
@@ -467,7 +436,6 @@ router
       if (
         sd[2] * 1 <
         1900
-        // || sd[2] * 1 > ed[2] * 1
       ) {
         throw 'Error: Must provide start date in MM/DD/YYYY format';
       }
@@ -487,8 +455,7 @@ router
         req.body.costInput,
         req.body.notesInput
       );
-      // console.log(updatedActivity);
-      // return res.status(200).json(updatedActivity);
+
       return res.render('successitinerary', {
         success: 'You have successfully updated your activity!'
       });
@@ -501,8 +468,6 @@ router
   .route('/edittrip')
   .get(async (req, res) => {
     //code here for GET
-
-    //May need to change what happens when an error occurs
     try {
       let tData3 = await tripsData.getAll(req.session.user.id); 
       let tData4 = await tripsData.getTripsAllowed(req.session.user.id);
@@ -515,7 +480,6 @@ router
   })
   .post(async (req, res) => {
     req.session.currentTrips = req.body.tripName;
-    // return res.redirect(`/trips/trip/${req.body.tripName}`)
     try{
       let querying3= await tripsData.get(req.body.tripName)
     }catch(e){
@@ -584,21 +548,6 @@ router
       if (!regex.test(tripNameInput)) {
         throw 'Trip Name must be a string';
       }
-      // let splitSL = tripInfo.startLocationInput.split(',');
-      // if(splitSL.length < 3){
-      //   throw 'You must have a full street name in your address'
-      // }
-      // console.log(Number.isNaN(parseInt('123')))
-      // if(Number.isNaN(parseInt(splitSL[0]))){
-      //   throw 'You must include a number in the address'
-      // }
-      // if(!regexStringsOnly.test(splitSL[0])){
-      //   throw 'You must have a street name in your address'
-      // }
-
-      // if(!regexStringsOnly.test(splitSL[1])){
-      //   throw 'You must have a full street name in your address'
-      // }
 
       let splitToDo = toDoInput.split(',');
       let splitStops = stopsInput.split('/');
@@ -673,9 +622,6 @@ router
       return res
         .status(200)
         .redirect(`/trips/map/${req.session.user.id}/${req.session.currentTrip}`);
-      // return res
-      //   .status(200)
-      //   .render('map', { title: 'map', mData: trip, userId: req.session.user.id, stops: slash, currentName: req.session.currentTrip });
     } catch (e) {
       return res.status(400).json(e);
     }
