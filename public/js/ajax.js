@@ -174,7 +174,9 @@ function errorCheck(firstName, lastName, emailAddress, password, confirmPassword
             passwordInput: password
           })
         };
-        //CITATIONS: https://api.jquery.com/deferred.done/, https://api.jquery.com/jquery.ajax/
+        //CITATIONS for using .done and using data.indexof to find errors:https://api.jquery.com/jquery.ajax/
+        //https://jsnlog.com/Documentation/HowTo/AjaxErrorHandling
+        //https://stackoverflow.com/questions/68938716/ajax-call-which-return-a-file-or-a-partial-html-on-case-of-error-how-to-handle
         $.ajax(requestConfig).done(function(data) {
           if (data.indexOf('Error') >= 0) {
             registrationResult.html('You must enter valid inputs in all of the fields');
