@@ -1,9 +1,3 @@
-// functions that need to be done
-
-// const { create } = require('handlebars');
-// import create from 'handlebars';
-
-// for tripplannning.handlebars there needs to be a function that shows a hidden div on click
 let registrationForm = document.getElementById('registration-form');
 let loginForm = document.getElementById('login-form');
 let error = document.getElementById('error');
@@ -12,7 +6,6 @@ let createTrip = document.getElementById('createTrip');
 let editTrip = document.getElementById('editForm');
 let createItinerary = document.getElementById('createItineraryForm');
 let editItinerary = document.getElementById('editItineraryForm');
-let promptQuestion1 = document.getElementById('promptQuestion1');
 
 //Taken and modified from Google API documentation
 function Map() {
@@ -211,7 +204,6 @@ function errorCheck(firstName, lastName, emailAddress, password, confirmPassword
 
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_!]).*$/;
 
-  //figure out regex
   if (password.length == 0 || password.length < 8 || password.includes(' ')) {
     throw 'Error: Password must be at least 8 characters long and cannot include empty spaces';
   }
@@ -244,7 +236,6 @@ function errorCheck2(emailAddress, password) {
 
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_!]).*$/;
 
-  //figure out regex
   if (password.length == 0 || password.length < 8 || password.includes(' ')) {
     throw 'Error: must input valid password';
   }
@@ -265,9 +256,9 @@ function errorCheck3(
   endDate,
   endTime,
   stops,
-  toDo
+  toDo,
+  usersAllowed
 ) {
-  // console.log(1);
   if (
     !tripName ||
     !startLocation ||
@@ -277,7 +268,7 @@ function errorCheck3(
     !endDate ||
     !endTime ||
     !stops ||
-    !toDo
+    !toDo 
   ) {
     throw 'Error: All fields need to have valid values';
   }
@@ -365,13 +356,15 @@ function errorCheck3(
   if (ed[2] * 1 < sd[2] * 1 || ed[2] * 1 > ed[2] * 1 + 1) {
     throw 'Error: Must provide end date in MM/DD/YYYY format';
   }
-  if (sd > ed) {
-    throw 'Error: Start date must be set to a date before end date';
+  if (!(ed[2]*1 >= sd[2]*1)) {
+    throw 'Error: Start date must be set to a date before end date'
   }
   let splitToDo = toDo.split(',');
   let splitStops = stops.split('/');
+  let splitUsers = usersAllowed.split('/');
   let toDoArr = [];
   let stopsArr = [];
+  let userArr = [];
 
   for (let i = 0; i < splitToDo.length; i++) {
     if (typeof splitToDo[i] == 'string') {
@@ -385,6 +378,13 @@ function errorCheck3(
       stopsArr.push(splitStops[i]);
     } else {
       throw 'One of the stops is not a valid string';
+    }
+  }
+  for (let i = 0; i < splitUsers.length; i++) {
+    if (typeof splitUsers[i] == 'string') {
+      userArr.push(splitUsers[i]);
+    } else {
+      throw 'One of the users is not a valid string';
     }
   }
   return;
@@ -438,7 +438,6 @@ function errorCheck4(activityName, date, startTime, endTime, cost, notes) {
   let newCurrentYear = currentYear.getFullYear();
   if (
     sd[2] < newCurrentYear
-    // && ed[2] > newCurrentYear + 2
   ) {
     throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
   }
@@ -462,7 +461,6 @@ function errorCheck4(activityName, date, startTime, endTime, cost, notes) {
   if (
     sd[2] * 1 <
     1900
-    // || sd[2] * 1 > ed[2] * 1
   ) {
     throw 'Error: Must provide start date in MM/DD/YYYY format';
   }
@@ -535,7 +533,7 @@ if (createTrip) {
       let endTime = document.getElementById('endTimeInput');
       let stops = document.getElementById('stopsInput');
       let toDo = document.getElementById('toDoInput');
-      let usersAllowed = document.getElementById('usersAllowedInput');
+      let usersAllowed = document.getElementById('allowedInput');
       errorCheck3(
         tripName.value,
         startLocation.value,
@@ -545,7 +543,8 @@ if (createTrip) {
         endDate.value,
         endTime.value,
         stops.value,
-        toDo.value
+        toDo.value,
+        usersAllowed.value
       );
     } catch (e) {
       event.preventDefault();
@@ -571,6 +570,7 @@ if (createTrip) {
       let endTime = document.getElementById('endTimeInput');
       let stops = document.getElementById('stopsInput');
       let toDo = document.getElementById('toDoInput');
+      let usersAllowed = document.getElementById('allowedInput');
       errorCheck3(
         tripName.value,
         startLocation.value,
@@ -580,7 +580,8 @@ if (createTrip) {
         endDate.value,
         endTime.value,
         stops.value,
-        toDo.value
+        toDo.value,
+        usersAllowed.value
       );
     } catch (e) {
       event.preventDefault();
@@ -606,6 +607,7 @@ if (editTrip) {
       let endTime = document.getElementById('endTimeInput');
       let stops = document.getElementById('stopsInput');
       let toDo = document.getElementById('toDoInput');
+      let usersAllowed = document.getElementById('allowedInput');
       errorCheck3(
         tripName.value,
         startLocation.value,
@@ -615,7 +617,8 @@ if (editTrip) {
         endDate.value,
         endTime.value,
         stops.value,
-        toDo.value
+        toDo.value,
+        usersAllowed.value
       );
     } catch (e) {
       event.preventDefault();
@@ -683,31 +686,4 @@ if (editItinerary) {
       error.innerHTML = e;
     }
   });
-}
-function promptQuestion() {
-  if (promptQuestion1) {
-    promptQuestion1.addEventListener('submit', (event) => {
-      try {
-        serverErr.innerHTML = '';
-        error.hidden = true;
-        error.innerHTML = '';
-        let createItineraryQuestion = document.getElementsByClassName('createItineraryQuestion');
-        for (let i = 0; i < createItineraryQuestion.length; i++) {
-          createItineraryQuestion[i].hidden = false;
-        }
-        let selectTag = document.getElementById('createItineraryQuestion');
-        selectTag.value = null;
-        if (selectTag.value == 'no') {
-          return;
-        } else {
-          createItinerary1();
-        }
-      } catch (e) {
-        event.preventDefault();
-        serverErr.innerHTML = '';
-        error.hidden = false;
-        error.innerHTML = e;
-      }
-    });
-  }
 }
