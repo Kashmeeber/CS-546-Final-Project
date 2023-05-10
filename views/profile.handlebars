@@ -24,14 +24,14 @@
 <p>view any trips you create here!</p>
 <a href="/displayitinerary">Click here to view your itineraries!</a>
 <p></p>
-<div id="trip-holder">
+<div class="trip-holder">
     {{#each trips}}
     <div class="trips">
         <div class="content">
             <div class="contains">
                 <p class="next">Name of Trip:</p>
                 <a href="http://localhost:3000/trips/map/{{this.userId}}/{{this.name}}" target="_self"
-                    id="tripUrl">{{this.name}}</a>
+                    class="tripUrl">{{this.name}}</a>
             </div>
             <div class="contains">
                 <p class="next">Start Location: </p>
@@ -70,12 +70,12 @@
             {{#if @first}}
             <div class="contains">
                 <p>-</p>
-                <p id="highlight-red">{{this}}</p>
+                <p class="highlight-red">{{this}}</p>
             </div>
             {{else}}
             <div class="contains">
                 <p>-</p>
-                <p id="list-{{@index}}">{{this}}</p>
+                <p class="list-{{@index}}">{{this}}</p>
             </div>
             {{/if}}
             {{/each}}
@@ -92,14 +92,14 @@
 </div>
 <h2>shared trips board</h2>
 <p>view any trips shared with you here!</p>
-<div id="trip-holder">
+<div class="trip-holder">
     {{#each allowed}}
     <div class="trips">
         <div class="content">
             <div class="contains">
                 <p class="next">Name of Trip:</p>
                 <a href="http://localhost:3000/trips/map/{{this.userId}}/{{this.name}}" target="_self"
-                    id="tripUrl">{{this.name}}</a>
+                    class="tripUrl">{{this.name}}</a>
             </div>
             <div class="contains">
                 <p class="next">Start Location: </p>
@@ -138,12 +138,12 @@
             {{#if @first}}
             <div class="contains">
                 <p>-</p>
-                <p id="highlight-red">{{this}}</p>
+                <p class="highlight-red">{{this}}</p>
             </div>
             {{else}}
             <div class="contains">
                 <p>-</p>
-                <p id="list-{{@index}}">{{this}}</p>
+                <p class="list-{{@index}}">{{this}}</p>
             </div>
             {{/if}}
             {{/each}}

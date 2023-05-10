@@ -6,16 +6,18 @@
         <li id="right"><a href="/logout" class="nav-item">Logout</a></li>
     </ul>
 </div>
-
+<p></p>
+<h2>my itinerary board</h2>
+<p>view the itineraries for your trips here!</p>
+<div class="trip-holder">
 {{#each trips}}
 {{#if this.itinerary}}
-
 <div class="trips">
     <div class="content">
         <div class="contains">
             <p class="next">Name of Trip:</p>
             <a href="http://localhost:3000/trips/map/{{this.userId}}/{{this.name}}" target="_self"
-                id="tripUrl">{{this.name}}</a>
+                class="tripUrl">{{this.name}}</a>
         </div>
         {{#each itinerary}}
         <div class="contains">
@@ -54,3 +56,57 @@
 </div>
 {{/if}}
 {{/each}}
+</div>
+
+<p></p>
+<h2>shared itinerary board</h2>
+<p>view any itineraries shared with you here!</p>
+<div class="trip-holder">
+{{#each allowed}}
+{{#if this.itinerary}}
+<div class="trips">
+    <div class="content">
+        <div class="contains">
+            <p class="next">Name of Trip:</p>
+            <a href="http://localhost:3000/trips/map/{{this.userId}}/{{this.name}}" target="_self"
+                class="tripUrl">{{this.name}}</a>
+        </div>
+        {{#each itinerary}}
+        <div class="contains">
+            <p class="next">Activity Name: </p>
+            <p>{{this.activityName}}</p>
+        </div>
+        <div class="contains">
+            <p class="next">Start Date:</p>
+            <p> {{this.date}}</p>
+        </div>
+        <div class="contains">
+            <p class="next">Start Time: </p>
+            <p>{{this.startTime}}</p>
+        </div>
+        <div class="contains">
+            <p class="next">End Time:</p>
+            <p>{{this.endTime}}</p>
+        </div>
+        <div class="contains">
+            <p class="next">Cost: </p>
+            <p>{{this.cost}}</p>
+        </div>
+        {{#if this.notes}}
+        <div class="contains">
+            <p class="next">Notes:</p>
+            <p>{{this.notes}}</p>
+        </div>
+        {{else}}
+        <div class="contains">
+            <p class="next">Notes:</p>
+            <p>N/A</p>
+        </div>
+        {{/if}}
+        {{/each}}
+    </div>
+</div>
+{{/if}}
+
+{{/each}}
+</div>
