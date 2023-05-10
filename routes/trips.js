@@ -58,41 +58,16 @@ router
     let stopsInput = xss(tripInfo.stopsInput);
     let toDoInput = xss(tripInfo.toDoInput);
 
-
-
-
     let toDoArr = [];
     let stopsArr = [];
     let usersArr = [];
     let regex = /.*[a-zA-Z].*/;
     let regexStringsOnly = /^[A-Za-z]+$/;
 
-    // try{
-    //   let querying4= await tripsData.get(req.body.tripName)
-    // }catch(e){
-    //   return res.status(400).render("updateTrip", {error: e})
-    // }
-
-
     try {
       if (!regex.test(tripNameInput)) {
         throw 'Trip Name must be a string';
       }
-      // let splitSL = tripInfo.startLocationInput.split(',');
-      // if(splitSL.length < 3){
-      //   throw 'You must have a full street name in your address'
-      // }
-      // console.log(Number.isNaN(parseInt('123')))
-      // if(Number.isNaN(parseInt(splitSL[0]))){
-      //   throw 'You must include a number in the address'
-      // }
-      // if(!regexStringsOnly.test(splitSL[0])){
-      //   throw 'You must have a street name in your address'
-      // }
-
-      // if(!regexStringsOnly.test(splitSL[1])){
-      //   throw 'You must have a full street name in your address'
-      // }
 
       let splitToDo = toDoInput.split(',');
       let splitStops = stopsInput.split('/');
@@ -395,9 +370,7 @@ router
   .route('/edititinerary/:tripName/:itineraryName')
   .get(async (req, res) => {
     //code here for GET
-    // let tData4 = await tripsData.getAll(req.session.user.id)
-    // let itData = await tripsData.get(req.params.tripName)
-    // console.log(itData)
+    
     try {
       let test = await itineraryData.getActivitybyName(req.params.itineraryName);
       // console.log(test)
@@ -708,92 +681,4 @@ router
     }
   });
 
-// router
-//   .route('/:userId')
-//   .get(async (req, res) => {
-//     //code here for GET
-//     try {
-//       // console.log(req.session.user.id)
-//       const trips = await tripsData.getAll(req.session.user.id);
-//       //   const returnTrips = bands.map((trip) => {
-//       //     return {
-//       //       _id: trip._id,
-//       //       name: trip.name
-//       //     }
-//       //   });
-//       // console.log(trips)
-//       return res.json(trips);
-//     } catch (e) {
-//       return res.status(500).json(e);
-//     }
-//   })
-//   .post(async (req, res) => {
-//     //code here for POST
-//     let tripInfo = req.body;
-
-//     let toDoArr = [];
-//     let stopsArr = [];
-//     let regex = /.*[a-zA-Z].*/;
-//     let regexStringsOnly = /^[A-Za-z]+$/;
-
-//     try {
-//       if (!regex.test(tripInfo.tripNameInput)) {
-//         throw 'Trip Name must be a string';
-//       }
-//       // let splitSL = tripInfo.startLocationInput.split(' ');
-//       // if(splitSL.length < 3){
-//       //   throw 'You must have a full street name in your address'
-//       // }
-//       // // console.log(Number.isNaN(parseInt('123')))
-//       // if(Number.isNaN(parseInt(splitSL[0]))){
-//       //   throw 'You must include a number in the address'
-//       // }
-//       // if(!regexStringsOnly.test(splitSL[1])){
-//       //   throw 'You must have a street name in your address'
-//       // }
-
-//       // if(!regexStringsOnly.test(splitSL[2])){
-//       //   throw 'You must have a full street name in your address'
-//       // }
-
-//       let splitToDo = tripInfo.toDoInput.split(',');
-//       let splitStops = tripInfo.stopsInput.split('/');
-
-//       for (let i = 0; i < splitToDo.length; i++) {
-//         if (typeof splitToDo[i] == 'string') {
-//           toDoArr.push(splitToDo[i]);
-//         } else {
-//           throw 'One of the to-do items is not a valid string';
-//         }
-//       }
-//       for (let i = 0; i < splitStops.length; i++) {
-//         if (typeof splitStops[i] == 'string') {
-//           stopsArr.push(splitStops[i]);
-//         } else {
-//           throw 'One of the stops is not a valid string';
-//         }
-//       }
-//     } catch (e) {
-//       return res.status(400).json(`${e}`);
-//     }
-
-//     try {
-//       const trip = await tripsData.createTrip(
-//         req.params.userId,
-//         req.body.tripNameInput,
-//         req.body.startLocationInput,
-//         req.body.startDateInput,
-//         req.body.startTimeInput,
-//         req.body.endLocationInput,
-//         req.body.endDateInput,
-//         req.body.endTimeInput,
-//         stopsArr,
-//         toDoArr,
-//         req.body.usersAllowedInput
-//       );
-//       return res.status(200).json(trip);
-//     } catch (e) {
-//       return res.status(400).json(e);
-//     }
-//   });
 export default router;

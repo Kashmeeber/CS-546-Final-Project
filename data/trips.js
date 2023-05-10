@@ -45,9 +45,6 @@ const createTrip = async (
   if (typeof endLocation != 'string' || endLocation.trim().length == 0) {
     throw 'Error: Must provide the end location as valid nonempty string';
   }
-  // if (!Array.isArray(toDo) || toDo.length == 0) {
-  //   throw 'Error: Must provide to-do list as valid nonempty array';
-  // }
   if (typeof endDate != 'string' || endDate.trim().length == 0) {
     throw 'Error: Must provide end date as valid nonempty string';
   }
@@ -66,9 +63,6 @@ const createTrip = async (
   if (startLocation == endLocation) {
     throw 'Start location cannot be the same as end location';
   }
-  // if (startTime == endTime) {
-  //   throw 'Start time cannot be the same as end time';
-  // }
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }
@@ -80,9 +74,6 @@ const createTrip = async (
   endDate = endDate.trim();
   startTime = startTime.trim();
   endTime = endTime.trim();
-  // stops = stops.map((stop) => stop.trim());
-  // toDo = toDo.map((todo) => todo.trim());
-  // usersAllowed = usersAllowed.map((usersAllowed) => usersAllowed.trim());
   let st = startTime.split(':');
   let et = endTime.split(':');
   if (tripName.includes("/")) {
@@ -244,7 +235,6 @@ const createTrip = async (
   }
   const insertInfo = await tripCollection.insertOne(newTrip);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add trip';
-  // const newId = insertInfo.insertedId.toString();
   const trip = await get(newTrip.name);
   return trip;
 };
@@ -277,73 +267,12 @@ const get = async (name) => {
     throw 'Id cannot be an empty string or just spaces';
   }
   name = name.trim();
-  // if (!ObjectId.isValid(id)) {
-  //   throw 'invalid object ID';
-  // }
   const tripCollection = await trips();
   const trip = await tripCollection.findOne({ name: name });
   if (trip === null) {
     throw 'No trip with that id';
   }
-  // trip._id = trip._id.toString();
   return trip;
-};
-
-// TODO: filter function -- MARIAM
-const filter = async (userId, sortingParam) => {
-  if (!userId) {
-    throw 'You must provide an id to search for';
-  }
-  if (typeof userId !== 'string') {
-    throw 'Id must be a string';
-  }
-  if (userId.trim().length === 0) {
-    throw 'Id cannot be an empty string or just spaces';
-  }
-  if (!sortingParam) {
-    throw 'You must provide an id to search for';
-  }
-  if (typeof sortingParam !== 'string') {
-    throw 'Id must be a string';
-  }
-  if (sortingParam.trim().length === 0) {
-    throw 'Id cannot be an empty string or just spaces';
-  }
-  userId = userId.trim();
-  sortingParam = sortingParam.trim();
-  if (sortingParam != 'past' && sortingParam != 'future' && sortingParam != 'present') {
-    throw 'You must filter trips by either past, present, or future';
-  }
-  let allTripArray = [];
-  let allTrips = await getAll(userId);
-  allTrips.forEach((elem) => {
-    elem._id = elem._id.toString();
-    allTripArray.push(elem);
-  });
-  let filtered = [];
-  let date = new Date();
-  // if (sortingParam == 'past') {
-  //   totalTrips.forEach((elem) => {
-  //     if (totalTrips.endDate < date) {
-  //       filtered.push(elem);
-  //     }
-  //   });
-  // }
-  // if (sortingParam == 'future') {
-  //   totalTrips.forEach((elem) => {
-  //     if (totalTrips.startDate > date) {
-  //       filtered.push(elem);
-  //     }
-  //   });
-  // }
-  // if (sortingParam == 'present') {
-  //   totalTrips.forEach((elem) => {
-  //     if (totalTrips.startDate < date && totalTrips.endDate > date) {
-  //       filtered.push(elem);
-  //     }
-  //   });
-  // }
-  return filtered;
 };
 
 const updateTime = async (tripId, startTime, endTime) => {
@@ -731,33 +660,6 @@ const getTripsAllowed = async (userId) => {
   }
 };
 
-// const usersAllowed = async (userId, tripName) => {
-//   if (!userId || !tripName) {
-//     throw 'All fields need to have valid values';
-//   }
-//   if (typeof userId !== 'string' || userId.trim() === '') {
-//     throw 'userId must be a non-empty string';
-//   }
-//   if (typeof tripName !== 'string' || tripName.trim() === '') {
-//     throw 'tripId must be a non-empty string';
-//   }
-//   userId = userId.trim();
-//   tripName = tripName.trim();
-//   const tripCollection = await trips();
-//   let triperoonie = await get(tripName);
-//   const trip = await tripCollection.find({ "users_allowed": { $in: [userId] } })
-//   if (!trip) {
-//     throw 'Trip does not exist';
-//   }
-//   const usersCollection = await users();
-//   const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-//   if (!user) {
-//     throw 'This user does not exist';
-//   } else {
-//     return true;
-//   }
-// };
-
 const remove = async (tripId) => {
   if (!tripId) {
     throw 'You must provide an id to search for';
@@ -852,9 +754,7 @@ const update = async (
   if (startLocation == endLocation) {
     throw 'Start location cannot be the same as end location';
   }
-  // if (startTime == endTime) {
-  //   throw 'Start time cannot be the same as end time';
-  // }
+
   if (startDate == endDate) {
     throw 'Start date cannot be the same as end date';
   }
@@ -866,9 +766,6 @@ const update = async (
   endDate = endDate.trim();
   startTime = startTime.trim();
   endTime = endTime.trim();
-  // stops = stops.map((stop) => stop.trim());
-  // toDo = toDo.map((todo) => todo.trim());
-  // usersAllowed = usersAllowed.map((usersAllowed) => usersAllowed.trim());
   let st = startTime.split(':');
   let et = endTime.split(':');
   if (tripName.includes("/")) {
@@ -1008,146 +905,7 @@ const update = async (
       usersAllowed.splice(g, 1);
     }
   }
-  // console.log(10)
 
-  // Check that the id is provided
-  // console.log(1);
-  // if (
-  //   !nameParams ||
-  //   !tripName ||
-  //   !startLocation ||
-  //   !startDate ||
-  //   !startTime ||
-  //   !endLocation ||
-  //   !endDate ||
-  //   !endTime ||
-  //   !stops ||
-  //   !toDo ||
-  //   !usersAllowed
-  // ) {
-  //   throw 'Error: All fields need to have valid values';
-  // }
-  // if (typeof nameParams != 'string' || nameParams.trim().length == 0) {
-  //   throw 'Error: Must provide the trip name as valid nonempty string';
-  // }
-  // if (typeof tripName != 'string' || tripName.trim().length == 0) {
-  //   throw 'Error: Must provide the trip name as valid nonempty string';
-  // }
-  // if (typeof startLocation != 'string' || startLocation.trim().length == 0) {
-  //   throw 'Error: Must provide the start location as valid nonempty string';
-  // }
-  // if (typeof startDate != 'string' || startDate.trim().length == 0) {
-  //   throw 'Error: Must provide start date as valid nonempty string';
-  // }
-  // if (typeof endLocation != 'string' || endLocation.trim().length == 0) {
-  //   throw 'Error: Must provide the end location as valid nonempty string';
-  // }
-  // if (!Array.isArray(toDo) || toDo.length == 0) {
-  //   throw 'Error: Must provide to-do list as valid nonempty array';
-  // }
-  // if (typeof endDate != 'string' || endDate.trim().length == 0) {
-  //   throw 'Error: Must provide end date as valid nonempty string';
-  // }
-  // if (typeof startTime != 'string' || startTime.trim().length == 0) {
-  //   throw 'Error: Must provide start time as valid nonempty string';
-  // }
-  // if (typeof endTime != 'string' || endTime.trim().length == 0) {
-  //   throw 'Error: Must provide end time as valid nonempty string';
-  // }
-  // if (!Array.isArray(stops)) {
-  //   throw 'You must provide an array of all stops on your trip';
-  // }
-  // if (!Array.isArray(usersAllowed)) {
-  //   throw 'You must provide an array of all users allowed on your trip';
-  // }
-  // if (startLocation == endLocation) {
-  //   throw 'Start location cannot be the same as end location';
-  // }
-  // if (startTime == endTime) {
-  //   throw 'Start time cannot be the same as end time';
-  // }
-  // if (startDate == endDate) {
-  //   throw 'Start date cannot be the same as end date';
-  // }
-  // nameParams = nameParams.trim();
-  // tripName = tripName.trim();
-  // startLocation = startLocation.trim();
-  // startDate = startDate.trim();
-  // endLocation = endLocation.trim();
-  // endDate = endDate.trim();
-  // startTime = startTime.trim();
-  // endTime = endTime.trim();
-  // stops = stops.map((stop) => stop.trim());
-  // toDo = toDo.map((todo) => todo.trim());
-  // usersAllowed = usersAllowed.map((user) => user.trim());
-  // let st = startTime.split(':');
-  // let et = endTime.split(':');
-  // if (st.length != 2 || st[0].length != 2 || st[1].length != 2) {
-  //   throw 'Error: Must provide start time in HH:MM format';
-  // }
-  // if (et.length != 2 || et[0].length != 2 || et[1].length != 2) {
-  //   throw 'Error: Must provide end time in HH:MM format';
-  // }
-  // if (st[0] * 1 < 0 || st[0] * 1 > 23) {
-  //   throw 'Error: Must provide start time in HH:MM format';
-  // }
-  // if (st[1] * 1 < 0 || st[1] * 1 > 59) {
-  //   throw 'Error: Must provide start time in HH:MM format';
-  // }
-  // if (et[0] * 1 < 0 || et[0] * 1 > 23) {
-  //   throw 'Error: Must provide end time in HH:MM format';
-  // }
-  // if (et[1] * 1 < 0 || et[1] * 1 > 59) {
-  //   throw 'Error: Must provide end time in HH:MM format';
-  // }
-  // let sd = startDate.split('/');
-  // let ed = endDate.split('/');
-  // let currentYear = new Date();
-  // let newCurrentYear = currentYear.getFullYear();
-  // if (sd[2] < currentYear && ed[2] > newCurrentYear + 2) {
-  //   throw 'The start date cannot be in the past and the end date cannot be more than 2 years than today';
-  // }
-  // if (sd.length != 3 || sd[0].length != 2 || sd[1].length != 2 || sd[2].length != 4) {
-  //   throw 'Error: Must provide start date in MM/DD/YYYY format';
-  // }
-  // if (sd[0] * 1 < 1 || sd[0] * 1 > 12) {
-  //   throw 'Error: Must provide start date in MM/DD/YYYY format';
-  // }
-  // if (sd[1] * 1 < 1 || sd[1] * 1 > 31) {
-  //   throw 'Error: Must provide start date in MM/DD/YYYY format';
-  // }
-  // if (sd[2] * 1 < 1900 || sd[2] * 1 > ed[2] * 1) {
-  //   throw 'Error: Must provide start date in MM/DD/YYYY format';
-  // }
-  // if (ed.length != 3 || ed[0].length != 2 || ed[1].length != 2 || ed[2].length != 4) {
-  //   throw 'Error: Must provide end date in MM/DD/YYYY format';
-  // }
-  // if (ed[0] * 1 < 1 || ed[0] * 1 > 12) {
-  //   throw 'Error: Must provide end date in MM/DD/YYYY format';
-  // }
-  // if (ed[1] * 1 < 1 || ed[1] * 1 > 31) {
-  //   throw 'Error: Must provide end date in MM/DD/YYYY format';
-  // }
-  // if (ed[2] * 1 < sd[2] * 1 || ed[2] * 1 > ed[2] * 1 + 1) {
-  //   throw 'Error: Must provide end date in MM/DD/YYYY format';
-  // }
-  // if (sd > ed) {
-  //   throw 'Error: Start date must be set to a date before end date';
-  // }
-  // if (stops.length === 0) throw 'You must supply at least one stop';
-  // for (let i in stops) {
-  //   if (typeof stops[i] !== 'string' || stops[i].trim().length === 0) {
-  //     throw 'You must supply at least 1 stop';
-  //   }
-  //   stops[i] = stops[i].trim();
-  // }
-  // if (toDo.length === 0) throw 'You must supply at least one to-do item';
-  // for (let i in toDo) {
-  //   if (typeof toDo[i] !== 'string' || toDo[i].trim().length === 0) {
-  //     throw 'You must supply at least 1 to-do item';
-  //   }
-  //   toDo[i] = toDo[i].trim();
-  // }
   let trippers = await get(nameParams);
   const tripCollection = await trips();
   if (await tripCollection.findOne({ name: tripName , userId: userId, _id: {$ne: trippers._id}})) {
@@ -1183,7 +941,6 @@ export {
   createTrip,
   getAll,
   get,
-  filter,
   updateTime,
   updateDate,
   updateLocation,
