@@ -1,12 +1,11 @@
-import {ObjectId} from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 const exportedMethods = {
   checkId(id, varName) {
     if (!id) throw `Error: You must provide a ${varName}`;
     if (typeof id !== 'string') throw `Error:${varName} must be a string`;
     id = id.trim();
-    if (id.length === 0)
-      throw `Error: ${varName} cannot be an empty string or just spaces`;
+    if (id.length === 0) throw `Error: ${varName} cannot be an empty string or just spaces`;
     if (!ObjectId.isValid(id)) throw `Error: ${varName} invalid object ID`;
     return id;
   },
@@ -23,10 +22,7 @@ const exportedMethods = {
   },
 
   checkStringArray(arr, varName) {
-    //We will allow an empty array for this,
-    //if it's not empty, we will make sure all tags are strings
-    if (!arr || !Array.isArray(arr))
-      throw `You must provide an array of ${varName}`;
+    if (!arr || !Array.isArray(arr)) throw `You must provide an array of ${varName}`;
     for (let i in arr) {
       if (typeof arr[i] !== 'string' || arr[i].trim().length === 0) {
         throw `One or more elements in ${varName} array is not a string or is an empty string`;
