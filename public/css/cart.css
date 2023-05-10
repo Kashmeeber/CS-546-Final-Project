@@ -227,6 +227,13 @@ label::before {
 #error {
   color: red;
   font-weight: bold;
+  font-size: 25px;
+}
+
+#serverErr {
+  color: red;
+  font-weight: bold;
+  font-size: 25px;
 }
 
 .requirement {
