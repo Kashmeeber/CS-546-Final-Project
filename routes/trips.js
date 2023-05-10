@@ -4,7 +4,7 @@ import { tripsData } from '../data/index.js';
 import { itineraryData } from '../data/index.js';
 import validation from '../validation.js';
 import xss from "xss";
-import { get } from '../data/trips.js';
+import { get, getTripsAllowed } from '../data/trips.js';
 import { checkUserAllowed } from '../helpers.js';
 
 router.route('/').get(async (req, res) => {
@@ -270,7 +270,9 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData2 = await tripsData.getAll(req.session.user.id);
-    return res.render('itinerary', { title: 'choose trip', trips: tData2 });
+    let tData3 = await getTripsAllowed(req.session.user.id);
+    let tData4 = tData2.concat(tData3);
+    return res.render('itinerary', { title: 'choose trip', trips: tData4 });
   })
   .post(async (req, res) => {
     req.session.currentTrip = req.body.tripName;
