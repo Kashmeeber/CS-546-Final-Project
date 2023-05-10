@@ -7,7 +7,7 @@ import { tripsData } from '../data/index.js';
 import { itineraryData } from '../data/index.js';
 import validation from '../validation.js';
 import xss from "xss";
-import { getActivitybyName } from '../data/itinerary.js';
+import { get } from '../data/trips.js';
 import { checkUserAllowed } from '../helpers.js';
 
 router.route('/').get(async (req, res) => {
@@ -125,8 +125,9 @@ router
 
     try {
       req.params.tripName = validation.checkString(req.params.tripName);
+      let trippers = await get(req.params.tripName); 
       const updatedTrip = await tripsData.update(
-        req.session.user.id,
+        trippers.userId,
         req.params.tripName,
         req.body.tripNameInput,
         req.body.startLocationInput,
@@ -329,8 +330,10 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData4 = await tripsData.getAll(req.session.user.id);
+    let tData5 = await tripsData.getTripsAllowed(req.session.user.id);
+    let tData6 = tData4.concat(tData5);
     
-    return res.render('choosetrip', { title: 'edit itinerary', trips: tData4 });
+    return res.render('choosetrip', { title: 'edit itinerary', trips: tData6 });
   })
   .post(async (req, res) => {
     // console.log("hihi8");
@@ -349,11 +352,13 @@ router
   .get(async (req, res) => {
     //code here for GET
     let tData4 = await tripsData.getAll(req.session.user.id);
+    let tData5 = await tripsData.getTripsAllowed(req.session.user.id);
+    let tData6 = tData4.concat(tData5);
     // let itData = await tripsData.get(req.params.tripName);
     let itData;
-    for(let i = 0; i<tData4.length; i++) {
-      if(tData4[i].name == req.params.tripName) {
-        itData = tData4[i]
+    for(let i = 0; i<tData6.length; i++) {
+      if(tData6[i].name == req.params.tripName) {
+        itData = tData6[i]
         break;
       }
     }
@@ -527,7 +532,9 @@ router
     //May need to change what happens when an error occurs
     try {
       let tData3 = await tripsData.getAll(req.session.user.id); 
-      return res.render('updateTrip', { title: 'edit trip', trips: tData3 });
+      let tData4 = await tripsData.getTripsAllowed(req.session.user.id);
+      let tData5 = tData3.concat(tData4);
+      return res.render('updateTrip', { title: 'edit trip', trips: tData5 });
     } catch (e) {
       return res.status(400).render("edittrip", {error: e});
     }

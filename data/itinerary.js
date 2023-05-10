@@ -399,7 +399,6 @@ const updateActivity = async (
   // console.log(itineraryArr);
 
   newItineraryArr.push(updatedItinerary);
-  console.log(newItineraryArr);
   // console.log(newItineraryArr);
 
   trip.itinerary = newItineraryArr;
