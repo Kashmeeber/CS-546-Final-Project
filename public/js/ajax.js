@@ -65,14 +65,13 @@
       if (!regex.test(password)) {
         throw 'Error: Password must include at least one capital letter, one number, and one special character';
       }
-      if (password != confirmPassword) {
+      if (password !== confirmPassword) {
         throw 'Error: Password and Confirm Password must match';
       }
     } catch (e) {
-      event.preventDefault();
       registrationResult.html(e);
+      return false;
     }
-
     let requestConfig = {
       method: 'POST',
       url: '/register',
@@ -87,15 +86,15 @@
     //CITATIONS for using .done and using data.indexof to find errors:https://api.jquery.com/jquery.ajax/
     //https://jsnlog.com/Documentation/HowTo/AjaxErrorHandling
     //https://stackoverflow.com/questions/68938716/ajax-call-which-return-a-file-or-a-partial-html-on-case-of-error-how-to-handle
-    $.ajax(requestConfig).done(function (data) {
-      if (data.indexOf('Error') >= 0) {
+    $.ajax(requestConfig).done(function (response) {
+      if (response.indexOf('Error') >= 0) {
         registrationResult.html('You must enter valid inputs in all of the fields');
       } else {
         registrationResult.html('Success, you have registered the account.');
         myNewTaskForm[0].reset();
       }
-    });
-    event.preventDefault();
-    return false;
+    }).fail(function () {
+      registrationResult.html('There already exists a user with that email');
+    })
   });
 })(window.jQuery);
