@@ -145,7 +145,7 @@ h2 {
   letter-spacing: 5px;
   font-family: Arial, Helvetica, sans-serif;
 }
-#trip-holder {
+.trip-holder {
   /* border-radius: 25px; */
   border: 5px solid #301014;
   padding: 5px;
@@ -239,7 +239,7 @@ label::before {
 .requirement {
   color: crimson;
 }
-#tripUrl {
+.tripUrl {
   color: black;
   text-decoration: underline;
   background-color: #acc9ba;
@@ -253,17 +253,17 @@ label::before {
   margin: 0 auto;
 }
 
-#highlight-red {
+.highlight-red {
   background-color: rgb(215, 138, 138);
   font-weight: bold;
 }
 
-#list-1 {
+.list-1 {
   background-color: rgb(251, 211, 138);
   font-weight: bold;
 }
 
-#list-2 {
+.list-2 {
   background-color: rgb(253, 255, 158);
   font-weight: bold;
 }
